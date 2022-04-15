@@ -1,0 +1,85 @@
+
+- extraction method mive it to methods , forward and backward reference.Rehrasing , established methodology
+
+back ref
+
+promising resuots
+
+py -m pip install "SomeProject"
+
+
+arff file 
+
+   % 1. Title: Iris Plants Database
+   % 
+   % 2. Sources:
+   %      (a) Creator: R.A. Fisher
+   %      (b) Donor: Michael Marshall (MARSHALL%PLU@io.arc.nasa.gov)
+   %      (c) Date: July, 1988
+   % 
+   @RELATION iris
+
+   @ATTRIBUTE sepallength  NUMERIC
+   @ATTRIBUTE sepalwidth   NUMERIC
+   @ATTRIBUTE petallength  NUMERIC
+   @ATTRIBUTE petalwidth   NUMERIC
+   @ATTRIBUTE class        {Iris-setosa,Iris-versicolor,Iris-virginica}
+
+  
+
+
+-features
+
+-dataset dimensions ; how many rows and columns
+statisical summary
+
+
+
+dataset
+-transform natrual language to numbers
+get pc understand content , ml understand the patterns in
+the numbers
+-feature transform text into numbers to pick patterns
+then connect them
+
+=classifier on weka they determine how the pattern 
+is going to be learned
+
+-pattern testing , percentage split gives a percentage 
+of training the model on our data and the rest of the percentage for testing
+the model.overfitting when learning trends that might not exist 
+in the real world .
+
+-classifier with rules 10 then start
+
+the atrribute that has true or false connects the correct classification
+
+baseline = number/totalnumberofdata above 17% is good
+
+-condusion matrix = right right,wroun wroung ,should on columns
+
+-more features affect the percentages accuracy
+
+overfitting // aeRCH MEANING blunt information ,production of an analysis that corresponds too closely or exactly to a particular dataset. vbvgv 
+sparsity // search  
+
+to add more features classifier decision tree .in rules . priority based on information gain 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class distribution

@@ -1,0 +1,19 @@
+=add file for non prob pharse 
+- uncoment the parse then add the labels for problematic and non problematic paragraphs
+
+=generate for each separaterly then add on top of each other add the highest POS tag as well .
+-then on weka gen data and prediction for new data based on one of the scitnific review papaer or moby dick .
+
+- test the new method if works add fir second paragrapb
+- gen data same way , test again also .
+
+
+Bottleneck	Caveat		Challenge	Complication	Conundrum	Difficulty
+Flaw		Impediment	Issue		Limitation	Mistake		Obstacle
+Riddle		Shortcoming	Struggle	Subproblem	Threat		Tragedy
+Dilemma		Disadvantage	Drawback	Fault		Pitfall		Problem
+Uncertainty	Weakness	Trouble		Quandary	 
+
+
+
+problem_string_paragraph2[0:10]+non_problem_string_paragraph2[0:10]+problem_string_paragraph[0:10]+non_problem_string_paragraph[0:10]

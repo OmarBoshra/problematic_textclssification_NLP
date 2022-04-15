@@ -1,0 +1,57 @@
+abstract in e-commerce system
+different reckoned
+in this paper, we address abstract
+incorporates the multi-scale neural networks and introduces a representation sharing strategy
+also define a novel combined loss function
+novel incorporates proposed approach outperforms existing approaches
+incorporates approach is regarded as one of the most fundamental machine learning tasks in e-commerce system 
+this predicted category information will influence incorporates approach
+categories in most ecommerce websites are organized as a hierarchical tree but not a directed acyclic graph
+figure incorporates novel approach category e-commerce system 
+
+
+predict a human-like score 
+robust reference-free evaluator 
+robust reference-free evaluator 
+evaluation of conversational systems robust reference-free evaluator
+automated metrics correlate poorly with human judgement they are not robust
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+moderate correlations correlate poorly with human judgement human evaluation slow and expensive
+moderate correlations correlate poorly with human judgement human evaluation slow and expensive
+lacks robustness under adversarial attack poorly with human judgement
+lacks robustness under adversarial attack poorly with human judgement
+lacks robustness under adversarial attack poorly with human judgement
+lacks robustness of response under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+generalizes to new dialogues unseen during training reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+obtain better text representations reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluators correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluatorsresponse appropriateness correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluatorsresponse appropriateness correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluatorsresponse appropriateness correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+adem and ruber shortcomings next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction is to predict whether a sentence is a true continuation given a preceding contex adem and ruber shortcomings next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluation language understanding generation next sentence prediction is to predict whether a sentence is a true continuation given a preceding contex adem and ruber shortcomings next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness

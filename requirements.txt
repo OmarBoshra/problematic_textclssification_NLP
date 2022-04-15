@@ -1,0 +1,8 @@
+pandas
+matplotlib
+sklearn
+random2
+nltk
+numpy
+gensim
+rpy2

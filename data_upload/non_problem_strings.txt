@@ -1,0 +1,500 @@
+are guaranteed to construct well-formed HPSG parse trees because HPSG schemas and principles are successfully applied during the development of the HPSG treebank
+the features induced from time-series text for constancy and uniqueness classification , respectively
+Until the system finds a multiple entry
+-LRB- dictionary -RRB- No price for the new shares has been set .
+by the proportion of unattached tokens that should be attached to the artificial root node
+-LRB- 2002 -RRB- were among the first to apply automated methods specifically to scoring the WLM subtest and determining the relationship between these scores and measures of cognitive function .
+may , for example , have a class ` noun ' as a superclass of lexical items ` boy ' , ` girl ' , ` computer ' and so forth
+DS-TTR tree nodes include a field head in all RTs .
+of a set divided by the cardinality of a superset
+lating finite-state devices that is based on the algebraic concepts of rational power series and semirings .
+of language ability -LRB- such as non-verbal IQ -RRB-
+built on top of the PR-Dep-Parsing package '
+while those for the hybrid dependency model are from Clark and Curran -LRB- 2007 -RRB-
+Bannard -LRB- 2007 -RRB- , using CPMI -LRB- conditional pointwise mutual information -RRB- , analyses these variants
+Recently , syntax-based models such as transitionbased parser have been used for detecting disfluI want a flight to Boston um to Denver
+capture lexical semantic preferences without a lot of effort
+involved : Nature of voice -LRB- e.g.
+The second baseline , Random , assigns each instance randomly to one of four clusters .
+The same data sets as in the binary classification task were used .
+will contribute to increase the visibility of the AMI Corpus
+However , we see the following as well .
+The rules for pronominal anaphora rely on three sources of confirming information : syntactic criteria , semantic selectional restrictions and consistency checks from inferencing procedures .
+-LRB- Typically no more than five sequences were removed . -RRB-
+expressed in this material are those of the authors and do not necessarily reflect the views of the NSF
+Finally , narration continues under E3 with Eq , Er , and Es , as daughters to E3 , with the additional constraint of `` because-inversion '' , Es < Er .
+used by wider audiences , then statistically driven techniques might be employed gradually
+conducted an experiment using real-world customer-care related questions
+to extract titles from a Chinese Wikipedia page and its corresponding linked English page if the link exists -LRB- Ji et al. , 2009 -RRB-
+to create tropical monomials -LRB- Step 3 -RRB-
+its morphological tag contains the symbol for negative verb
+Experiments using all data are also reported , although a 64GB machine was necessary , even with binarized phrase and distortion tables .
+success -LRB- Yang et al. , 2006 -RRB- , accuracy -LRB- Kehler et al. , 2004a ; Angheluta et al. , 2004 -RRB- and success rate -LRB- Tetreault , 2001 -RRB-
+unlikely to cope with very large sets of candidate patterns
+depends on its similarity to w1 .
+FrameNet provides semantic roles as character offsets .
+according to their relationship to the semantic predicates expressed in the sentence
+than the graphemic one - namely , the morphemic level
+This system was tested on eight essays , but precision and recall figures are not reported .
+Since this only gives us coarse supersense labels
+Time-series text For a time-series text , we used Japanese blog posts that had been gathered from Feb. 2006 to Sep. 2011 -LRB- 68 months -RRB- .
+The rather technical APPLE attribute specifies the number of l-participles -LRB- more -RRB- and helps to determine AMOOD and ATENSE .
+In this paper , this semantic interpretation is based only on a weak `` ontological model '' .
+The six text collections used in our experiments are shown in Table 1 .
+This suggests that using all the words from the text spans -LRB- i.e. , EDUs -RRB- produces sparse models .
+STEP I handles the words which and who which behave differently when they appear at the beginning of a sentence .
+tracking relevance classification improvement for multi-sentence search task
+all the N possible sequences of words
+There are 283 language editions available as of now .
+whether there is any correspondence between what people do and what they say -LRB- Nisbett 4 Wilson , 1977 -RRB-
+In the area of automatic essay scoring , essay content are represented to facilitate the scoring .
+Initially , all words except the predicate itself are treated as argument candidates .
+except those that only use NEPAIR features
+on the order of bilingual document pairs
+seems to be somewhat better to train on NF01F3 regardless of the test set
+dialogue 3.2 from the TRAINS 91 corpus
+The dominating node is markedup according to the head hi of its corresponding dominated branches .
+is presented which is based on a combination of clues
+for researchers to compare methods for temporal information extraction
+Table 4 shows example noun clusters created using Q = 0.15 .
+if d exists -LCB- e -RCB- otherwise .
+materials , resulting in a new set of 24 items similar to -LRB- 2 -RRB- .
+Specifically , a semantic label is assigned to each internal node of each SAPT , so that the MRs of its children are composed correctly according to the MR for this example .
+are designed for sighted users , which means that one can not assume that the modalities of text and data
+A primary requirement for a parsing grammar is that it is descriptively adequate .
+In our experiments reported below , we will only use naive Bayes with feature selection .
+is useful to get a ballpark estimate of the accuracy to be expected of character-based systems
+the more often a keyphrase appears in the corpus
+The unaligned Scene is in English .
+analyzer -LRB- PBA -RRB- by Bharati et al.
+hypothesis that for this type of semantic space the multiplicative vector combination function produces representations which have a sounder probabilistic basis .
+This is not necessarily a negative result .
+of a size of around 4 megabytes
+is simply a matter of parsing a query , adding its semantic parse to the KB , and recomputing the partition function -LRB- which is tractable in TML -RRB-
+The paper concludes with an analysis of our results , and some discussion of related and future work .
+lead to a nucleus or satellite , respectively
+This paper proposes a method of selecting important sentences from a text based on the evaluation of the connectivity between sentences by using surface information .
+need to be accompanied by a support verb
+a very simple method of text containment
+than the baseline system using the telicity feature alone
+introduced a prior , based on the shared logistic normal distribution
+apparently , they are common in all types of writing , including both technical and nontechnical genres
+is empirically evaluated on two tasks , solving multiple-choice SAT word analogy questions and classifying semantic relations in noun-modifier pairs
+responsible for normalizing and tagging the texts
+of dividing a k-planar graph into planes , as shown in the example of Figure 4
+For this reason , we will now transfer the concept of solved forms from dominance constraints to RMRS .
+tested all three feature types , and found the biggest gain with the domain indicator feature -LRB- +.11 , Table 4 -RRB-
+through these polysemous words in only one language side
+reclassified into one of the four possible DDI categories
+Moser , Moore , and Glendening -LRB- 1996 -RRB- achieved an agreement
+the comparative results on the English test set and Table 8
+distinguish between the Conventionalized and Nonliteral categories more clearly
+The system should thank the user .
+Of the 176 lemmas represented in the 400 most frequent verbs , 79 -LRB- 45 % -RRB- have only one verb .
+use a supervised POS tagger to label the result snippets and then transfer the tags to the queries , producing a set of noisy labeled queries
+for binary classification able to handle large numbers of parameters efficiently
+On the back of this we propose a relation based way of performing Argumentation Mining .
+a boundary found in the reference data -RRB- .
+In this paper , we use SVMs for ASR confidence scoring to achieve a better performance than when using word posterior probabilities as ASR confidence scores .
+has the right to lock -LRB- claim -RRB- a resource
+In fact , we find that it is feasible to customize a pre-defined standard into any other standards with TBL method in -LRB- Gao , 2005 -RRB- .
+is actually slightly higher for the systems built with just in-domain data , an effect that is more marked for the st domain
+that \u03ba is really low -LRB- 0.37 -RRB- due to the few disagreements that annotators had above all about the grammar
+In more detail , we first gathered lexical translation probabilities of the form P -LRB- s | t -RRB- by running five iterations of Model 1 on the training corpus .
+has the empty set as denotation , if each disjunct is invalid
+Pruning Algorithm 2 : Same as the Algorithm 1 except that added nodes are its grandchildren as well as its dependents .
+capture the fact that reordering increases with the RQuantity of the test set
+using for each concept its full noun or its pronoun
+a history-based approach which uses decision trees to estimate P -LRB- TIS -RRB-
+In -LRB- 4 -RRB- , for example , about should be marked as a lexical violation .
+We furthermore report on an experiment that tests predictions that follow from simulations .
+with new features -LRB- Supervised , all -RRB-
+Comment type 2 has only 2 variations as .
+can outperform the standard inductive classifiers and the transductive classifiers
+As is evident from table 3 , there is a significant bias for ten-star reviews .
+the three compounds , which housed villas and four-storey blocks
+This was determined by varying K and selecting the top-performing value .
+This demonstrates the advantage of utilizing existing syntactic parsers that are learned from large open domain treebanks instead of relying just on the training data .
+The result is shown in Table 2 .
+We plan to work on the remaining question types and patterns in the future .
+is also among the top performing approaches available as of today
+The YouBot Framework gathers and compares the scores returned from the TPs , then selects the processor which returned the highest score to process the message .
+An excellent introduction to the broad field of mathematics , each chapter written by one of the masters of the field ,
+These examples are taken from the collection of review texts .
+on the sentence length of their reference translations
+be used for the development of tools and software resources by IndoWordNet members
+from the point of view of their intrinsic semantic complexity we should get the following picture
+can expect from the application to the test of an optimal verb reordering prediction technique
+As such , the following two hypotheses are applied :
+For instance , 4 % of MUC 's and 5.9 % of BBN 's PER entities have wordtype Aaa A. Aaa , e.g.
+alignments and combined alignments on two sentence pairs in the training data
+the questions mentioned in the first section
+The distribution of various translations is given below :
+since precision is a measure of the proportion of inferred boundaries that were correct
+Third , we wanted to investigate the performances of different algorithms in the online and offline experiment settings .
+The complete algorithm is described in Section 5 and experiments are presented in Section 6 .
+in linking determiners from different word classes
+The above discussion is overly simplified for the purpose of explanation .
+train the MaxEnt classifier using semisupervised learning
+existing efforts that are already well-disposed toward electronic distribution
+We will describe the representations that we try in section 3.2 .
+on the criterion used to choose a transition at each configuration
+three types of supervised/semisupervised data used in the experiments
+The higher the d-value , the more of the simplified and unsimplified pairs are lumped together as indistinguishable .
+We designate a query as bilingual if the concept has been searched by users of both two languages .
+we need to fix a concept inventory and to use this inventory in a consistent way in particular , by assigning synonyms the same concept
+Note that all the edges in E\u03b8 are unweighted .
+it was not originally provided by the morphological analyzer
+is computed , giving rise to a p value
+a scaled version of fe -LRB- ` y -RRB- as the basis for a tropical monomial
+a copy of the corpus , the \u03b8\u02c6
+given 1 -RRB- the model -LRB- A , a -RRB- satisfies all constraints in C. \u2022 If x a E C : xa E L -LRB- . A.G -RRB- -LRB- e , a -RRB- E a -LRB- x -RRB-
+MTL was successfully applied in some Natural Language Processing -LRB- NLP -RRB- tasks .
+.
+Section 4 gives details of experiments carried out on a medium-vocabulary command and control task from an instruction manual domain .
+n - Spanish Government -LRB- grant no
+First , eliminate all loop arcs .
+but loses 2.11 % for COMP . . We obtain further improvement using SCNN with normalization
+SRN is not very different from JRN as shown in Figure 4b .
+a surprising amount of information about the verb paradigm is strictly local to the verb
+The rule-based and statistical detectors perform well , with the statistical detector outperforming the rule-based one -LRB- F1 = 0.967 vs. 0.929 -RRB- .
+a precision of 95 % but a recall of only 23 % while money-fx has a precision of 89 % and a recall of 60 %
+Since each parallel corpus is independently aligned , the number of sentences in each bitext is not the same across the language pairs .
+adapting LMs based on the input improves SMT performance
+Evaluations on other NLP tasks are also planned .
+utilize these during decoding , as Moses only uses continous phrases
+The methodology is more fully described by Power , Scott , and Bouayad-Agha -LRB- 2003 -RRB- .
+The probability , p -LRB- t | w -RRB- ,
+an edge aiaj that represents the physical or discourse relation -LRB- i.e.
+In addition , the standard deviation of the F-measure is also adopted as an important metric of our SRL model .
+However , the current task adds two levels of complexity .
+can be used to specify this metagrammar
+At least in the second case , weighted coefficients are almost unavoidable .
+Experiments with young children support these predictions .
+apply another constraint while making correction decision
+the generalised sum is evaluated using the min operation
+classifying search result snippets and also original texts , extracted from webpages
+cluster verbs , nouns and adjectives using the dependencybased word similarity of -LRB- Lin , 1998 -RRB-
+The results are almost similar with that of OOV results shown in Table 8 except for Person .
+The chart parsing algorithm is listed in Figure 4 .
+would be reasonable to assume that the translation is correct
+The difference between our method and Birch et al. .
+a sweep that seem particular to the domain , but are similar to tasks in other domains
+The P function enables us to utilize incomplete succeeding contexts to approximately predict words .
+the set II of the probes on b towards is detached from 6
+less susceptible to the subtleties of style manipulation
+In NER track we also include a named entity list extracted from the training data .
+HVR is designed for modern mobile devices equipped with an embedded microphone to capture speech signals
+In graph theory -LRB- Biggs et al. , 1976 -RRB- , similar ideas are conceived with a different jargon .
+The subset has been manually classified by three lexicographers into idioms , collocations and free combinations .
+A typical text consists of sentences glued together in a systematic way to form a coherent discourse .
+persons , locations , organiniques in one probabilistic model in section 7
+In word alignment , we have to
+`` Sloopy '' admits recognized temporal expressions as long as their right boundary is the same as in the corresponding TimeBank 's extents -LRB- Boguraev and Ando , 2005 -RRB- .
+boyl is a member of the set of boys , denoted by boy
+Keyboard communication patterns , upon which most natural language heuristics and algorithms have been based , also are contrasted with patterns observed in the two speech modalities .
+Our evaluation shows that the system performs better than the baseline although the baseline performs surprisingly well .
+has been constructed based on observations on a development dataset and by -LRB- intelligent -RRB- extrapolation of these findings
+pairs for an article about Albert Einstein contains -LRB- Person , Early_life -RRB- , -LRB- Person , Awards -RRB- , and -LRB- Person , Political_views -RRB- as well as several others
+model 2 -LRB- Bikel , 2004 -RRB- .
+discrepancy between automatic and human evaluations -LRB- Callison-Burch et al. , 2007 -RRB- .
+This bias forces the training algorithm to learn a distorted probability model which can significantly differ from the actual one .
+However , sometimes combinations of features or feature values may be very good predictors .
+experimented using -LRB- 1 -RRB- F1 only , -LRB- 2 -RRB- F1 and F2 , -LRB- 3 -RRB- F1 , F2 , and F3
+we then rank using a linear function of seven predictor variables
+Baseline 2 as follows , employing the methods described in Section 4 for training , parameter tuning , and testing
+Indeed , learning the solution with Partially Observable MDPs in a batch and off-policy manner is not common in the literature .
+Females in mixed-gender pairs do not match their interlocutor 's previous turn any more than do males .
+are genres such as discussion boards , web fora , and mailing lists
+a \u2751 , ha \u2751 \u2751 a \u2751 a.
+Having linguistic features enables the model to implicitly incorporate sentiment information into the word embeddings , helping to classify this example correctly .
+were randomly selected then manually split into sentences
+a fixed value for all positive words and another value for all negative words -LRB- Polanyi and Zaenen , 2006 -RRB-
+a number of linguistic rules for both Tamil and English
+The work here only represents an initial step towards conversation entailment .
+The new parse scores are calculated as follow :
+a group consensus as to where the segment boundaries should go
+Nowadays however , most large companies employ the statistical translation approach , using exceedingly large amounts of bilingual data -LRB- aligned sentences in two languages -RRB- .
+After the DBE has completed an acquisition session for a file , TEAM can interpret and respond to end-user queries .
+This situation , in which semantic analyses and lexicographic descriptions of adjectives -LRB- and other categories -RRB- are rare , is bound to change rapidly .
+how the relations between phrases and strings are defined
+CLIP 's inferences on the corpus of political speeches can be browsed at http://www.ark .
+90 -RSB- have to hold in order to ensure termination .
+hierarchical clustering , which produces a tree structure
+The fifth one is a corpusbased distributional similarity measure .
+whatever the reason , speech repairs are a normal occurrence in spoken dialogue
+are that the rules are always followed
+using Sections 15-18 for the training set
+Star-freeness of the constraints is a minor restriction when compared to the finiteness of this language .
+We thank the anonymous reviewers for their many comments and suggestions .
+more than one verb can be used to explicate the meaning of a verb
+We use Kanzi characters as index terms to retrieve paraphrase candidates , assuming that noun phrases sharing the same Kanzi characters could be paraphrases of each other .
+a grammatical framework that describes syntactic structure in terms of the combinatory potential of the lexical -LRB- word-level -RRB- items
+MPCT must be included in SALT-1 for both pairs , because the only
+When compared to commonly used learning algorithms such as Perceptron and MIRA , the model trained by our algorithm performs consistently better when given the same amount of training time .
+Therefore , this parameter can be used to adjust the balance between precision and recall .
+Barzilay and Lapata -LRB- 2006 -RRB- use it for content aggregation in a generation system .
+Google Translate translates the segment asset into Verm NNP ogensgegenst NNP ande , whereby the domain-specific approach translates it into Verm NNP ogenswerte .
+Similarly , this means that word and all its descendants form a contiguous substring of the sentence .
+the oracle learns over time and hence the speed of annotation or perhaps the accuracy of annotation increases
+is an open research field in natural language processing
+propose a method for the description of knowledge about collocations in the dictionary of a multilingual generation system
+As context for a word , we consider the sentence in which this word occurs .
+provides full-text annotation of both explicit and implicit semantic roles
+the newswire domain and the biomedical domain
+structural analysis guided by the grammatical system -RRB- , and which refinements like the above could be construed as part of a subsequent task of interpretation .
+From current point of view , enriching the hint lists is also desirable .
+multiple codes are used for the same language
+In a projected space with approximately 103 or 104 fragments , including a few hundred more features can produce noticeably different accuracy readings .
+retrieval of the independent forms from compound elements is not straightforward
+is only one transition that violates the constraint
+One possible objection to this comparison is that the subset for which we have a fair compar
+is dependent on a set of `` features '' which , hopefully , are helpful in making a prediction about the future .
+Examples are correlative clauses -LRB- these are an old Indo-European feature which most modern European languages have lost -RRB- , extensive use of complex predication , and rampant pro-drop .
+The MWER templates are instantiated at each position of the input sequence .
+is a research group in which different linguistic and computer science-oriented projects cooperate
+this data carried out by one annotator -LRB- different from those who annotated PDT data , but using the same methodology and a tool -RRB-
+the first four entities in Table 1
+The probabilities of alternative assignments are within some small specified distance .
+another experiment -LRB- Eastman and McLean 1981 -RRB-
+an obligatory semantic role like the missing Agent of passivized structures
+the most content-dense sentences from source articles
+4the actual size of the filtered lexicon
+The second line is the output of the second stage of Xtract , it is a multiple word collocation -LRB- or n-gram -RRB- .
+However , they are far from containing only interesting semantic relations .
+5 , if all of the a ; , are in A then so is at least one of the O. ; , -LRB- In fact , the other two conditions are just special cases of this condition . -RRB-
+a target word -LRB- 50 words on each side -RRB-
+labeling competitions as part of the Conferences on Computational Natural Language Learning -LRB- Carreras and M`arquez 2004 , 2005 -RRB-
+Ontological promiscuity makes it possible to explore more complicated analyses in this general framework .
+two piles -LRB- the relevant texts and the irrelevant texts -RRB-
+reestimates the N-gram model from an untagged segmented language -LRB- e.g. , English -RRB- text as training data
+the English document and 1000 lines and 297 blocks in the Spanish text
+it is not part of your address
+Every document cluster has corresponding human summaries for evaluating system summaries on the basis of ROUGE scores -LRB- Lin , 2004 -RRB- .
+constructs and traverses the information of these layers under control of the discourse development
+The nodes of the trees represent semantically significant words .
+local AAC users , their supporting professionals and families
+will have its own highest ranking candidate
+several more specific 3-grams like read a book
+place / a / as a -LSB- + low -RSB- vowel
+To testify this , we need a diversity metric .
+the monotone policy toward the end and of course outperforms the batch policy throughout the sentence
+a breakdown of our system 's performance on the various category subtypes
+different assumptions on which resources are domain-dependent or independent
+Similar to the AMIRA framework , we adopt an IOB chunk/segment tagging scheme .
+Finally , DCDlight does not average the weight vectors .
+information retrieval -LRB- Franz , M. and McCarley , S. 2002 -RRB-
+For example , in figure 2 , the first Chinese word MEP may be correspondent to the English chunk 5 or 7 .
+handling relaxation of word categories and relaxation of predicates on ATN arcs
+an example of sentence graph creation and expansion
+surprised to find that the IE groups led to improvements in intelligibility when used with marginal relevance selection
+the average and standard deviation in each set
+is : `` schools '' -LRB- agent -RRB- ; `` constantly '' -LRB- time/frequency -RRB- ; `` uniforms '' -LRB- theme -RRB-
+Research on paraphrase alignment focuses on identifying links between semantically related word strings .
+Second , our trees include FEATURES , following -LRB- Vijay-Shanker , 1987 -RRB- .
+We have also evaluated our sampled SHRG on a string-to-AMR graph parsing task and achieved some reasonable result without using a dependency parse .
+a clustering subroutine that is used in both phases
+the E/R model we propose as a starting point in the kLogNLP pipeline
+In the tablebased approaches , if a tokenized form is mapped to more than one surface form , we use the most frequent surface form .
+Indeed , coarse-to-fine is even more effective when a hierarchy of successive approximations is used -LRB- Charniak et al. , 2006 ; Petrov and Klein , 2007 -RRB- .
+constructs left-most derivations of strings , using dotted productions to keep track of partial derivations .
+the tagger used for tagging the BNC
+The text with the largest number of instructions
+For example , Hildebrand et al. .
+While the helicopter is airborne , an on-board active vision system will interpret the scene below to interpret ongoing events , which may be reported -LRB- via NL generation -RRB- to the operator .
+The nonWSJ articles -LRB- mainly political and disaster news -RRB- include both print and broadcast news that are from a variety of news sources , such as ABC , AP , and VOA .
+In the USL system , extensions of concepts are represented as virtual relations of a relational database which are defined on physically stored relations -LRB- base relations -RRB- .
+should probably be treated separately , as a preposition modifier
+one metric for measuring the similarity of two DRDAs
+where fve can replace the summation of kernels
+Selftraining for enhancement and domain adaptation of statistical parsers
+the creator or user of the corpus
+correction , machine translation and dialogue systems
+Processing stages include lexical lookup , syntactic parsing , semantic analysis , and pragmatic analysis .
+one additional degree of freedom needs to be fixed
+The general approach is to re-train a parser with parse trees which are the most consistent with alignment matrices .
+now being used in GPSG -LSB- 15 -RSB- and in an extension of PATR-II -LSB- 81
+The accuracies are presented by the `` micro averaged '' F-score .
+is indeed always stronger for learner 1 than learner 2
+allows for either kind of response .
+is essentially related to the different morphemes corpus of Chain1 and Chain2
+only the first four levels : D4 .808.54.79 G3 .770.670.310
+consists of 3 special annotations followed by the raw data
+The institute has traditionally offered courses In particular aspects of linguistics which are not readily available to students and faculty on their home campuses .
+they are not selective with regard to the predicate they can occur with
+gives a breakdown of the average number of annotations for each of the target pairs in the master set
+flows from one history representation to another , and thus determines the inductive bias of the system
+the fact that the current COPA is not resolving any event coreferences
+Sections 5 and 6 report experiments and results .
+is a compromise to the writing style of the students
+Thus probabilistic modeling of any data structures is possible when they are represented by feature forests .
+and less frequent meanings have lower priority
+First , instead of weighing all edits equally , each unique edit has a probability associated with it .
+The hearer presupposes that the event e actually took place at some time in the past .
+information should be communicated to the hearer
+The Fmeasure suggests that category terms better capture the semantics of an article when compared to the text of the article .
+allow easy transfer of action from subject to object
+allows edge expectations to be computed in O -LRB- n3 -RRB- from the inside-outside values
+a name and a series of up to 9 numbers that indicate where in the thesaurus it appears
+include several baselines that have access to the same training data as our system
+uses the two-stage parsing process to complete malformed parses
+Unsupervised constituency parsing is also an active research area .
+edit-probability between the graphemes of si and ti
+Both rule-based and statistical stemmers have been developed for a variety of languages .
+Solomon 's approach -LRB- Solomon , 1991 -RRB-
+using a special purpose parser which is sensitive to the type of chunks
+obtaining an accurate lexicon in unsupervised training
+the possible relationships that exist among the various factors
+divide key/response entity pairs into four categories
+The parsing accuracy for parsing word lattices
+exists an index such that the following two conditions are satisfied
+are based on the output of an MT system , that is , how well the MT system can translate portions
+is built via the edns : expresses property
+integrating the knowledge about multi-word expressions into the word alignment models
+all the datasets mentioned above , both parallel and monolingual
+In this paper we leverage the existing linear model -LRB- Equation 2 -RRB- to bring source-side context into phrase-based MT in a way that is robust to data sparseness .
+checks the following phrase , d'importation , which is rejected by those criteria identifying this phrase as a compound in NOMAL
+As mentioned in section 6.2 , many positive changes introduced by the LM pipeline are not fully realized under the LM or Joint -LRB- NNS -RRB- experiments .
+a number of years now -LRB- Vila et al. , 2011 -RRB-
+During his career , Philippe Blache has focused on Natural Language Processing and Formal Linguistics , with a special interest in spoken language analysis .
+the parallel sets and their repetition rate on both sides
+Moving in as a T. police force
+Overall , pruning works less effectively for nouns than for verbs
+translation requires non-isomorphic transformation from the source to the target
+For lemma and POS annotation , we can calculate basic agreement statistics , as there is one annotation for each token .
+The main ideas of the three-level semantics can be stated as follows :
+This has been a workable assumption for telephone-based systems , and a useful one for many single-purpose applications .
+In examples 1 , 2 and 3 above ` bought ' is a transitive verb , but without knowledge of traces example 2 in training data will contribute to the probability of ` bought ' being an intransitive verb .
+A similar approach is also developed in
+Significant differences between results -- computed using the approximate randomization test -LRB- Pad NNP o , 2006 -RRB- -- are given in Table 3 .
+low-bandwidth , low-quality VoIP channel -RRB- , from a language modelling perspective -LRB- e.g. .
+is used as an evaluation metric and is defined as the fraction of number of correctly identified SO words
+A basic conceptual system is assumed to exist before the SLA process starts .
+two well-known benchmark data collections for text classification
+this algorithm to bigram model training from untagged Japanese text for new word extraction
+uses its verb prediction to update the translation using the prediction , by placing it at the end of the source sentence
+there seems to be some consensus as to the kind of information one
+passes through some or all of the nodes
+provide users with a way to create a user defined list of stopwords
+politics , economy , medicine -RRB- or a latent
+Each rule now has the form3 :
+lexicalized binary reordering between French and English
+Slot grammar is a unification-based dependency grammar -LRB- cf.
+If `` stake '' can be interpreted to mean something as vague as ` Stake as any kind of investment in any enterprise ' then the answer is yes .
+the Penn treebank -LRB- PTB -RRB- -LRB- Marcus et al. , 1993 -RRB-
+can be useful for research into domain adaptation and semi-supervised learning
+similar concepts -LRB- Gardenfors , 2004 -RRB-
+the average number of words for all articles
+Let F * = -LCB- f1 , ... , fm -RCB- be m existing ranking functions .
+a variant of TAG that supports all three requirements
+We propose extending the lattice-based approach to jointly perform lexical normalization , word segmentation , and POS tagging .
+event types in the ACE extraction evaluations
+is based on a full semantic analysis of sentences
+Brill 's transformation-based algorithm along with simple counts within a lexical hierarchy in order to generalize over individual words
+can involve the assertion or retraction of facts to/from the KB
+Building on Alves and Gongalves -LRB- forthcoming -RRB-
+see that BLEU scores increase rapidly with small amounts of data
+is complicated by cases where the distributions under comparison have different supports , i.e.
+use the ubuntu-users email archive11 as our primary corpus
+This could be the reason why the baseline selects the word `` was '' instead of `` is '' .
+By these prefixation , the root is reduplicated as given below :
+Before identifying all possible noun phrases for testing , the search space of all documents in a large text database will have to be efficiently narrowed down first .
+engine provides this functionality and is used in this system
+can occur with minimal , or no
+However , this assumption is not ideal for modeling abbreviations .
+Equation 3 ensures that A is nonnegative .
+its importance to produce lexical relations of our interest
+In turn , there is a loss of independence from linguistic knowledge , when compared to shallower approaches .
+lexical , as well as semantic levels
+is standard practice for the Penn Treebank
+This paper describes the resulting lexicon , CzEngVallex , and the process of building it , as well some interesting observations and statistics already obtained .
+the most frequent 5000 terms and most frequent 5000 contexts
+is $ -LSB- ^ Art : * `` Indef -RSB-
+ek diwar ise surakshit karane ke liye banayi gayi thi
+The same analyzer is used for deriving the meaning of questions and of texts from which the fact repository content is extracted .
+will be Machine Translation which is currently very topical given the newly-achieved official European status that the local language now enjoys
+can be aligned to the same vb \u2208 cl in the first term and likewise in the second term
+Figure 2 displays all the weights we explored during this process and the corresponding perplexity of the resulting language model on the development set -LRB- nc-dev2007 -RRB- .
+We shall summarize Perrault 's theory briefly as it relates to informing and belief .
+= link -LRB- Cd , C1 -RRB-
+tion of the rule for ` rel marker ' , at the node marked -LRB- * -RRB- in the figure .
+contains a description of the CoNLL-2012 Shared Task and the participating systems
+NPL will have a number of modern flow of control facilities -LRB- for example , FOR and WHILE loops -RRB- .
+features relying only on word and character ngrams
+has emanated from research conducted with the financial support of Science Foundation Ireland under Grant Number SFI/12/RC / 2289
+can use -LRB- others can be used too -RRB-
+a noise free environment using a small number of grid points
+selectional preferences -LRB- like subj , obj , mod -RRB-
+may combine when they are separated by a large gap , only that the two smallest possible constituents , i.e. , the two words , may not combine
+a substantial part of learners ' input can be controlled , while their time capacity is small
+mixed dependencies may be the result of distance
+the form a1-a2 , where a1 denotes adjusting the predictions of which classifier
+taking into account the brevity penalty at the sentence level
+the F-score performance of our classifier as obtained by an averaged 10-fold cross-validation
+recurrent models like LSTMs can discover implicit recursive compositional structure
+a version that uses pseudo-projective parsing -LRB- Nivre and Nilsson 2005 -RRB- to recover non-projective arcs
+should probably be converted into other formats
+The difference between SVD and pure-vector models
+the closed sourced Pharaoh decoder -LRB- Koehn 2004 -RRB-
+Thus Wimp will try to believe that .
+figure 1 , where `` system '' refers to dedicated NLP applications
+could be useful for plot unit analysis
+the waveform and the fundamental frequency -LRB- F0 -RRB-
+sharing their data with us , and supporting us through this project
+onomic structure by minimizing overall distances .
+a number of different approaches to machine translation
+can effectively learn to diacritize Arabic texts and rivals state-of-the-art methods that rely on language-specific tools
+also changing the meaning of this legal text
+the evaluation methodology of Snow et al.
+hard to see a way the system handled adequately
+the generalization that directional verbs with motion-manner adverbials translate as motion-manner verbs with directional adverbials
+may well influence the choice of pronouns to be matched with
+penalizing embeddings , reembedding words , and dropout
+a word w which occurs only once , with a sense s . In the joint model
+the Bar-Ilan RTE system -LRB- Bar-Haim et al. , 2009 -RRB-
+incorporating the target domain data -LRB- unlabeled -RRB-
+the occurrence of repairs and their word correspondences
+Since CoreNLP use some syntactic knowledge to resolving coreference , it can also output coreferring entities for other languages .
+substantially outperforming a strong baseline based on semantic gap and user annotations
+minimal parsing and maximal reliance on the dictionary
+the riot identified by UK newspaper The Guardian from this set of tweets
+a set of n fixed , manually defined
+a fragment of a narrative sentence consisting of ten words
+the order of 10 words per second -LRB- wps -RRB- -LRB- Abney 1997 -RRB-
+D-Theory : Talking about Talking about Trees .
+Therefore , in the classification phase , we can obtain two prediction values for a test review .
+If we want to be guaranteed a non-deficient joint interpretation , we can require equality .
+Within this area , we can distinguish two kinds of phenomena .
+a bit string that resides in a higher row of the grid
+learning different matching patterns between a post and a response
+using a built-in positive and negative lexicon and a bag-of-words as features
+The same method can be used repeatedly to create connections to multiple language WordNets .
+The ambiguous words of the corpus should be semantically tagged in advance.Table 3 lists
+the number of rules in which a particular symbol occurs , which is actually very high -LRB- more than 1000 on average -RRB-
+space k , where the space before the first symbol is space zero
+Complete drafts , in English , should be received by the program chairman by February 1 , 1983 .
+the whole sample would pose the risk of drawing false conclusions on the usage of ACWs
+consisting of questions with a 6-point scale ranging from 1
+the case of a pure bottom-up parser
+assigning two different values to the feature structure for walked
+Secondly , once a specific analysis is determined , the process of splitting off or abstracting off a feature must be clear on what the form of the resulting word should be .
+the most frequently encountered and important part of speech
+the language of the foreign language segment
+the domain indicator feature and the other sparse
+the similarity of the human judgments and that of the manual summaries
+the language of children with SLI and one on the language of typically developing children
+Training and querying this model for all German documents can be done in several hours .
+some execution of the subroutine search in the path -RCB-
+fame factor , personality , personal , social , education , nationality , scandal , and work
+the end position or null if the action can not be executed at the start position according to the map
+the transfer rules will cater for the localizer
+For example in -LRB- 11 -RRB- -LRB- 11 -RRB- Without her , contributions to the fund would be inadequate .
+With conventional Japanese parsers , the linguist must classify the . bunsetsu and select appropriate features to compute modification values .
+For instance , if there is an alignment between the retelling word sympathetic and the source word touched , the story element touched by the woman 's story would be counted as correctly recalled .
+will resign if he is not reselected , a move which could divide the party nationally
+tweeting and retweeting behavior for political learning during 2012 US Presidential election
+Manuscripts must be written in English .
+attempting to extract the type of interaction and the participating proteins , disregarding agens and patiens
+With the MTL-based joint tuning , general knowledge can be better learned by the generaldomain models , while domain knowledge can be better exploited by the in-domain models as well .
+can be redeployed over the task of supertagging
+Moreover , when the dependency parser is non-projective , our method can perform discontinuous constituent parsing in a very natural way .

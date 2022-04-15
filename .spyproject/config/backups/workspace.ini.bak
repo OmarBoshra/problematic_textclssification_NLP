@@ -1,0 +1,12 @@
+[workspace]
+restore_data_on_startup = True
+save_data_on_exit = True
+save_history = True
+save_non_project_files = False
+project_type = 'empty-project-type'
+recent_files = ['test.py', 'requirements.txt', 'writeArff.R', 'data_upload\\problem_heads.xml', 'test.r', 'data_upload\\non_problem_strings.txt', 'data_upload\\non_problem_heads.xml', 'data_upload\\problem_strings.txt', 'tweets.csv', 'data_upload\\problem_strings_paragraph.txt', 'data_upload\\paragraph_trees.txt', 'data_upload\\acl_corpus.txt', 'data_upload\\non_problem_strings_paragraph.txt', 'problem_baseline.arff', 'data_upload\\problem_strings_paragraph_method2.txt', 'data_upload\\problem_strings_paragraph_method3txt', 'data_upload\\non_problem_strings_paragraph_method3.txt', 'data_upload\\non_problem_strings_paragraph_method2.txt', 'problem_syntax.arff']
+
+[main]
+version = 0.2.0
+recent_files = ['..\\..\\.spyder-py3\\temp.py', 'test.r', 'data_upload\\non_problem_strings_paragraph_method2.txt', 'data_upload\\non_problem_strings_paragraph.txt', 'requirements.txt', 'data_upload\\acl_corpus.txt', 'data_upload\\problem_strings_paragraph2.txt', 'data_upload\\problem_strings_paragraph.txt', 'data_upload\\problem_strings_paragraph2_method2.txt', 'data_upload\\problem_strings_paragraph_method2.txt', 'data_upload\\non_problem_strings_rasp.xml', 'data_upload\\non_problem_strings_paragraph2.txt', 'data_upload\\paragraph_nonproblematic_trees.txt', 'data_upload\\problem_heads.xml', 'data_upload\\problem_strings.txt', 'data_upload\\problem_strings_rasp.xml', 'data_upload\\paragraph_problematic_trees.txt', 'data_upload\\non_problem_strings_paragraph2_method2.txt', '..\\..\\anaconda3\\lib\\site-packages\\rpy2\\rinterface.py', 'model2.py', 'model1.py', 'testing.py']
+
