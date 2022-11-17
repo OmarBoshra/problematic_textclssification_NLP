@@ -1,0 +1,60 @@
+automatic dialogue response evaluator has been proposed however, existing automatic evaluators
+exploit the power of semi-supervised training and pretrained (masked) language models experimental results demonstrate that the proposed evaluator
+human judgement diverse responses and corpora
+one major obstacle in dialogue research particularly for open-domain dialogues
+human evaluation provides the most accurate assessment alternative is to train an evaluator
+automatic evaluators exploit the power of semi-supervised training
+exploit power of semi-supervised training human judgement corpora
+dialogue research diverse responses and corpora
+one major human evaluation for open-domain dialogues
+automatic evaluators training human judgement corpora
+human judgement corpora dialogue research
+dialogue research for open-domain dialogue
+human judgement dialogue research
+dialogue research
+dialogue research
+ 
+
+
+experimental results demonstrate that the proposed evaluator achieves a strong correlation 
+to diverse responses and corpora//
+automated metrics correlate poorly with human judgement they are not robust
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+automated metrics correlate poorly with human judgement they are not robust human evaluation slow and expensive.
+moderate correlations correlate poorly with human judgement human evaluation slow and expensive
+moderate correlations correlate poorly with human judgement human evaluation slow and expensive
+lacks robustness under adversarial attack poorly with human judgement
+lacks robustness under adversarial attack poorly with human judgement
+lacks robustness under adversarial attack poorly with human judgement
+lacks robustness of response under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+generalizes to new dialogues unseen during training reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+obtain better text representations reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluators correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluatorsresponse appropriateness correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluatorsresponse appropriateness correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluatorsresponse appropriateness correlation reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+adem and ruber shortcomings next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction is to predict whether a sentence is a true continuation given a preceding contex adem and ruber shortcomings next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+evaluation language understanding generation next sentence prediction is to predict whether a sentence is a true continuation given a preceding contex adem and ruber shortcomings next sentence prediction evaluatorsresponse appropriateness reference-dependent metrics lacks robustness under adversarial attack poorly with human judgement
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness
+next sentence prediction response evaluation reference-dependent metrics lacks robustness

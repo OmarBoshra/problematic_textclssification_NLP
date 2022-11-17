@@ -1,0 +1,2551 @@
+
+
+
+Abstract
+The ACL Anthology is a digital archive of conference and journal papers in natural language processing and computational linguistics.
+Its primary purpose is to serve as a reference repository of research results, but we believe that it can also be an object of study and
+a platform for research in its own right. We describe an enriched and standardized reference corpus derived from the ACL Anthology
+that can be used for research in scholarly document processing. This corpus, which we call the ACL Anthology Reference Corpus
+(ACL ARC), brings together the recent activities of a number of research groups around the world. Our goal is to make the corpus
+widely available, and to encourage other researchers to use it as a standard testbed for experiments in both bibliographic and bibliometric
+research.
+1. Introduction
+The advent of scholarly digital libraries has tremendously
+facilitated access to published research. In many fields,
+scholars now often use such digital libraries as their entry point into the research literature. Modern digital libraries rely on a number of semi-automated tasks, such
+as document collection and reference metadata extraction
+and cleaning, and provide infrastructure for searching and
+browsing. High performance on these tasks is critical to enabling lightweight, low-cost quality maintenance of a digital collection. As summarized in Table 1, we are witnessing
+a proliferation of digital libraries from diverse disciplines
+and domains. However, to the best of our knowledge, there
+has been little work on building a standard, real-world digital collection testbed that can be used to measure performance on the key infrastructural tasks that have such an
+impact on the value of these resources. This paper presents
+an attempt to provide such a testbed.
+Sponsored by the Association for Computational Linguistics, the ACL Anthology represents the NLP community’s
+most up-to-date and long-standing freely accessible research repository.1 At the time of writing, the Anthology
+contains 14,000 articles, drawn from a range of conferences
+and workshops as well as past issues of the Computational
+Linguistics journal. It is indexed by a host of other digital
+libraries and repositories, such as CiteSeer, Google Scholar,
+OLAC, and the ACM Digital Library. In this paper, we describe the ACL Anthology Reference Corpus (ACL ARC),2
+†Contact author.
+1Available at http://www.aclweb.org/anthology/.
+2
+For ease of reference we use ‘ACL ARC’ to refer to the corpus
+project under discussion, and ‘ACL Anthology’ for the publiclyaccessible website containing the ACL publication archives,
+which currently spans the period from the 1970s to 2007.
+a collaborative attempt to provide a standardized reference
+corpus based on the ACL Anthology.
+Section 2provides background information on the ACL Anthology. In Section 3, we give an overview of the ACL ARC
+as an end-product, and then describe the processing done to
+the source ACL Anthology data to transform it into the reference corpus. Then we describe future plans for the ACL
+ARC that include bibliographic processing. In Section 5,
+we review related work in bibliographic research and discuss how the development of the ACL ARCt relates to recent grassroots initiatives in the community. We conclude
+our paper with a call to researchers to utilize the ACL ARC
+as a target corpus in their bibliographic research.
+2. Background
+The proposal for an ACL Anthology was first put forward
+to the ACL Executive by Steven Bird at the Association’s
+2001 conference, in response to a call for ideas to mark the
+ACL’s 40th anniversary. In the following 12 months, over
+US$50,000 in funding was donated by institutions and individuals to allow digitization of the previous two decades
+of ACL conference and journal issues. Pages were scanned
+at 600dpi grayscale for archival storage, and then downsampled to 300dpi black-and-white, and assembled into
+articles and stored in the ‘PDF Image with Hidden Text’
+format. Author and title metadata was extracted from the
+OCRed text, and used to build HTML index pages.
+By the time of its launch at the 40th anniversary meeting
+in Philadelphia in 2002, the Anthology contained 3,100 papers, available on the web and indexed by search engines.
+Later tasks involved locating older materials such as conference proceedings dating back to the 1960s; digitizing
+microfiche slides from the early years of the journal Computational Linguistics; and manually converting the set of
+‘born-digital’ proceedings to the Anthology layout.
+1755
+Name Domains # Articles # References
+Source
+ISI SCI Sciences 0 25m HH
+ISI Science Citation Index
+http://portal.isiknowledge.com/portal.cgi
+CAS Chemistry 0 23m HH
+Chemical Abstracts Service
+http://www.cas.org/
+PubMed Life Science 0 12m HH
+http://www.ncbi.nlm.nih.gov/sites/entrez
+CiteSeer Sciences 0.8m 10m SS
+http://citeseer.ist.psu.edu/
+arXiv e-Print Physics, Math 0.3m 0.3m HS
+http://arxiv.org/
+SPIRES-HEP High-energy
+Physics
+0.27m 0.5m HH
+SPIRES High Energy Physics Database
+http://www.slac.stanford.edu/spires/index.shtml/hep/
+DBLP Computer Science
+0 0.93m H
+Digital Bibliography and Library Project
+http://www.informatik.uni-trier.de/ ley/db/index.html
+CSB Computer Science
+0 2m SS
+Collection of Computer Science Bibliographies
+http://liinwww.ira.uka.de/bibliography/
+ACM D Computer Science
+N/A N/A HS
+Association for Computing Machinery Digital Library (Portal)
+http://portal.acm.org/dl.cfm
+IEEE DL Engineering N/A N/A HS
+Institute of Electrical and Electronic Engineers Digital Library (Xplore)
+http://www.computer.org/portal/site/csdl/
+SIGMOD Anthology
+Computer Science
+N/A N/A HH
+Special Interest Group on the Management of Data Anthology
+http://www.informatik.uni-trier.de/ ley/db/anthology.html
+Google
+Scholar
+Sciences N/A N/A SS
+http://scholar.google.com/
+CNKI Sciences 0.89m 0.89m HS (?)
+Collection of Full-Text Papers in Important Chinese Conferences (Chinese)
+http://cajiod.cnki.net/kns50/Navigator.aspx?ID=CPFD
+HKJO Sciences N/A N/A HH (?)
+Hong Kong Journals Online (Chinese and English)
+http://sunzi1.lib.hku.hk/hkjo/
+Table 1: Demographics of a sample of currently available
+scholarly digital collections. Sizes are given in millions of
+PS or PDF articles held by the collection, where 0 indicates
+that there are no resources available. Source indicates the
+origin of the data: HH for human-submitted and humanextracted, HS for human-submitted and software-extracted,
+and SS for software-crawled and software-extracted collections.
+Currently, the ACL’s conference publication software automatically generates conference proceedings that can be
+incorporated into the Anthology with a minimum of manual effort. Papers from almost all events sponsored by, or
+in some way affiliated with, the ACL have now been incorporated into the collection, providing a constantly growing
+and up-to-date collection of publications in the field.
+In recent years, subsets of the Anthology have served as
+an evaluation corpus for research efforts in bibliographic
+data processing carried out by researchers in our own community. However, these experiments have employed different subsets of the Anthology at different points in time,
+making comparisons across experiments difficult. Other research communities, such as those concerned with digital
+libraries and databases, face the same problem: people often use subsets of reference data from the DBLP or CiteSeer collections, yet the quality of metadata is not satisfactory and there have not been any reference subsets against
+which research results can be objectively compared. Information Retrieval corpora, such as ones used by TREC
+and CLEF community evaluations, while standard, largely
+focus on newswire and are unsuited for bibliographic research. To facilitate future work, a standardized reference
+corpus specifically for bibliometric research would be very
+useful.
+3. ACL ARC Overview
+We describe here the current ACL ARC release3
+and the
+selection and standardization process used to create it. This
+current release of the ACL ARC corresponds to the ACL
+Anthology website as of February 2007, and consists of:
+• the source PDF files corresponding to 10,921 articles
+from the February 2007 snapshot of the Anthology;
+• automatically extracted text for all these articles; and
+• metadata for the articles, consisting of BibTeX records
+derived either from the headers of each paper or from
+metadata taken from the Anthology website.
+Whether usable text could be extracted from the document
+formed the basis of document selection in the ACL ARC.
+While the Anthology website contained more than these
+10,921 PDF sources at the time the corpus was created,
+those which were problematic in extracting text were excluded.
+Automatic text extraction from PDF is known to be problematic (Lawrence et al., 1999). Approaches to text extraction can be categorized as either OCR- or non-OCR-based.
+Non-OCR approaches try to extract text directly from the
+PDF data file, whereas OCR approaches use a PDF interpreter to render an image over which standard optical character recognition software is then run to re-capture the text.
+For the current ACL ARC release, we used PDFBox 0.724
+to perform direct, non-OCR based text extraction, due to its
+cost (free), availability and processing speed. This usually
+resulted in variable quality; results vary from very clean
+text to completely garbled output. Rather than subjectively
+selecting a level to threshold extraction results, we included
+in this corpus release all source PDF articles that produced
+non-empty output and excluded those generated no output
+or produced fatal errors in the automated text extraction
+phase. Excluded documents amounted to 476 papers (about
+4% of all available at the time).
+Problems that prevent text from being extracted from the
+PDFs primarily stem from the way font and glyph information is encoded in the source file: when a custom font
+encoding is used by the PDF generator (often used to make
+the PDF more compact), the extractable text becomes gibberish.
+The metadata consists of the unique ID assigned to each
+paper, along with the paper’s author(s), title, publication
+venue, and year of publication. The ID is composed of a
+letter signifying the journal, conference, or workshop series
+where the paper was presented, the year of publication, and
+3Version 20080325, available at http://aclarc.comp.nus.edu.sg/.
+4
+http://www.pdfbox.org/.
+1756
+Total Articles 10,921
+Total References 152,546
+References to articles inside ACL ARC 38,767 ( 25.4%)
+References to articles outside ACL ARC 113,779 ( 74.6%)
+Table 2: General Statistics for the ACL ARC.
+a unique number in that series in that year. So, for example, the ID P00-1004 refers to the fourth paper (1004: paper
+numbering in a volume starts at 1001) in the 2000 proceedings (represented by the ‘00’) of the main conference of the
+ACL (represented by the ‘P’). The ACL Anthology website
+includes article metadata for all of the papers in ACL ARC.
+General statistics for the ACL ARC are shown in Table 2.
+However, during the construction of the corpus we found
+that this metadata was not always correct; the verification of
+the article metadata revealed errors which have been passed
+to the Anthology editor for incorporation to the Anthology
+proper.
+The form the metadata takes is as follows: for each series
+and year, the website provides a list of links to the papers
+with their associated metadata, i.e.: P00-1001: Susan E.
+Brennan. Invited Talk: Processes that Shape Conversation
+and their Implications for Computational Linguistics.
+The current ACL ARC release specifies the exact identity of
+the documents in the collection, the documents themselves
+(in original PDF and converted text versions) and includes
+gold standard ground truth for document metadata, which
+allows the evaluation of automated document metadata extraction algorithms that process headers of papers (i.e., title
+page and abstracts).
+4. Future ACL ARC development
+The corpus described above is already useful in its own
+right, by virtue of providing a fixed set of documents that
+the present consortium of authors has agreed to use for
+benchmarking. However, we believe that some specific enrichments would make it a useful testbed for an enlarged
+set of research problems. To enable such research, we have
+planned for multiple corpus releases that provide data and
+ground-truth for such research. Future corpus releases will
+enlarge the corpus with a larger set of documents (as future
+NLP research publications are archived within the Anthology) and provide both manually validated gold-standard
+data and automatic processing results of tools run on the
+corpus. Ground-truth data enables the objective evaluation of OCR benchmarking, information retrieval studies on
+specific queries and bibliometric research on citation structure; the results of running other tools on the data provides
+input for more sophisticated processing.
+The provision of a standardized collection of documents enables researchers to conduct research on topics of interest
+to the Digital Libraries and NLP communities. Basic processing such as OCR benchmarks can be run on this corpus,
+which represents a genre-specific (i.e., academic discourse)
+corpus. Information retrieval studies may investigate the
+relevance of research documents given scientific queries.
+Bibliometric research can analyze the citation structure of
+this closed collection of documents to programmatically
+identify key authors and topics in NLP across a span of
+over 30 years.
+Work on the next corpus release focuses on expanding the
+gold-standard data for both intra-article and inter-article
+analysis. In particular, we plan to make available groundtruth reference data for the following tasks:
+• Intra-article linkages between the sentences containing explicit citations and the reference list items they
+correspond to5
+. Matching citations to reference items
+is often straightforward, but determining the scope of
+the citation—precisely what in the text the citation attaches to—is generally non-trivial. The scope often
+crosses clausal and sentential boundaries, extending to
+preceding or subsequent clauses and sentences. Goldstandard data will enable future learning-based methods to address the robustness of work in this area; this
+research is driven by Macquarie University (Powley
+and Dale, 2007).
+As an example, consider the citation to P83-1019 as
+it appears in example paper P00-1001: ... Few approaches to parsing have tried to handle disfluent utterances (notable exceptions are Core & Schubert,
+1999; Hindle, 1983; Nakatani & Hirschberg, 1994;
+Shriberg, Bear, & Dowding, 1992). Ideally, we would
+like to be able to automatically determine that P83-
+1019 offers an approach to the parsing of disfluent utterances.
+• Inter-article linkage between each reference to its target article, where that article exists in the ACL ARC.
+By definition, this extends the gold-standard metadata
+provided for each paper to include the clean metadata
+for referenced documents. This work is being carried out at the University of Michigan as part of the
+ACL Anthology Network (AAN) (Joseph and Radev,
+2007). Where an article links to another article within
+the ACL ARC, the ACL ARC identifier is used, otherwise the full reference string is given. This data will
+be distributed as a text file in the corpus that lists each
+citation as a separate line, in the form of citing paper
+==> target paper . The file is exactly 152,546 lines,
+corresponding to the total number of citations made
+from all papers, as given in Table 2.
+As an example, the same paper P00-100 makes a total
+of 38 references of which 2 point to other papers in the
+ACL ARC collection: H92-1085 and P83-1019. Such
+gold-standard data will enable, amongst other goals,
+the exact construction of the social network of NLP
+researchers within the ACL ARC, and subsequent visualization and exploration.
+5Note that we adopt the term ‘reference’ to refer to bibliographic information found at the end of an article (in the reference
+list) and ‘citation’ to refer to an embedded pointer to the respective reference that appears in the body text. These elements are
+also distinct from the metadata obtainable from the header of the
+paper, which often contains additional author information, such
+as email addresses. Work which is primarily concerned with only
+one or two of these elements tends to use the terms interchangeably; however, since the ACL ARC contains all three types of
+information, we explicitly differentiate these data sources with a
+more precise use of terminology.
+1757
+Other currently planned work includes: (1) the automatic
+processing of the ACL ARC documents through an OCRbased text extraction process, to be carried out by multiple sites; (2) automated keyphrase extraction (Nguyen
+and Kan, 2007), (3) presentation-to-article alignment (Kan,
+2007); and (4) the automatic segmentation of references
+into their constituent fields. The latter three tasks are being carried out by the National University of Singapore. In
+the same vein, we hope the community will contribute more
+data and processing results to incorporate into future ACL
+ARC releases.
+We plan to release a new version of the corpus every one
+to two years to ensure that the community has enough time
+to utilize the resource for comparative research. We believe
+that more frequent corpus releases would hamper benchmarking and other comparative research.
+5. Related Work
+Here, we touch upon related problems in bibliographic data
+processing, and then describe work that will utilize the ACL
+ARC as a canonical data source to further develop scholarly
+article processing.
+Reference Segmentation: When references are extracted
+as full strings from the references section of a PDF document, being able to identify the separate data fields that
+make up these reference strings (e.g., title, author, venue,
+page numbers and year of publication) helps subsequent
+processing steps significantly. However, the different styles
+adopted for formatting references makes segmentation nontrivial. Different disciplines, publishers, or domains tend
+to have their own unique styles for the formatting of bibliographic data in the references section of a paper; and
+scholars occasionally invent their own styles by ignoring
+(inadvertently or not) the specified style. High accuracy
+reference segmentation is thus a significant challenge, and
+one that has already attracted considerable attention (see,
+for example, (Peng and McCallum, 2004)).
+Reference–Article Matching: In order to create links between a reference and the target article, one needs to determine whether a reference matches the (header) metadata for
+a candidate target article. One can view this matching problem as a specialization of the more general Entity Resolution (or Record Linkage) problem common in the database
+and data mining communities. Scholars have generally exploited domain-specific characteristics to inform the similarity computation. In bibliographic data, approaches include culling evidence from collaboration networks, and
+viewing references as artifacts of a probabilistic language
+model, as well as techniques for linking abbreviated forms
+to full forms (e.g., John Doe and J. Doe, or ACL and Association for Computational Linguistics) or data cleaning
+methods for fixing errors. All such techniques can significantly help the citation matching process (Kan and Tan,
+2008; On, 2007).
+5.1. Research Enabled by the ACL ARC
+Citation Classification: Citations made in articles serve
+different purposes, providing a foundation for an article’s
+current focus, pointing to tools with which the research was
+performed or serving as a contrast to the results given by
+the article. Work on citation classification tries to automatically determine the purpose of a citation; this work hinges
+on the correct resolution of the citation to the appropriate
+reference, and learning the function of lexical cues within
+citing sentences. Work has already been done in this area
+on corpora in NLP (Teufel et al., 2006) and in the biomedical domain (Schwartz et al., 2007).
+Automatic Survey Article Generation: The iOPENER
+Project (Information Organization for PENning Expositions on Research), a newly-commenced NSF-funded collaboration between the University of Maryland and the
+University of Michigan, will link automatic summarization (e.g., (Zajic et al., 2007; Radev et al., 2004; Radev et
+al., 2005)) and visualization work with citation classification. Key developments in this work will include extending
+techniques in summarization to handle redundancy, contradictions, and temporal ordering based on citation analyses
+(Elkiss et al., 2008). The intended result is a set of readilyconsumable surveys of different scientific domains and topics, targeted to different audiences and levels. The project
+will leverage existing publicly-available resources such as
+the ACL Anthology, ACM Digital Library, CiteSeer, and
+others for analysis, retrieval, selection, and survey/timeline
+creation and visualization. The iOPENER software and resulting surveys and timelines will be made publicly available.
+5.2. Relationship to Grassroots Initiatives
+At the Association for Computational Linguistics 2007
+conference in Prague, the ACL Executive Committee called
+for grassroots proposals for activities that would benefit the
+community. Three proposals centered on developments related to the ACL Anthology, which we refer to here as
+the Linked Anthology, the Extended Anthology and the
+Video Archives. The work reported here is an outcome
+of the Linked Anthology proposal. The Linked Anthology additionally specifies the creation of tools for bibliographic data processing and proposes that any corrected
+gold-standard data be propagated to the Anthology (e.g.,
+allowing citations in the body of the PDF version of a
+conference paper to link directly to the target PDF paper). The Extended Anthology and Video Archives aim
+to extend the reach of Anthology, by including, respectively, grey literature (e.g., institutional technical reports)
+and multi-modal records (e.g., videos of conference presentations (Lee, 2007)). If and when the Anthology incorporates these additional resources, future releases of the the
+ACL ARC will, where practically possible, also incorporate
+these additional corpora.
+6. Discussion and Conclusion
+Aside from the Anthology, as indicated in the introduction to this paper, quite a few digital anthologies now exist, and some of these far exceed the Anthology in terms
+of size as well as breadth; in our community, perhaps the
+most widely known is example is the ACM Digital Library
+(White, 2001). The skeptic will rightly question why the
+ACL ARC is a significant reference corpus in light of these
+other resources. What distinguishes this work is that it
+is both collaborative and standardized. Several research
+1758
+teams, representing ACL’s worldwide membership, have
+joined to develop the ACL ARC. This collaboration will
+propose standard tasks (e.g., text extraction and reference
+segmentation) that can integrate with the community’s standard venues for bake-off competitions (e.g., CoNLL). The
+standardization aspect is possibly more crucial, as live digital anthologies are diachronic, being updated on a daily
+basis; in contrast, a reference corpus needs to be frozen in
+order to facilitate comparison. By versioning and publishing only major revisions, we hope that the ACL ARC will
+facilitate performance comparisons.
+While other communities also have digital anthologies, for
+example DBLP (Ley, 2002), many researchers look towards
+the NLP community to provide leadership towards the next
+generation of scholarly digital libraries that will be enhanced by sophisticated language processing. We believe
+this is a challenge we should address head-on, and what
+better place to start than a set of data we are already familiar with? The creation of the ACL ARC offers an opportunity to bring together researchers from various disciplines
+(such as NLP, DB and IR) to research and implement tools
+and resources which will provide a basis for the future of
+academic research. We call on the community to become
+involved in this exciting development, where we can utilize
+our own technology to advance and highlight our research.
+7. Acknowledgments
+We would like to acknowledge the support of the ACL Executive Committee in their drive to support the computational linguistics community’s efforts in this area. Work at
+the University of Michigan work was partially supported by
+the National Science Foundation under grants 0534323 and
+0705832. All opinions, findings, conclusions and recommendations in any material resulting from this workshop
+are those of the participants, and do not necessarily reflect
+the views of the National Science Foundation. We would
+also like to thank Nayeoung Kim and Paul Hartzog for their
+annotation help.
+
+PAPER--END
+
+Automatic dialogue response evaluator has
+been proposed as an alternative to automated
+metrics and human evaluation. However, existing automatic evaluators achieve only moderate correlation with human judgement and
+they are not robust. In this work, we propose to build a reference-free evaluator and
+exploit the power of semi-supervised training and pretrained (masked) language models. Experimental results demonstrate that
+the proposed evaluator achieves a strong
+correlation (> 0.6) with human judgement and generalizes robustly to diverse responses and corpora. We open-source the
+code and data in https://github.com/
+ZHAOTING/dialog-processing.
+1 Introduction
+Evaluation of conversational systems has been
+one major obstacle in dialogue research. Particularly for open-domain dialogues, automated metrics have been shown to correlate poorly with human judgement (Liu et al., 2016). Although human evaluation provides the most accurate assessment, they are slow and expensive. An alternative is to train an evaluator that learns to predict a human-like score. Lowe et al. (2017) proposed ADEM, a supervised regression model, for
+automatic response evaluation and reported 0.436
+Pearson’s and 0.428 Spearman’s correlations with
+human judgement. Though better than automated
+metrics, the scores only indicate moderate correlations. Another criticism from Sai et al. (2019)
+further pointed out that ADEM produces scores of
+low deviation and lacks robustness under adversarial attack.
+An ideal evaluator should be precise such that
+its predictions have a strong correlation with human judgement. It should also be robust such
+that it generalizes to new dialogues unseen during training. We explored three methods to improve the precision and robustness of response
+evaluators. 1) We propose building referencefree evaluator since reference-dependent metrics
+cause the problem of low deviation described by
+Sai et al. (2019). We also find that the referencedependent evaluators’ performance degrades significantly when we remove ground-truth responses
+from test data. 2) Tao et al. (2018) proposed an unsupervised model (RUBER) that outperforms supervised ADEM by training on a next sentence
+prediction (NSP) task. We show that RUBER
+can be further improved by supervised training
+on a small amount of annotated data. 3) We
+make use of strong pretrained models such as
+RoBERTa (Liu et al., 2019) to obtain better text
+representations. By combining the three methods, a reference-free, semi-supervised, RoBERTabased evaluator has better correlation and robustness. Experimental results also show that the
+model can maintain good performances in crossdomain and low-resource settings.
+2 Related Works
+Automatic response evaluator was first proposed
+by Lowe et al. (2017) to mimic human annotator’s
+assessment of response appropriateness. They collected human annotations of response quality for
+4,104 context-response pairs, and train a regression network (ADEM) supervisedly by minimizing a squared error. Tao et al. (2018) proposed an
+unsupervised method (RUBER) to train automatic
+evaluators, where a model is optimized to distinguish a ground-truth response and a negativesampling response by minimizing a margin rank
+loss. This process resembles the next sentence
+prediction (NSP) task applied in the training of
+BERT (Devlin et al., 2019). It allows for exploit-
+27
+ing a large amount of conversation data and has
+been shown to outperform ADEM. Using ADEM
+and RUBER as the baselines of this work, we will
+analyze their shortcomings and develop solutions
+to build more precise and robust evaluators.
+Next sentence prediction is to predict whether
+a sentence is a true continuation given a preceding context, where a positive sample is the
+ground-truth subsequent sentence and a negative
+sample is a different piece of text. NSP benefits not only evaluation (Tao et al., 2018), but also
+language understanding (Devlin et al., 2019) and
+language generation (Bruni and Fernandez, 2017;
+Wolf et al., 2019).
+Dialogue response evaluation can also be improved with better automated metrics and approximation to response quality. Examples of successful attempts to improve automated metrics include exploiting multiple references for comparison (Gupta et al., 2019) and combining human
+judgement with automated metrics (Hashimoto
+et al., 2019). Li et al. (2019) demonstrated that
+single-turn human judgement is not reliable as expected and proposed multi-turn human evaluation.
+Ghandeharioun et al. (2019) approximated sentiment, semantic similarity, and engagement with
+new automated metrics and used a hybrid metric in
+a multi-turn evaluation setting. Dziri et al. (2019)
+showed that entailment is also an option to approximate dialogue coherence and quality.
+3 Background
+ADEM is a regression model that takes as inputs
+a dialogue context vector c, a hypothesis response
+vector ˆr, and a reference response vector r. Its
+output is the sum of a referenced metric and an
+unreferenced metric:
+ADEMref(r,ˆr) = r
+T Nˆr, (1)
+ADEMunref(c,ˆr) = c
+TMˆr, (2)
+where the encoding vectors are produced by pretrained RNN encoders. M and N are trainable parameters.
+RUBER also combines two metrics but computes them differently:
+RUBERref(r,ˆr) = r
+Tˆr
+krk · kˆrk
+, (3)
+RUBERunref(c,ˆr) = MLP([c;ˆr; c
+TMˆr]; θ), (4)
+where [·; ·] denotes the concatenation of vectors
+and MLP is a multi-layer perceptron with nonlinear activation functions. M and θ are trainable parameters.
+Besides the differences in metric computation,
+they are different in training strategy. ADEM uses
+supervised training to minimize the mean square
+error between predictions and human scores, while
+RUBER uses unsupervised training on an NSP
+task to minimize a margin ranking loss. In Section 5, we combine their advantages to build a better response evaluator.
+4 Data Collection
+For assessing dialogue response evaluators, we
+sample 100 dialogues from the test split of the
+DailyDialog corpus (Li et al., 2017) which contains 13,118 open-domain and human-written conversations. We expand them with extra response
+hypotheses and collect human annotations of response quality.
+Collection of Extra Responses. Besides the
+ground-truth response, we add responses from different sources for each dialogue context, including 1) a negative-sampling response randomly selected from a different dialogue and 2) responses
+generated by generative models trained on the
+training split. We combine 6 generative models (S2S (Sutskever et al., 2014), attentional S2S,
+HRED (Serban et al., 2016), VHRED (Serban
+et al., 2017), GPT2-sm, and GPT2-md (Wolf
+et al., 2019)) with 3 decoding methods (greedy
+decoding, ancestral sampling, and nucleus sampling (Holtzman et al., 2019)). The resulting response pool for each dialogue context contains 20
+responses of various qualities.
+Collection of Human Annotations. From the
+2,000 dialogue-response pairs, we select 900 of
+them and ask Amazon Mechanical Turk workers
+to rate response appropriateness on a 5-point Likert scale. Each pair is rated by four workers. After
+removing annotation outliers for each pair (Leys
+et al., 2013), the remaining data reaches good
+reliability regarding an inter-annotator agreement
+with Krippendorff’s α > 0.8 (Krippendorff,
+2018).1 We make a 0.8:0.1:0.1 split of the annotated data for training, validation and test.
+Figure 1(a) shows the overall distribution of 900
+human scores on response appropriateness, and
+1More details of inter-annotator agreement and outlier removal are provided in Appendix A.
+28
+
+(a) Overall score distribution.
+
+(b) Box plot of scores for each response source. GT - ground-truth, NS -
+negative-sampling.
+Figure 1: Distributions of human annotations on response appropriateness (§4).
+Model
+Full Test Data Excluding Ground-truth
+(90 responses) (77 responses)
+Pearson Spearson SD Pearson Spearson SD
+ADEM
+full 0.34∗∗ 0.36∗∗ 0.51 0.25 0.23 0.30
+ref. 0.32∗ 0.35∗∗ 0.52 0.21 0.23 0.30
+unref. 0.26 0.26 0.32 0.28 0.27 0.33
+RUBER
+full 0.37∗∗ 0.31∗ 0.67 0.43∗∗ 0.41∗∗ 0.68
+ref. 0.32∗ 0.29∗ 0.07 0.12 0.13 0.04
+unref. 0.35∗∗ 0.29∗ 1.32 0.43∗∗ 0.39∗∗ 1.35
+Human 1.0 1.0 1.42 1.0 1.0 1.40
+Table 1: Comparison between referenced metric and unreferenced metric on the full test data and the ground-truth
+response-excluded test data (§5.1). SD is short for standard deviation. ∗ denotes scores that have p-values < 0.01.
+∗∗ denotes scores that have p-values < 0.001.
+Figure 1(b) shows box plots of human scores for
+different response sources. The distributions suggest that the created data consists of diverse responses.
+5 Methodology
+5.1 Reference-free Evaluation
+Sai et al. (2019) proved theoretically that the comparison with reference response in the referenced
+metric causes ADEM to make conservative predictions where scores have a very low standard
+deviation. To investigate the effect of removing
+reference from computation, we experiment with
+the full ADEM and RUBER as well as their referenced and unreferenced versions. As shown in
+Table 1, the referenced metrics of ADEM and RUBER have much lower standard deviations than
+human scores. ADEM’s unreferenced metric has
+low scores in both correlation and standard deviation because the full ADEM model is heavily affected by its referenced metric while its unreferenced metric is not fully utilized, especially in the
+data set that includes ground-truth responses.
+Another important finding is that the referenced
+metrics’ correlations degrade significantly when
+we remove ground-truth responses from the test
+data. It suggests that referenced metrics may help
+evaluators to distinguish a ground-truth response
+from a non-ground-truth response easily, but they
+cannot distinguish a good response from a bad one
+among non-ground-truth responses.
+Based on the results, we propose to build
+reference-free evaluators and avoid direct comparison with reference responses to improve its robustness and diversity.
+5.2 Semi-supervised Training
+ADEM is a supervised model that relies on human
+annotations. However, it is expensive to collect
+large-scale annotated data; On the other hand, RUBER has been shown to reach reasonable correlation scores via only unsupervised training on an
+NSP task. A natural idea is to apply unsupervised
+training first and then finetune an evaluator usin
+
+PAPER--END
+
+
+Abstract
+Cross-modal language generation tasks such
+as image captioning are directly hurt in their
+ability to support non-English languages by
+the trend of data-hungry models combined
+with the lack of non-English annotations. We
+investigate potential solutions for combining
+existing language-generation annotations in
+English with translation capabilities in order to
+create solutions at web-scale in both domain
+and language coverage. We describe an approach called Pivot-Language Generation Stabilization (PLuGS), which leverages directly
+at training time both existing English annotations (gold data) as well as their machinetranslated versions (silver data); at run-time,
+it generates first an English caption and then
+a corresponding target-language caption. We
+show that PLuGS models outperform other
+candidate solutions in evaluations performed
+over 5 different target languages, under a largedomain testset using images from the Open Images dataset. Furthermore, we find an interesting effect where the English captions generated by the PLuGS models are better than
+the captions generated by the original, monolingual English model.
+1 Introduction
+Data hungry state-of-the-art neural models for
+language generation have the undesired potential
+to widen the quality gap between English and
+non-English languages, given the scarcity of nonEnglish labeled data. One notable exception is
+machine translation, which benefits from large
+amounts of bilingually or multilingually annotated
+data. But cross-modal language generation tasks,
+such as automatic image captioning, tend to be
+directly hurt by this trend: existing datasets such
+as Flickr (Young et al., 2014a), MSCOCO (Lin
+et al., 2014), and Conceptual Captions (Sharma
+et al., 2018) have extensive labeled data for English, but labeled data is extremely scarce in other
+languages (Elliott et al., 2016) (at 2 orders of magnitude less for a couple of languages, and none for
+the rest).
+In this paper, we conduct a study aimed at answering the following question: given a large annotated web-scale dataset such as Conceptual Captions (Sharma et al., 2018) in one language, and a
+baseline machine translation system, what is the
+optimal way to scale a cross-modality language
+generation system to new languages at web-scale?
+We focus our study on the task of automatic image captioning, as a representative for cross-modal
+language generation where back-and-forth consistency cannot be leveraged in a straightforward manner 1
+. In this framework, we proceed to test several possible solutions, as follows: (a) leverage
+existing English (En) image captioning datasets to
+train a model that generates En captions, which
+are then translated into a target language X; we
+call this approach Train-Generate-Translate (TGT);
+(b) leverage existing En captioning datasets and
+translation capabilities to first translate the data
+into the target language X, and then train a model
+that generates X -language captions; we call this
+approach Translate-Train-Generate (TTG); (c) stabilize the TTG approach by directly using the En
+gold data along with the translated training data
+in the X language (silver data) to train a model
+that first generates En captions (conditioned on the
+image), and then generates X -language captions
+(conditioned on the image and the generated En
+caption); this approach has En acting as a pivot
+language between the input modality and the X -
+language output text, stabilizing against and reduc1We chose to focus on the cross-modality version of this
+problem because for the text-only modality the problem is
+less severe (due to existing parallel data) and also more studied (Artetxe et al., 2018), as it is amenable to exploiting backand-forth consistency as a powerful learning signal.
+161
+Image TGT
+Train Generate Translate
+TTG
+Translate Train Generate
+PLuGS
+Pivot Language Generation
+Stabilization
+Das Logo ist auf dem
+Computer zu sehen.
+(the logo can be seen on
+the computer.)
+Bild mit dem Titel Live mit
+einem Schritt
+(Image titled Live with a
+step)
+the iphone is seen in this
+undated image . <de> Das
+iPhone ist in diesem
+undatierten Bild zu sehen .
+Autoverkehr an einem
+regnerischen Tag
+(car traffic on a rainy day)
+Polizeiauto auf der Straße
+(police car on the street)
+a car in the city <de> ein auto
+in der stadt
+Bronzestatue im Garten
+(bronze statue in the
+garden)
+eine Stadt im Garten
+(a city in the garden)
+the entrance to the gardens
+<de> der Eingang zu den
+Gärten
+Figure 1: Examples of captions produced in German by Train-Generate-Translate (TGT), Translate-Train-Generate
+(TTG), and Pivot Language Generation Stabilization (PLuGS) approaches. Captions are shown in bold font. For
+TGT and TTG outputs, we show the English translation in parenthesis beside the caption. For the PLuGS outputs
+we mark the Stabilizer in the output using a light gray background. We do not explicitly show a translation for
+PLuGS outputs since the Stabilizer is already a translation.
+ing potential translation noise. We call the latter the
+Pivot-Language Generation Stabilization (PLuGS)
+approach. Examples of outputs produced by these
+three solutions are shown in Fig. 1.
+We perform extensive evaluations across five different languages (French, Italian, German, Spanish,
+Hindi) to compare these three approaches. The
+results indicate that the bilingual PLuGS models consistently perform the best in terms of captioning accuracy. Since there is very little support in the literature regarding the ability of standard evaluation metrics like BLEU (Papineni et al.,
+2002), ROUGE (Lin, 2004), METEOR (Banerjee
+and Lavie, 2005), CIDEr (Vedantam et al., 2015),
+and SPICE (Anderson et al., 2016) to accurately
+measure captioning accuracy for non-English languages, our evaluations are done using fine-grained,
+side-by-side human evaluations using paid raters;
+we explain the evaluation protocol in detail in
+Sec. 5.
+Besides the evaluations on bilingual
+PLuGS models, we also train and evaluate a
+multilingual PLuGS model, in which all five
+non-English languages considered are supported
+through a single model capable of generating
+outputs in all 5 languages. The results indicate
+that similar languages are reinforcing each other
+in the common representation space, showing
+quantitative gains for the Romance languages
+involved in our experiments. A related but perhaps
+less expected result is that the English captions
+generated by PLuGS models (what we call the
+Stablizer outputs) are better, as measured using
+side-by-side human evaluations, than captions
+generated by the original, monolingual English
+model.
+There is a final additional advantage to having
+PLuGS models as a solution: in real-world applications of image captioning, quality estimation of the
+resulting captions is an important component that
+has recently received attention (Levinboim et al.,
+2019). Again, labeled data for quality-estimation
+(QE) is only available for English2
+, and generating
+it separately for other languages of interest is expensive, time-consuming, and scales poorly. The
+TGT approach could directly apply a QE model
+at run-time on the En caption, but the subsequent
+translation step would need to be perfect in order
+not to ruin the predicted quality score. The TTG ap2
+https://github.com/google-research-datasets/ImageCaption-Quality-Dataset
+162
+proach cannot make use at run-time of an En QE
+model without translating the caption back to English and thus again requiring perfect translation
+in order not to ruin the predicted quality score. In
+contrast, the PLuGS approach appears to be best
+suited for leveraging an existing En QE model, due
+to the availability of the generated bilingual output
+that tends to maintain consistency between the generated EN- & X-language outputs, with respect to
+accuracy; therefore, directly applying an English
+QE model appears to be the most appropriate scalable solution.
+2 Related Work
+There is a large body of work in automatic image captioning for English, starting with early
+work (Hodosh et al., 2013; Donahue et al., 2014;
+Karpathy and Fei-Fei, 2015; Kiros et al., 2015;
+Xu et al., 2015) based on data offered by manually annotated datasets such as Flickr30K (Young
+et al., 2014b) and MS-COCO (Lin et al., 2014), and
+more recently with work using Transformer-based
+models (Sharma et al., 2018; Zhao et al., 2019;
+Changpinyo et al., 2019) based on the web-scale
+Conceptual Captions dataset (Sharma et al., 2018).
+Generating image captions in languages other
+than English has been explored in the context of the
+WMT 2017-2018 multimodal translation sub-task
+on multilingual caption generation (Elliott et al.,
+2017). The goal of the task is to generate image
+captions in German and French, using a small training corpus with images and captions available in
+English, German and French (based on Flickr30K).
+In the context of that work, we use the results reported in (Caglayan et al., 2019) to quantitatively
+compare it against our approach.
+Another relevant connection is with the work in
+(Jaffe, 2017), which explores several LSTM-based
+encoder-decoder models that generate captions in
+different languages. The model most similar to
+our work is their Dual Attention model, which first
+generates an English caption, then an LSTM with
+attention over the image and the generated English
+caption produces a German caption. Their quantitative evaluations do not find any additional benefits
+for this approach.
+Our work is related to this idea, but there are
+key technical differences. In the PLuGS approach,
+we train an end-to-end model based on a Transformer (Vaswani et al., 2017) decoder that exploits
+the generated English-prefix via the self-attention
+mechanism to learn to predict the non-English target caption, conditioned on the English tokens at
+multiple levels through the decoder stack. Moreover, we approach this study as the search for a
+solution for web-scale multi-language image captioning: we employ the web-sized Conceptual Captions dataset for training, and consider the effects
+of using captions across multiple languages, as well
+as multi-language/single-model setups.
+3 Model Architecture
+We model the output caption using a sequencegeneration approach based on Transformer Networks (Vaswani et al., 2017). The output is the
+sequence of sub-tokens comprising the target caption. As shown in Fig. 2, the input sequence is
+obtained by concatenating the following features.
+Global Image Embedding: We use a global
+image representation using the Graph-RISE
+model (Juan et al., 2019), a ResNet-101 model (He
+et al., 2016) trained for image classification at ultrafine granularity levels. This model produces a compact image embedding i of dimension Di = 64.
+This embedding is projected to match Transformer
+dimensions (set to 512 in most of our experiments)
+by a 2 layer DNN with linear activation and fed as
+the first element in the sequence of inputs to the
+encoder.
+Object Labels Embeddings: Detecting the presence of certain objects in the image (e.g. “woman”,
+“flag”, “laptop”) can help generate more accurate
+captions, since a good caption should mention the
+more salient objects. The object labels are generated by an object detection model which is run over
+the entire image. The output labels are then converted to vectors using word embeddings to obtain
+what we call object-label embeddings.
+More precisely, we detect object labels over the
+entire image using a ResNet-101 object-detection
+classifier trained on the JFT dataset (Hinton et al.,
+2015). The classifier produces a list of detected
+object-label identifiers, sorted in decreasing order
+by the classifier’s confidence score; we use the first
+sixteen of these identifiers. The identifiers are then
+mapped to embeddings oj using an object-label
+embedding layer which is pre-trained to predict
+label co-occurrences in web documents, using a
+word2vec approach (Mikolov et al., 2013). The
+resulting sequence of embeddings is denoted O =
+(o1, . . . , o|O|
+), where each oj has dimension Do =
+163
+DNNobjects DNNimage
+Image Object
+Classifier
+Global
+Features
+Extractor
+Label
+Embeddings
+Trainable
+Pre-trained/fixed)
+Text
+Transformer Inputs
+LangId
+VocabLangid
+DNNLangId
+Vocabtext
+Embedding Transformer
+Encoder
+Decoder
+Outputs
+(Shifted)
+Splitter
+Stabilizer
+Caption
+Vocabtext
+Encoder
+Outputs Transformer
+Decoder
+Embedding
+Encoder-decoder
+Attention
+Linear
+SoftMax Probs
+Beam Search
+Decoder
+Outputs
+Figure 2: The Transformer based PLuGS model. The text on the input side is used for the translation and multimodal translation experiments with the Multi30K dataset. For image captioning, no text input is provided.
+256. Each member of this sequence of embeddings
+is projected to match Transformer dimensions by a
+2 layer DNN with linear activation. This sequence
+of projected object-label embeddings is fed to the
+encoder together with the global image embedding.
+LangId Embeddings: When training languageaware models, we add as input the language of the
+target sequence. We specify the language using a
+language identifier string such as en for English,
+de for German, etc. We call this the LangId of the
+target sequence or target LangId in short. Given the
+target LangId, we encode it using a LangId vocabulary, project it to match Transformer dimensions
+with a 2 layer DNN, then append it to the encoder
+input sequence.
+Text Embeddings: All text (input or output) is
+encoded using byte-pair encoding (Sennrich et al.,
+2016) with a shared source-target vocabulary of
+about 4000 tokens, then embedded as described
+in (Vaswani et al., 2017), resulting in a sequence
+of text embeddings. The embeddings dimensions
+are chosen to match the Transformer dimensions.
+When performing the translation (MT) and multimodal translation (MMT) experiments in Sec. 6.1,
+the sequence of source text embeddings are fed to
+the encoder after the LangId embedding. Additionally, we reserve a token-id in the text vocabulary
+for each language (e.g. hdei for German) for use
+as a separator in the PLuGS model output and also
+have a separate start-of-sequence token for each
+language.
+Decoding: We decode with beam search with
+beam width 5.
+PLuGS: For PLuGS models, in addition to the
+target caption we require the model to generate a
+ ... car parked in the city < de >
+Encoder Outputs
+Decoder Layer 1
+Encoder-Decoder Attention
+Masked Self-Attention
+Trainable
+Fixed
+Previous tokens
+Add & Normalize
+Voc
+Emb
+Voc
+Emb
+Voc
+Emb
+Voc
+Emb
+Voc
+Emb
+Voc
+Emb
+FF FF FF FF FF FF
+Add & Normalize
+Add & Normalize
+Decoder Layer k
+...
+ parked in the city < de > Auto
+...
+Figure 3: Caption’s dependence on the Stabilizer. The
+target-language caption is conditioned on the Stabilizer
+through the Masked Self-Attention in the decoder, and
+on the input image through the Encoder-Decoder attention that attends to the outputs of the last encoder layer.
+Note that in this figure, FF stands for the feed forward
+network, Voc stands for the (fixed) text vocab, and Emb
+stands for the (trainable) text embeddings.
+pivot-language (En) caption which we call the Stabilizer. Specifically, we train the model over target
+sequences of the form Stabilizer + hseparatori +
+Caption.
+We use h$LangIdi as the separator (i.e., for German captions we use hdei as the separator). This
+approach has the advantage that it can be applied to
+multilingual models as well. We subsequently split
+the model output based on the separator to obtain
+two strings: the Stabilizer and the Caption.
+164
+Note an important technical advantage here: as
+shown in Fig. 3, after initially generating the Stabilizer output, the Transformer decoder is capable
+of exploiting it directly via the self-attention mechanism, and learn to predict the non-English Caption tokens conditioned (via teacher-forcing) on the
+gold-data English tokens at multiple levels through
+the decoder stack, in addition to the cross-attention
+mechanism attending to the inputs. As our results
+indicate, the models are capable of maintaining this
+advantage at run-time as well, when auto-regressive
+decoding is performed.
+4 Datasets
+We perform our experiments using two different
+benchmarks. We use the Multi30K (Elliott et al.,
+2016) dataset in order to compare the effect of
+the PLuGS model using a resource that has been
+widely used in the community. We focus on Task
+1 for French from (Caglayan et al., 2019), generating a translation in French based on an image
+and an English caption as input. The training set
+consists of images from the Flickr30K train and validation splits, along with the corresponding French
+captions. The validation split consists of test2016
+images and captions, and the test split consists of
+the test2017 images and captions.
+For the core results in this paper, we use the
+Conceptual Captions dataset (Sharma et al., 2018)
+as our English-annotated generation labels, in order to capture web-scale phenomena related to
+image captioning. In addition, we use Google
+Translate as the translation engine (both for the
+run-time translations needed for the TGT approach
+and the training-time translations needed for the
+TTG and PLuGS approaches), targeting French,
+Italian, German, Spanish, and Hindi as target languages. We use the standard training and validation
+splits from Conceptual Captions for developing our
+models. We report the results using a set of 1,000
+randomly samples images from the Open Images
+Dataset (Kuznetsova et al., 2018). We refer to this
+test set as OID1k when reporting our results.
+5 Evaluation
+In the experiments done using the Multi30K
+dataset, we are reporting results using the METEOR (Banerjee and Lavie, 2005) metric, in line
+with previous work. For the experiments performed
+using the Conceptual Captions dataset, we have
+found that automated evaluation metrics for image captioning such as BLEU (Papineni et al.,
+2002), ROUGE (Lin, 2004), CIDEr (Vedantam
+et al., 2015), and SPICE (Anderson et al., 2016)
+cannot accurately measure captioning accuracy for
+non-English languages. However, we are reporting
+CIDEr numbers as a point of comparison, and contrast these numbers with human evaluation results.
+We describe the human evaluation framework we
+use next.
+5.1 Human Side-by-Side Evaluation
+We perform side-by-side human evaluation for
+comparing model outputs. To compare two image
+captioning models A (baseline) vs B, we generate
+captions for these images with each model and ask
+human raters to compare them. As illustrated in
+Fig. 4, the raters are shown the image with the two
+captions randomly placed to the left vs. right, and
+are asked to compare the captions on a side-by-side
+rating scale. In addition, they are asked to also
+provide an absolute rating for each caption. The
+absolute rating provides a cross-check on the comparison. Each image and associated captions are
+rated by three raters in our experiments.
+We calculate the following statistics using the
+resulting side-by-side rating comparisons:
+W ins: Percent of images where majority of raters
+(i.e. 2 out of 3) marked Caption B as better (after
+derandomization).
+Losses: Percent of images where majority of raters
+marked Caption A as better.
+Gainsxs = W ins − Losses
+We also calculate the following statistics using
+the resulting absolute ratings:
+AAccept = Percent of images where majority of
+raters mark caption A as Acceptable, Good, or Excellent.
+BAccept = Percent of images where majority of
+raters mark caption B as Acceptable, Good, or Excellent.
+GainAccept = BAccept − AAccept
+The advantages of the Gainsxs and GainAccept
+metrics is that they are intuitive, i.e., they measure
+the absolute increase in accuracy between the two
+experimental conditions3
+3
+Inter-rater agreement analysis shows that for each evaluation comparing two models, two of the three raters agree
+on W in/Loss/Same for 90% to 95% of the items. Further,
+for more than 98% of the items using the difference between
+the absolute ratings gives the same W in/Loss/Same values
+as obtained from the side-by-side ratings. Also, for 80% to
+85% of the absolute ratings, two of the three raters agree on
+the rating.
+165
+Caption A: tractor seed in the morning
+followed by seagulls Caption B: tractor plowing the field
+How well does Caption A above
+describe the image?
+ Excellent
+ Good
+ Acceptable
+ Bad
+ Not enough information
+How well does Caption B above
+describe the image?
+ Excellent
+ Good
+ Acceptable
+ Bad
+ Not enough information
+Much
+Better Better
+Slightly
+Better
+About the
+same
+Slightly
+Better Better Much Better
+Please compare Caption A to Caption B:
+Now select individual ratings for each caption:
+Figure 4: Side-by-side human evaluation of two image captions. The same template is used for evaluating English
+as well as the 5 languages targeted.
+5.2 Training Details
+Multi30K: For the experiments using this
+dataset, we use a Transformer Network (Vaswani
+et al., 2017) with 3 encoder and 3 decoder layers, 8 heads, and model dimension 512. We use
+the Adam optimizer (Kingma and Ba, 2015), and
+do a hyperparameter search over learning rates
+{3e
+−4
+, e−4
+, 3e
+−5
+, e−5} with linear warmup over
+16000 steps followed by exponential decay over
+{50k, 100k} steps. We use 5e
+−6
+as the weight for
+L2 regularization. We train with a batch size of
+1024, using a dropout of 0.3, on 8 TPU (You et al.,
+2019) cores.
+Conceptual Captions: For all except large multilingual models, we use a vanilla Transformer with
+6 encoder and decoder layers, 8 heads, and model
+dimension 512. We use the SGD optimizer, and
+do a hyperparameter search over learning rates
+{0.12, 0.15, 0.18, 0.21, 0.24} with linear warmup
+over 16000 steps followed by exponential decay
+over {350k, 450k} steps. For multilingual models,
+we also use linear warmup over 80000 steps. We
+use 1e
+−5
+as the weight for L2 regularization. We
+train with a batch size of 4096, using a dropout of
+0.3 on 32 TPU (You et al., 2019) cores.
+For large multilingual models, we use a Transformer with 10 encoder and decoder layers, 12
+heads, and model dimension 7684 We also use a
+smaller learning rate of 0.09.
+4Dimension chosen so that we maintain 64 dimensions per
+head.
+6 Experiments and Results
+6.1 Multi30K
+In order to compare our work to related work we
+train our models on the Multi30K dataset and compared our results to the results in (Caglayan et al.,
+2019). We focus on Task 1: generate a French
+translation based on an image and English caption as input. Table 1 shows the results on the
+Multi30K dataset for Multimodal Translation. Note
+that since (Caglayan et al., 2019) does not show
+numbers for the pure (no caption input) image captioning task, we show numbers for the D4 condition, where only the first 4 tokens of the English
+caption are provided as input to the image captioning model.
+We see that the PLuGS model is able to produce
+numbers for MT and MMT that are close to the
+baseline, even thought it is just an image captioning
+model augmented to handle these tasks. For the D4
+task, which is the closest to image captioning, the
+PLuGS model shows improvement over the baseline. Furthermore, the results contain preliminary
+indications that the PLuGS approach produces better results compared to the non-PLuGS approach
+Task Baseline non-PLuGS PLuGS
+MT 70.6 66.6 67.7
+MMT 70.9 64.7 65.6
+IC-D4 32.3 30.6 32.8
+Table 1: Multi30K test set METEOR scores for Translation (MT), Multi Modal Translation (MMT), and Image Captioning (IC-D4). The baseline is from task 1 of
+(Caglayan et al., 2019).
+166
+Lang W ins Losses Gainsxs PLuGSAccept TGTAccept GainAccept
+Fr 22.8 19.4 3.4 68.7 66.5 2.2
+It 22.5 18.3 4.2 52.1 49.9 2.2
+De 22.6 19.1 3.5 69.2 67.7 1.5
+Es 27.0 22.1 4.9 58.8 56.9 1.9
+Hi 26.8 23.8 3.0 78.6 75.9 2.7
+W ins Losses Gainsxs PLuGSAccept TTGAccept GainAccept
+Fr 18.2 17.3 0.9 66.2 64.2 2.0
+It 23.7 20.8 2.9 55.1 52.2 2.9
+De 21.9 19.6 2.3 64.3 63.0 1.3
+Es 24.9 23.8 1.1 57.7 56.8 0.9
+Hi 27.4 25.5 1.9 71.3 69.6 1.7
+Table 2: SxS performance of PLuGS vs. TGT models (upper half) and PLuGS vs. TTG models (lower half),
+across five target languages on OID1k. The PLuGS models perform better on both GainSxS and GainAccept
+metrics, for all five languages.
+Lang TGT TTG PLuGS PLuGS-TGT PLuGS-TTG
+Fr 0.7890 0.7932 0.7820 -0.0070 -0.0112
+It 0.7729 0.7760 0.7813 0.0084 0.0053
+De 0.6220 0.6079 0.6170 0.0050 0.0091
+Es 0.8042 0.7907 0.7854 -0.0188 -0.0053
+Hi 0.7026 0.7149 0.7155 0.0129 0.0006
+Table 3: CIDEr scores on CC-1.1 validation set for PLuGS, TGT, and TTG models for five languages.
+(+2.2 METEOR).
+6.2 Conceptual Captions
+In this section, we evaluate the performance of
+models trained using Conceptual Captions, as detailed in Sec. 4. Table 2 presents the results on
+the OID1k testset for the SxS human evaluations
+between the TGT and PLuGS models (upper half),
+and between the TTG and PLuGS models (lower
+half). The results show that, for all five languages,
+the PLuGS model captions are consistently superior to the TGT captions on both GainSxS and
+GainAccept metrics. The GainSxS are between
+3% and 5% absolute percentages between TGT and
+PLuGS models, and 1% and 3% absolute percentages between TTG and PLuGS models, with similar trends for the GainAccept metric.
+Table 3 presents the CIDEr scores on the validation set of the Conceptual Captions v1.1 (CC-1.1).
+The CIDEr metric fails to capture any meaningful
+correlation between its scores and the results of the
+SxS human evaluations.
+6.3 Multilingual Models
+We further explore the hypothesis that adding more
+languages inside one single model may perform
+even better, as a result of both translation noise canceling out and the languages reinforcing each other
+in a common representation space. In this vein,
+we rename the bilingual version as PLuGS-2L, and
+train several additional models: a TTG-5L model,
+which uses a LangId token as input and uses for
+training all translated captions for all five languages
+and English; a TTGlarge-5L model, for which we
+simply increased the capacity of the Transformer
+network (see Sec. 5.2); and a PLuGS-5L model,
+which is trained using groundtruth labels that are
+concatenations (using the LangId token as separator) between golden groundtruth En labels and their
+translated versions, for all five target languages.
+Results using CIDEr are shown in Table 4.
+Across all languages, the TTG-5L models show
+a large gap in the CIDEr scores as compared to
+the TTG monolingual models. Using more capacity in the TTGlarge-5L model closes the gap
+only slightly. However, the effect of using pivotlanguage stabilizers tends to be consistently larger,
+in terms of CIDEr improvements, than the ones
+obtained by increasing the model capacity.
+To accurately evaluate the impact of multilinguality, we also perform SxS evaluations between the PLuGS-2L (as the base condition) vs.
+167
+Lang TTG PLuGS-2L TTG-5L TTGlarge-5L PLuGS-5L
+Fr 0.7932 0.7820 0.6834 0.7064 0.7264
+It 0.7760 0.7813 0.6538 0.6885 0.6978
+De 0.6079 0.6170 0.4992 0.5367 0.5503
+Es 0.7907 0.7854 0.7093 0.7203 0.7284
+Hi 0.7149 0.7155 0.5891 0.6201 0.6641
+Table 4: CIDEr scores on CC-1.1 validation set for bilingual and multilingual models.
+Lang W ins Losses Gainsxs BAccept AAccept GainAccept
+Fr 21.3 18.3 3.0 69.8 68.7 1.1
+It 22.2 18.2 4.0 56.4 55.5 0.9
+Hi 26.8 27.0 -0.2 75.6 79.5 -3.9
+Table 5: SxS performance of PLuGS-5L vs. PLuGS-2L models for three languages.
+PLuGS-5L (as the test condition) models, over
+three languages (French, German, and Hindi). As
+shown in Table 5, the PLuGS-5L model performs
+better on French and Italian (3% and 4% better on
+Gainsxs), while performing worse on Hindi compared to the bilingual PLuGS Hindi model (-0.2%
+on Gainsxs, -3.9% on GainAccept). The results
+are encouraging, and indeed support the hypothesis
+that similar languages are reinforcing each other in
+the common representation space, explaining the
+gain observed for the Romance languages and the
+detrimental impact on Hindi.
+We also note here that the human evaluation
+results, except for Hindi, come in direct contradiction to the CIDEr metric results, which indicate a
+large performance hit for PLuGS-5L vs. PLuGS2L, across all languages. This reflects again the
+extreme care needed when judging the outcome of
+such experiments based on the existing automatic
+metrics.
+6.4 Stabilizers Used as English Captions
+As already mentioned, the PLuGS models generate
+outputs of the form Stabilizer + hLangIdi + Caption. We therefore ask the following question: how
+does the quality of the Stabilizer output compare
+to the quality of captions produced by the baseline
+English model (that is, the same model whose captions are translated to the target languages in the
+TGT approach)?
+We perform SxS human evaluations over Stabilizer captions (English) for three different PLuGS2L models (trained for French, German, and Spanish). As shown in Table 6, the somewhat unexpected answer is that these Stabilizer outputs are
+consistently better, as English captions, compared
+to the ones produced by the original monolingual
+English captioning model. The Gainsxs are between 5% and 6% absolute percentage improvements, while GainAccept also improves up to 3.4%
+absolute for the PLuGS-Fr model.
+We again note that the CIDEr metric is not able
+to correctly capture this trend, as shown by the results in Table 7, which indicate a flat/reverse trend.
+6.5 Caption is Translation of Stabilizer
+So far, we have verified that both the targetlanguage Caption and the Stabilizer English outputs for the PLuGS-2L models are better compared
+to the alternative ways of producing them. Additionally, we want to check whether the Stabilizer
+and the target-language Caption are actually translations of each other, and not just independently
+good captions associated with the input image. In
+Table 9, we show the BLEU-4 score of the translation of the Stabilizer output for the PLuGS-2L
+models, compared to the corresponding PLuGS-2L
+Caption treated as a reference, using the images in
+the OID1k test set. The high BLEU scores are indeed confirming that the Caption outputs are close
+translations of the Stabilizer English outputs. This
+allows us to conclude that PLuGS models are indeed performing the double-duty of captioning and
+translation.
+6.6 Stabilizers Used for Quality Estimation
+Finally, we perform an experiment to understand
+the extent to which the quality of the Stabilizer
+outputs is correlated with the quality of the targetlanguage Captions, so that a QE model (Levinboim
+et al., 2019) trained for English can be applied directly on PLuGS model outputs (more specifically,
+168
+Model W ins Losses Gainsxs BAccept AAccept GainAccept
+PLuGS-Fr 26.9 21.8 5.1 70.4 67.0 3.4
+PLuGS-De 26.6 21.3 5.3 70.4 69.7 0.7
+PLuGS-Es 28.0 21.8 6.2 69.7 67.8 1.9
+Table 6: Performance of Stabilizers used as captions from PLuGS models for three languages vs the captions produced by the baseline English model. The PLuGS Stabilizer outputs are better captions across all three languages.
+Model PLuGS Baseline Diff
+PLuGS-Fr 0.8663 0.8772 -0.0139
+PLuGS-De 0.8680 0.8772 -0.0092
+PLuGS-Es 0.8590 0.8772 -0.0182
+Table 7: CIDEr scores on CC-1.1 validation set for
+Baseline and PLuGS-Stabilizer outputs (English captions).
+Model Spearman ρ
+TGT TTG PLuGS
+PLuGS-Fr 0.3017 0.3318 0.5982
+PLuGS-De 0.3246 0.2900 0.5862
+PLuGS-Es 0.2928 0.3201 0.5566
+Table 8: Spearman correlation of Stabilizer vs TGT,
+TTG and PLuGS Captions across three languages.
+on the Stabilizer outputs). To that end, we perform
+human evaluations of stand-alone captions.
+In this type of evaluation, the raters are shown
+an image along with a single caption, and are asked
+to provide an absolute rating for the caption on a 4-
+point scale. As before, we define the metric Accept
+= Percent of images where majority of raters (2 of
+3) marked Caption as Acceptable, Good or Excellent. Since these ratings are obtained individually
+for captions, we can use them to measure crosslingual quality correlations.
+6.6.1 Quality Correlation between Stabilizer
+and Caption
+We use the stand-alone caption evaluation results
+to compute quality correlations. Table 8 shows the
+correlation between the median human rating for
+the Stabilizer (English caption) vs Caption (targetlanguage caption) for the PLuGS models considered. We see that the correlation is much higher
+compared to the baselines, calculated by computing
+the correlation of the median rating for the Stabilizer vs Caption (target-language) generated by the
+TGT and TTG approaches.
+These results confirm that the PLuGS approach
+appears to be best suited for leveraging an existing
+
+
+
+PAPER--END
+
+
+This work investigates the use of interactively
+updated label suggestions to improve upon the
+efficiency of gathering annotations on the task
+of opinion mining in German Covid-19 social
+media data. We develop guidelines to conduct
+a controlled annotation study with social science students and find that suggestions from
+a model trained on a small, expert-annotated
+dataset already lead to a substantial improvement – in terms of inter-annotator agreement
+(+.14 Fleiss’ κ) and annotation quality – compared to students that do not receive any label
+suggestions. We further find that label suggestions from interactively trained models do
+not lead to an improvement over suggestions
+from a static model. Nonetheless, our analysis of suggestion bias shows that annotators remain capable of reflecting upon the suggested
+label in general. Finally, we confirm the quality of the annotated data in transfer learning experiments between different annotator groups.
+To facilitate further research in opinion mining
+on social media data, we release our collected
+data consisting of 200 expert and 2,785 student
+annotations.1
+1 Introduction
+The impact analysis of major events like the Covid19 pandemic is fundamental to research in social
+sciences. To enable more socially sensitive public decision making, researchers need to reliably
+monitor how various social groups (e.g., political
+actors, news media, citizens) communicate about
+political decisions (Jungherr, 2015). The increasing use of social media especially allows social
+science researchers to conduct opinion analysis on
+a larger scale than with traditional methods, e.g.
+1Code and data can be found on GitHub:
+https://github.com/UKPLab/
+acl2021-label-suggestions-german-covid19
+interviews or questionnaires. However, the publication of research results is often delayed or temporally transient due to limitations of traditional
+social science research, i.e. prolonged data gathering processes or opinion surveys being subject to
+reactivity. Given the increasing performance of language models trained on large amounts of data in a
+self-supervised manner (Devlin et al., 2019; Brown
+et al., 2020), one fundamental question that arises
+is how NLP systems can contribute to alleviate existing difficulties in studies for digital humanities
+and social sciences (Risch et al., 2019).
+One important approach to make data annotation more efficient is the use of automated label
+suggestions. In contrast to active learning, that
+aims to identify a subset of annotated data which
+leads to optimal model training, label suggestions
+alleviate the annotation process by providing annotators with pre-annotations (i.e., predictions) from
+a model (Ringger et al., 2008; Schulz et al., 2019).
+To enable the annotation of large amounts of data
+which are used for quantitative analysis by disciplines such as social sciences, label suggestions are
+a more viable solution than active learning.
+One major difficulty with label suggestions is the
+danger of biasing annotators towards (possibly erroneous) suggestions. So far, researchers have investigated automated label suggestions for tasks that
+require domain-specific knowledge (Fort and Sagot,
+2010; Yimam et al., 2013; Schulz et al., 2019); and
+have shown that domain experts successfully identify erroneous suggestions and are more robust to
+potential biases. However, the limited availability of such expert annotators restricts the use of
+label suggestions to small, focused annotation studies. For tasks that do not require domain-specific
+knowledge and can be conducted with non-expert
+annotators – such as crowd workers or citizen science volunteers – on a large scale, label suggestions have not been considered yet. This leads to
+2
+two open questions. First, if non-expert annotators
+that do not receive any training besides annotation guidelines benefit from label suggestions at all.
+Second, if existing biases are amplified especially
+when including interactively updated suggestions
+that have been shown to be advantageous over static
+ones (Klie et al., 2020).
+We tackle these challenges by conducting a comparative annotation study with social science students using a recent state-of-the-art model to generate label suggestions (Devlin et al., 2019). Our
+results show that a small set of expert-labeled
+data is sufficient to improve annotation quality
+for non-expert annotators. In contrast to Schulz
+et al. (2019), we show that although interactive and
+non-interactive label suggestions substantially improve the agreement, we do not observe significant
+differences between both approaches. We further
+confirm this observation with experiments using
+models trained on (and transferred to) individual
+annotator groups. Our contributions are:
+C1: An evaluation of label suggestions in terms of
+annotation quality for non-expert annotators.
+C2: An investigation of label suggestion bias for
+both static and interactively updated suggestions.
+C3: A novel corpus of German Twitter posts that
+can be used by social science researchers to
+study the effects of governmental measures
+against Covid-19 on the public opinion.
+Finally, we also publish 200 expert and 2,785
+individual student annotations of our dataset to facilitate further research in this direction.
+2 Related Work
+Label suggestions. In an early work, Rehbein
+et al. (2009) study the effects of label suggestions on the task of word sense disambiguation
+and observe a positive effect on annotation quality.
+With the introduction of annotation tools such as
+brat (Stenetorp et al., 2012), WebAnno (Yimam
+et al., 2013), or INCEpTION (Klie et al., 2018),
+the use of label suggestions became more feasible; leading to an increased investigation of label
+suggestions in the context of NLP. For instance,
+Yimam et al. (2014) investigate label suggestions
+for Amharic POS tagging and German named entity recognition and show with expert annotators
+that label suggestions significantly reduce the annotation time. Other works further investigate interactively updated label suggestions and come to a
+similar conclusion (Klie et al., 2020). Label suggestions have also been shown to be effective in nonNLP annotation tasks that require domain-specific
+knowledge such as in medical (Lingren et al., 2014)
+or educational (Schulz et al., 2019) use cases.
+Bias. Annotations from untrained human annotators may introduce biases that are conveyed to
+machine learning models (Gururangan et al., 2018).
+One possible source of bias may be due to the different decision making process triggered by label suggestions – namely, first deciding if the suggested
+label is correct and only if not, considering different
+labels (Turner and Schley, 2016). Hence, the key
+question that arises is to what extent annotators are
+influenced by such suggestions. Although Fort and
+Sagot (2010) identify an influence on annotation
+behaviour when providing pre-annotated data for
+POS-tagging, they do not measure any clear bias
+in the annotated labels. Rosset et al. (2013) come
+to a similar conclusion when investigating the bias
+introduced by label suggestions in a cross-domain
+setup, i.e., when using label suggestions from a
+model that is trained on data from a different domain than the annotated data. They conduct their
+experiments with eight annotators from varying
+levels of expertise and report considerable annotation performance gains while not finding considerable biases introduced by label suggestions.
+Most similar to our work is the setup from Schulz
+et al. (2019). The authors investigate interactive
+label suggestions for expert annotators across two
+domains and study the effects of using existing
+and newly annotated data for training different suggestion models. They compare personalised user
+models against a universal model which has access
+to all annotated data and show that the latter provides suggestions with a higher acceptance rate.
+This seems less surprising due to the substantially
+larger training set. Further, they do not identify any
+bias introduced by pre-annotating data.
+Whereas existing work reports no measurable
+bias for expert annotators (Fort and Sagot, 2010;
+Lingren et al., 2014; Schulz et al., 2019), it remains unclear for annotators who have no prior
+experience in similar annotation tasks; especially
+for scenarios where – besides annotation guidelines – no further training is provided. However,
+the use of novice annotators is common for sce-
+3
+0
+1
+10
+100
+1.000
+10.000
+2019-12-01
+2020-01-01
+2020-02-01
+2020-03-01
+2020-04-01
+Number of tweets
+Figure 1: Number of tweets per day collected from December 2019 to April 2020.
+narios where no linguistic or domain expertise is
+required. Hence, we present a first case-study for
+the use of interactive label suggestions with nonexpert annotators. Furthermore, we find that recent state-of-the-art models such as BERT (Devlin
+et al., 2019) can provide high-quality label suggestions with already little training data and hence,
+are important for interactive label suggestions in
+non-expert annotation tasks.
+3 Annotation Task
+Our task is inspired by social science research
+on analyzing public opinion using social media (Jungherr, 2015; McCormick et al., 2017). The
+goal is to identify opinions in German-speaking
+countries about governmental measures established
+to contain the spread of the Corona virus. We use
+Twitter due to its international and widespread usage that ensures a sufficient database and the several challenges for the automatic identification of
+opinions and stance it poses from an NLP perspective (Imran et al., 2016; Mohammad et al., 2016;
+Gorrell et al., 2019; Conforti et al., 2020). For example, the use of language varies from colloquial
+expressions to well-formed arguments and newsspreading statements due to its heterogeneous user
+base. Additionally, hashtags are used directly as
+part of text but also to embed the tweet itself in
+the broader discussion on the platform. Finally,
+the classification of a tweet is particularly challenging given the character limitation of the platform,
+i.e., at the date of writing Twitter allows for 280
+characters per tweet.
+Data collection. Initially, we collected tweets
+from December 2019 to the end of April 2020.
+Using a manually chosen set of search queries
+(‘corona’, ‘pandemie’, ‘covid’, ‘socialdistance’),
+we made use of the Twitter Streaming API and
+gathered only those tweets which were classified as
+German by the Twitter language identifier. This resulted in a set of approximately 16.5 million tweets.
+We retained only tweets that contain key terms
+referring to measures related to the Covid-19 pandemic and removed all duplicates, retweets and
+all tweets with text length less than 30 characters.
+After filtering, 237,616 tweets remained and their
+daily temporal distribution is visualized in Figure 1.
+We sample uniformly at random from the remaining tweets for all subsequent annotation tasks.2
+Annotation scheme. We developed annotation
+guidelines together with three German-speaking
+researchers from social sciences and iteratively refined them in three successive rounds. Our goal
+from a social science perspective is to analyze the
+public perception of measures taken by the government. Therefore, the resulting dataset should help
+in (1) identifying relevant tweets for governmental
+measures and if relevant, (2) detecting what stance
+is expressed. We follow recent works on stance detection and Twitter data (Hanselowski et al., 2018;
+Baly et al., 2018; Conforti et al., 2020) and use
+four distinct categories for our annotation. They
+are defined as follows:
+Unrelated: no measures related to the containment of the pandemic are mentioned
+Comment: measures are mentioned, but not assessed or neutral
+Support: measures are assessed positively
+Refute: measures are assessed negatively
+The four label annotation scheme allows us to
+distinguish texts that are related to the pandemic
+but do not talk about measures (i.e., unrelated).
+4 Study Setup
+Our goal is to study the effects of interactively updated and static label suggestions in non-expert
+annotation scenarios. Non-experts such as crowd
+workers or student volunteers have no prior experience in annotating comparable tasks and only
+receive annotation guidelines for preparation.3 Our
+secondary goal is to collect a novel dataset that can
+be used by social science researchers to study the
+2We provide additional information about data collection
+in Appendix A and discuss ethical concerns regarding the use
+of Twitter data after the conclusion.
+3We provide the original German guidelines along with the
+dataset. An English summary is provided in the Appendix B
+4
+Figure 2: Design of the annotation setup for each of the three user groups. The 30 quality control instances (red)
+were inserted at random positions but are visualized at the end for presentation purpose.
+effects of governmental measures for preventing
+the spread of Covid-19 on the public opinion.
+To train a model that provides label suggestions
+to our non-expert annotators, we first collect a small
+set of 200 expert-annotated instances. We then
+split our non-expert annotators into three different
+groups that receive (G1) no label suggestions, (G2)
+suggestions from a model trained on expert annotations, and (G3) suggestions from a model that is
+retrained interactively using both expert-annotated
+and interactively annotated data.
+4.1 Expert Annotations
+The expert annotations were provided by the researchers (three social science researchers and one
+NLP researcher) that created the annotation guidelines and who are proficient in solving the task. In
+total, 200 tweets were sampled uniformly at random and annotated by all four experts. The interannotator agreement (IAA) across all 200 tweets
+lies at 0.54 Fleiss’s κ (moderate agreement) and
+is comparable to previously reported annotation
+scores in the field of opinion and argument mining (Bar-Haim et al., 2020; Schaefer and Stede,
+2020; Boltuziˇ c and ´ Snajder ˇ , 2014). Overall, in
+more than 50% of the tweets all four experts selected the same label (respectively, in ∼75% of the
+tweets at least three experts selected the same label).
+The disagreement on the remaining ∼25% of the
+tweets furthermore shows the increased difficulty
+of our task due to ambiguities in the data source,
+e.g., ironical statements or differentiating governmental measures from non-governmental ones like
+home-office. To compile gold standard labels for
+instances that the experts disagreed upon, we apply
+MACE (Hovy et al., 2013) using a threshold of 1.0.
+The resulting labels were then re-evaluated by the
+experts and agreed upon.
+4.2 Student Annotations
+The annotations were conducted with a group of 21
+German-speaking university students. To ensure a
+basic level of comparability for our student annotators, we recruited all volunteers from the same
+social science course at the same university. The
+annotators received no further training apart from
+the annotation guidelines. We randomly assigned
+them to three different groups (G1, G2, and G3),
+each consisting of seven students. To investigate
+the effects of interactive label suggestions, we defined different annotation setups for each group.
+The annotations were split into two rounds. At
+each round of annotation, students were provided
+with 100 tweets consisting of 70 new tweets and
+30 quality control tweets from the expert-labeled
+data which are used to compare individual groups.
+Across both rounds, we thus obtain a total of 140
+unique annotated tweets per student and use 60
+tweets for evaluation. The annotation setup of each
+group including the individual data splits is visualized in Figure 2.
+4
+No label suggestions (G1). The first group
+serves as a control group and receives no label
+suggestions.
+Static label suggestions (G2). The second
+group only receives label suggestions based on
+a model which was trained using the 200 expertlabeled instances described in section 4.1.
+4Note that the control instances were distributed uniformly
+at random within a round to mitigate any interdependency
+effects between different tweets.
+5
+Interactive label suggestions (G3). The last
+group of students receives expert label suggestions
+in the first round and interactively updated label
+suggestions in the second round. In contrast to existing work (Schulz et al., 2019), this setup allows
+us to directly quantify effects of bias amplification
+that may occur with interactive label suggestions.
+4.3 Label Suggestion Model
+System setup. We conduct our annotation experiments using INCEpTION (Klie et al., 2018) which
+allows us to integrate label suggestions using recommendation models. To obtain label suggestions,
+we use a German version of BERT (Ger-BERT) that
+is available through the HuggingFace library (Wolf
+et al., 2020).5 We perform a random hyperparameter search (cf. Appendix B.3) and train the model
+on the expert annotated data for 10 epochs with
+a learning rate of 8e-5 and a batch size of 8. We
+select the model that performed best in terms of
+F1-score on a held-out stratified test set (20% of the
+data) across ten runs with different random seeds.
+All experiments were conducted on a desktop machine with a 6-core 3.8 GHz CPU and a GeForce
+RTX 2060 GPU (8GB).
+Model Macro-F1 Accuracy
+Majority .15 .45
+Random .23 .27
+BiLSTM (Schulz et al., 2019) .47 .53
+SBERT+LGBM (Klie et al., 2020) .50 .55
+Ger-BERT (this work) .66 .68
+Table 1: Performance of various label suggestion models on expert-labeled dataset.
+Model comparison. To assess the label suggestion quality of our model, we report the predictive
+performance on the expert-labeled dataset (setup
+as described above) in Table 1. We compare our
+model with baselines6 which have been used in
+related work (Schulz et al., 2019; Klie et al., 2020)
+for label suggestions. As expected, Ger-BERT
+achieves superior performance and the results are
+promising for using label suggestions.
+Interactive training routine. To remedy the
+cold-start problem, G3 receives label suggestions from the model trained only on the expertannotated data in round 1. Afterwards, we retrain
+the model with an increasing number of instances
+5https://deepset.ai/german-bert
+6We adapted the respective architectures to our setup.
+using both, the expert annotations and the G3 data
+of individual students from round 1.7 To avoid
+unnecessary waiting times for our annotators due
+to the additional training routine, we always collect batches of 10 instances before re-training our
+model. We then repeatedly train individual models
+for each student in G3 with an increasing amount of
+data of up to 70 instances. The 30 expert-annotated
+quality control tweets were excluded in this step to
+avoid conflicting labels and duplicated data.
+5 Study Evaluation
+Table 2 shows the overall statistics of our resulting
+corpus consisting of 200 expert and 2,785 studentannotated German tweets. Note that we removed
+60 expert-annotated instances that we included for
+annotation quality control for each student, resulting in 140 annotated tweets per student.
+Outliers. A fine-grained analysis of annotation
+time is not possible due to online annotations at
+home. However, one student in G3 had, on average,
+spent less than a second for each annotation and
+accepted almost all suggested labels. This student’s
+annotations were removed from the final dataset
+and assumed as faulty labels considering the short
+amount of time spent on this task in comparison to
+the minimum amount of seven seconds per tweet
+and annotation for all other students.
+5.1 Annotation Quality
+To assess the overall quality of our collected student
+annotations, we investigate annotator consistency
+in terms of inter-annotator-agreement (IAA) as well
+as the annotator accuracy on our quality assurance
+instances.
+Table 3 shows Fleiss’ κ (Fleiss, 1971) and the
+accuracy computed for the quality control instances
+that were consistent across all groups. In general, we observe a similar or higher agreement for
+our students compared to the expert annotations
+(κ = 0.54) showing that the guidelines were able
+to convey the task well. We also find that groups
+that receive label suggestions (G2 and G3) achieve
+a substantially larger IAA as opposed to G1. Most
+interestingly, we observe a substantial increase in
+IAA for both G2 and G3 in the second annotation round, whereas the IAA in G1 remains stable.
+7Note that using all previously annotated data of G3 would
+impair the comparability between individual students as the
+data was collected asynchronously to allow students to pick
+their best suited timeslot. Further, a synchronization step
+between users would impair the applicability of the approach.
+6
+N Annotator Avg. Length Unrelated Comment Support Refute
+200 Expert 189 (±75) 53 (26.5%) 89 (44.5%) 43 (21.5%) 15 (7.5%)
+2,785 Student 185 (±75) 1,003 (36.0%) 1,055 (37.9%) 425 (15.3%) 302 (10.8%)
+965 G1 185 (±76) 387 (40.1%) 334 (34.6%) 128 (13.3%) 116 (12.0%)
+980 G2 185 (±73) 320 (32.7%) 407 (41.5%) 152 (15.5%) 101 (10.3%)
+840 G3 184 (±75) 296 (35.2%) 314 (37.4%) 145 (17.3%) 85 (10.1%)
+Table 2: Our Twitter dataset on public opinion about containment measures during the Corona pandemic.
+G1 G2 G3
+Acc IAA Acc IAA Acc IAA
+Round 1 .74 .48 .90 .76 .84 .62
+Round 2 .68 .47 .92 .81 .82 .67
+Total .71 .48 .91 .78 .83 .65
+Table 3: Annotation accuracy (Acc) and IAA (Fleiss’
+κ) on the quality control instances for each annotator
+group and round.
+Analyzing our models’ predictions shows that the
+suggested labels for the 60 quality control samples
+mostly conform with the label given by the expert
+(97% for G2 and 94% for G3). Therefore, annotators are inclined to accept the label suggested by
+the model. We can further confirm this observation
+when investigating the number of instances that the
+students labeled correctly (accuracy). The highest
+accuracy is observed for the group that received
+the highest quality suggestions (G2). Furthermore,
+both groups that received label suggestions (G2,
+G3) express an increased accuracy over the control
+group (G1). In general, for both rounds the accuracy remains similarly high across all groups (±.02
+difference) with only a slight decrease (−.04) for
+G1. Hence, we conjecture that the resulting annotations provide satisfying quality given the challenging task and annotator proficiency.
+5.2 Suggestion Bias
+One major challenge in using label suggestions is
+known in psychology as the anchoring effect (Tversky and Kahneman, 1974; Turner and Schley,
+2016). It describes the concept that annotators who
+are provided a label suggestion follow a different
+decision process compared to a group that does not
+receive any suggestions and tend to accept the suggestions. As we observe larger IAA and accuracy
+for groups receiving label suggestions, we look
+at the label suggestion acceptance rate and which
+Unrelated
+Comment
+Support
+Refute
+Refute
+Support
+Comment
+Unrelated
+10 25 16 0
+50 51 0 27
+99 0 46 42
+0 14 6 2
+Number of label suggestion corrections (G2)
+0
+20
+40
+60
+80
+Number
+Figure 3: The number of rejected label suggestions.
+The x-axis displays the corrected label and the y-axis
+the label suggestion. For example, the upper left corner shows that ten suggestions of label Refute were
+corrected as Unrelated by the users.
+labels have been corrected by the annotators.
+Acceptance rate. One way to quantify possible
+biases is to evaluate if annotators tend to accept
+more suggestions with an increasing number of
+instances (Schulz et al., 2019). This may be the
+case when annotators increasingly trust the model
+with consistently good suggestions. Consequently,
+with increasing trust towards the model’s predictions, non-expert annotators may tend to accept
+more model errors. To investigate if annotators
+remain capable of reflecting on instance and label
+suggestion, we compute the average acceptance
+rate for G2 and G3 in both rounds. We find that
+for both groups, the acceptance rate remains stable
+(G2: 73% and 72%, G3: 68% and 69%) and conclude that annotators receiving high quality label
+suggestions remain critical while producing more
+consistent results.
+7
+ 0
+ 20
+ 40
+ 60
+ 80
+ 100
+ 100 120 140 160 180 200
+Accumulative difference
+Iteration
+s21
+s22
+s23
+s24
+s25
+s27
+Figure 4: Number of label suggestions that diverge from
+the model trained on expert-data with increasing number
+of annotations (for each student).
+ 0
+ 10
+ 20
+ 30
+ 40
+ 50
+ 60
+ 70
+ 80
+ 90
+ 100
+ 100 110 120 130 140 150 160 170 180 190 200
+Total accepted suggestions
+Iteration
+s21
+s22
+s23
+s24
+s25
+s27
+Figure 5: Number of label suggestions in G3 that have
+been accepted in the second round of annotations (for
+each student).
+Label corrections. To further evaluate if students are vulnerable to erroneous label suggestions
+from a model, we specifically investigate labels that
+have been corrected. Figure 3 shows our results for
+G2.8 As can be seen, the most notable number of
+label corrections were made by students for unrelated tweets that were classified as comments by
+the model. Additionally, we find a large number of
+corrections that have been made with respect to the
+stance of the presented tweet. We will discuss both
+types of corrections in the following.
+Unrelated tweets. The label suggestion model
+makes the most errors for unrelated tweets (i.e.,
+tweets that are corrected as Unrelated) by misclassifying them as Comment (99). In contrast,
+instances that are identified as Unrelated tweets
+are only seldomly corrected. This indicates an increased focus on recall at the expense of precision
+for related tweets, most likely due to Comment
+being the largest class in the training data (see Table 2, expert data). We find possible causes for
+such wrong predictions when we look at examples
+where Comment was suggested for Unrelated
+instances9
+:
+Example 1: The corona virus also requires special protective measures for Naomi Campbell.
+The top model wears a protective suit during
+a trip.
+Example 2: Extraordinary times call for extraordinary measures: the ”Elbschlosskeller”
+now has a functioning door lock. #Hamburg
+#Corona #COVID-19
+8Note that analyzing G3 shows similar observations (cf.
+Appendix C).
+9Note that we present translations of the original German
+texts for better readability and to protect user privacy
+Clearly, these examples are fairly easy to annotate
+for humans but are difficult to predict for a model
+due to specific cue words being mentioned, e.g.,
+measures. Similar results have also been reported
+in previous work (Hanselowski et al., 2018;
+Conforti et al., 2020).
+Stance. In Figure 3, we can also see that
+the model makes mistakes regarding the stance of
+a tweet. Especially, 101 Support suggestions
+have been corrected as either being unrelated or
+neutral and 88 Comment suggestions have been
+corrected to either Support or Refute. For
+the second case, we often discover tweets that
+implicitly indicate the stance – for example, by
+complaining about people ignoring the measures:
+Example 3: Small tweet aside from XR: Colleague drags himself into the office this morning with flu symptoms (OD) The other col- ¨
+leagues still have to convince him to please go
+home immediately. Only then does he show
+some understanding. Unbelievable. #COVID
+#SocialDistancing
+Such examples demonstrate the difficulty of the
+task and seem to be difficult to recognize for the
+model. However, given the large amount of label
+corrections, the non-expert annotators seem to be
+less susceptible to accept such model errors.
+5.3 Bias Amplification
+The high number of label corrections for specific
+types of tweets shows that our annotators of G2
+remained critical towards the suggested label. With
+interactively updated suggestions however, this
+may not be the case. Especially annotators that
+accept erroneous suggestions may lead to reinforc-
+8
+ing a model in its prediction; hence, leading to
+amplifying biases.
+Diverging suggestions. To study such effects,
+we first identify if the interactively updated models
+express a difference in terms of predictions compared to the static model. In Figure 4 we can observe that with already 40 instances (Iteration 140),
+the number of differently predicted instances is ten
+or higher across all personalized models. This divergence is highly correlated with the number of
+changes a student provides (see Figure 5). We thus
+can conclude that the interactively trained models
+are able to adapt to the individual annotations for
+each annotator.
+ 0
+ 20
+ 40
+ 60
+ 80
+ 100
+ 120
+ 140
+ 160
+ 180
+ 200
+ 0 20 40 60 80 100 120 140 160 180 200
+Mean accepted suggestions
+Iteration
+G2
+G3
+Figure 6: Average number of accepted label suggestions across all instances for G2 and G3. The shared areas display the upper and lower quartile for each group.
+Comparison to G2. Figure 6 shows the average
+number of accepted suggestions for G2 and G3 as
+well as the upper and lower quartiles, respectively.
+The vertical line separates the first and the second
+round of annotations. We find that especially in the
+first round of annotations, both groups have a very
+similar acceptance rate of suggested labels. Only
+with interactively updated suggestions we find an
+increasing divergence in G3 with respect to the
+upper and lower quartiles.
+Individual acceptance rate. To assess the impact of interactive label suggestions, we further
+investigate how many suggestions were accepted
+by each annotator. Figure 5 shows the number of
+accepted label suggestions for each student in G3
+in the second round of annotations. Although we
+observe that the average number of accepted label suggestions remains constant across G2 and
+G3, we can see substantial differences between individual students. For instance, we can observe
+that for s21, the increased model adaptivity leads
+expert
+g1
+g2
+g3
+g3
+g2
+g1
+expert
+55.93 44.14 49.31 47.96
+52.38 41.48 48.22 44.88
+40.38 39.49 40.13 40.64
+52.15 38.38 45.86 44.10
+Transfer Learning Experiments using expert and student data
+40
+42
+44
+46
+48
+50
+52
+54
+Macro F1
+Figure 7: Transfer learning performance of models
+trained on individual annotator groups. The x-axis
+presents the dataset which is used for model training,
+the y-axis lists the dataset used for model testing.
+to an overall decrease in the number of accepted
+labels. Moreover, s24 who received predictions
+that diverge less from the static model prediction
+accepted the most suggestions in the second round.
+This shows that interactive label suggestions does
+not necessarily lead to a larger acceptance rate –
+possibly amplifying biases – but instead, varies
+for each annotator and needs to be investigated in
+future work.
+5.4 Cross-group Transfer
+Finally, we investigate how well models trained
+on different annotator groups transfer to each other.
+We hence conduct transfer learning experiments for
+which we remove the quality control instances in
+our student groups and train a separate Ger-BERT
+model using the same hyperparameters as for the
+expert model. We use 80% of the data for training
+and the remaining 20% to identify the best model
+which we then transfer to another group. Figure 7
+shows the macro-F1 scores averaged across ten
+independent runs, diagonal entries are the scores
+on the 20%. Most notably, models trained on the
+groups with label suggestions (G2, G3) do in fact
+perform comparable or better on the expert-labeled
+data and outperform models trained on the group
+not receiving any suggestions (G1). The higher
+cross-group performance for models trained on
+groups that received label suggestions shows that
+the label suggestions successfully conveyed knowledge from the expert annotated data to our students
+
+
+
+PAPER--END
+
+
+Abstract
+In e-commerce system, category prediction
+is to automatically predict categories of
+given texts. Different from traditional
+classification where there are no relations
+between classes, category prediction is
+reckoned as a standard hierarchical
+classification problem since categories are
+usually organized as a hierarchical tree. In
+this paper, we address hierarchical category
+prediction. We propose a Deep
+Hierarchical Classification framework,
+which incorporates the multi-scale
+hierarchical information in neural networks
+and introduces a representation sharing
+strategy according to the category tree. We
+also define a novel combined loss function
+to punish hierarchical prediction losses.
+The evaluation shows that the proposed
+approach outperforms existing approaches
+in accuracy.
+1 Introduction
+Category Prediction (CP), which aims to
+recognize the intent categories of given texts, is
+regarded as one of the most fundamental machine
+learning tasks in e-commerce system (Ali et al.,
+2016). For example, this predicted category
+information will influence product ranking in
+search and recommendation system.
+Different from the traditional classification
+(Yann et al., 1998; Larkey and Croft, 1996) CP is
+formally categorized as a hierarchical
+classification task since categories in most ecommerce websites are organized as a hierarchical
+tree (we consider the situation that the categories
+are organized as a hierarchical tree, but not a
+directed acyclic graph). Figure 1.(a) shows a
+simplified fragment of one category architecture.
+Apart from CP, there are also many other tasks
+belonging to hierarchical classification, e.g., image
+classification shown in Figure 1.(b).
+For simplicity, most practical approaches ignore
+the relation information between classes (hereafter
+referred to as flat classification). These approaches
+are easily implemented, but disadvantage in
+accuracy (Rohit et al., 2013). In academy, the
+hierarchical classification problem is not wellstudied as well (Silla and Freitas., 2011). Except
+these flat approaches, published studies are mainly
+divided into two directions: the local approaches,
+and the global approaches (Carlos and Freitas.,
+2009). The local approaches learn multiple
+independent classifiers, each classifier either for
+per node, or for per parent node or for per layer.
+Taking the local approach for per layer as an
+example, for Figure 1.(b) it will train two
+independent classifiers for layer_1 and layer_leaf,
+respectively. The global approaches regard all
+none-root nodes as the classes to predict. Only one
+classifier is trained for all these none-root classes.
+We argue that all these approaches either do not
+consider the hierarchical structure at all (i.e., the
+flat approaches), or take implicit or tiny
+consideration of the class hierarchy.
+Figure 1. Hierarchical Classification Tasks
+The main challenges in hierarchical
+classification are at two aspects: hierarchical
+representation in classification model and
+hierarchical inconsistency in training process.
+Hierarchical representation means researchers may
+select Naive Bayesian (Larkey and Croft, 1996),
+Support Vector Machine (Chang and Lin, 2009),
+and Neural Networks (Jurgen Schmidhuber, 2015)
+as their classification models. But the hierarchical
+information fails to be explicitly incorporated in
+these models. Consequentially, it is hard for these
+models to learn the complex hierarchical
+information. The hierarchical inconsistency means
+Deep Hierarchical Classification for Category
+Prediction in E-commerce System
+Dehong Gao, Wenjing Yang, Huiling Zhou, Yi Wei, Yi Hu and Hao Wang
+Alibaba Group
+Hangzhou City, Zhejiang Province, China
+{dehong.gdh, carrie.ywj, zhule.zhl, yi.weiy, erwin.huy, longran.wh}@alibaba-inc.com
+64
+ACL 2020 ECNLP3
+2
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+if a text is predicted as “appeal” in the layer_1, but
+as “laptop” in the leaf layer during training phase
+in Figure 1.(a), none approach can deal with this
+inconsistency as far as we known.
+To solve these two problems, we propose a
+general Deep Hierarchical Classification (DHC)
+framework. Firstly, according to hierarchical
+representation, our DHC approach directly
+incorporates class hierarchy information in neural
+network. DHC first generates one hierarchical
+layer representation for per layer. Inspired by the
+idea that sibling classes under one parent class
+must share certain common information, we
+introduce a hierarchical representation sharing
+strategy that the representation of one lower layer
+should include the representation information
+about its upper layer. This sharing strategy is
+recursively carried on in a top-down manner
+according to the class hierarchy. As a result, the
+classification model is forced to learn this structure
+information, and the class hierarchy information is
+“explicitly” involved in the model. Secondly,
+according to hierarchical inconsistency, we define
+a hierarchical loss function composed of the layer
+loss and the dependence loss. The layer loss
+defines the training loss within layers, which is the
+same to the loss in traditional flat classification.
+The proposed dependence loss defines the loss
+between layers. When predictions of two
+successive layers are inconsistent (i.e., these two
+predicted classes are not in a parent-child
+relationship), we will add an additional
+dependence loss to compel the classification model
+to learn this relation information. The dependence
+loss function is hierarchy-related and is regarded as
+a punishment when predictions are not consistent
+with the category structure. By this way, we can
+deal with the hierarchical inconsistency during the
+training process.
+DHC can be regarded as a general hierarchical
+classification framework, we evaluate it with text
+and image classification. For text classification, we
+collect query-category and title-category pairs
+from one e-commence website. For image
+classification we adopt the commonly-used
+cifar100 dataset. Taking advantage of hierarchical
+representation and hierarchical loss function, the
+DHC approach significantly improves the
+accuracy. Our main contributions include the novel
+DHC framework and the hierarchical
+representation and hierarchical loss which are first
+proposed as far as we know. All of them will be
+detailed in the following sections.
+2 Deep Hierarchical Classification
+Mathematically, the hierarchical classification task
+can be formulated as: Given:
+Input �: � can denote the text or the image inputs.
+Category tree �: Categories are organized by a
+category tree � with L hierarchical layers. The
+categories (i.e., classes to predict) are denoted by
+�. Categories of different layers are dependent as
+�$ ⇒ �$&' ⇒ ⋯ ⇒ �' ( ⇒ denotes the IS-A
+relation in category tree �.)
+Output: Categories of input �: Predict categories
+of the given input � . Since categories are
+hierarchically related, it is possible to predict the
+leaf class and infer the classes of all the other layers
+according to category tree �.
+In the DHC approach, we defines a neural
+network model �(�) where � are the parameters
+to be estimated. Taking a three-layer hierarchical
+classification problem as an example, we show the
+DHC neural network in Figure 2. The neural
+network is composed of three parts: Flat Neural
+Network (FNN), Hierarchical Embedding
+Network (HEN) and Hierarchical Loss Network
+(HLN). We will further discuss these three parts.
+Figure 2. Deep Hierarchical Classification (Take threelayer hierarchical classification as example)
+2.1 Flat Neural Network
+Given an input �, FNN is used to generate a root
+representation. For our main contributions lay in
+the HEN and HLN, we can adopt a state-of-the-art
+neural network in practice. Let �./01(�./01)
+denote this flat neural network, the output is
+viewed as the root representation �3
+�� = �����(�, �����) (1)
+65
+ACL 2020 ECNLP3
+3
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+2.2 Hierarchical Embedding Network
+With the root representation, HEN aims to produce
+hierarchical representations for every layers. For
+the �
+@A layer, we first produce the independent
+representation �/
+B , i.e.,
+��
+B = ��� ∗ �� (2)
+where �G/ represents the weights for the
+independent layer representation. The independent
+layer representation is hierarchical-free. As
+mentioned, classes belonging to the same parent
+class share certain common information. The
+representation of one lower layer should include
+the representation information about its upper
+layer. Thus, the hierarchical representation �/ is
+computed by concatenating the independent
+representations of all previous layers denoting by
+�� = ��&�⨁��
+B ��� � ≠ �
+�� = ��
+B ��� � = � (3)
+For the �
+th layer prediction, the hierarchical
+representation �/ is passed into a softmax
+regression layer. The output of the softmax
+regression layer is denoted by
+�O�� = �������
+∑ ������� |�|
+�V�
+(4)
+where �W/ are the parameters of the �
+@A softmax
+regression layer. �Y/Z denotes the prediction
+probability of the �
+@A class in the �
+@A hierarchy
+layer. |�| denotes the number of classes in the �
+@A
+hierarchy layer.
+2.3 Hierarchical Loss Network
+According to hierarchical layer representations and
+document true classes, HLN will compute the
+hierarchical loss to estimate the neural network
+parameters. We propose two types of losses, i.e.,
+the layer loss and the dependency loss. Concretely,
+the �
+@A layer loss function �����/ is defined as
+������ = −_������ (�O��)
+|�|
+�V�
+(5)
+�/d is the expected output of the �@Aclass in the �
+@A
+hierarchy layer. To measure the prediction errors
+between layers, we propose a dependence loss. If
+the predicted classes of two successive layers are
+not parent-child relation, a dependence loss
+appears to punish the learning model for it does not
+predict the classes according to the hierarchy
+ 1 https://www.cs.toronto.edu/~kriz/cifar.html
+structure. The �
+@A layer dependence loss is
+defined as
+
+where �/ and �/ denote that whether the model
+predictions conflict category structure, especially
+
+(7)
+Here �q/ = max
+Z �Y/Z denotes the predicted class,
+and �/ is the true label of the query. �/ denotes
+whether the predicted label in the �
+@A layer is a child
+class of the predicted class in the � − 1@Alayer. �/
+denotes whether the �
+@A layer prediction is correct.
+ is a dependence punishment to force the
+neural network to learn structure information from
+the category structure.  can be set as a
+constant or related to the prediction error.
+Finally, the total loss is defined as the weighted
+summation of the layer losses and the dependence
+losses, i.e.,
+�(�) = _��������
+�
+�V�
++_��������
+�
+�V�
+(8)
+where � and � (0 ≤ �, � ≤ 1) are the loss
+weights of different layers.
+In the inference phase, there are mainly three
+methods to determine the category of one text, the
+heuristic method, the greedy method and the beam
+search method (Wu et al., 2016). We adopt the
+greedy method in our experiments for fair
+comparison.
+Datasets Sample 1st&2nd layer
+Query-Category 1.3millions 39/742
+Title-Category 30.7millions 39/742
+Cifar1001 60thousands 20/100
+Table 1. Information of experiment datasets
+3 Experiments
+3.1 Datasets
+As DHC is a general hierarchical classification
+framework, we experiment on text classification
+and image classification with both industry and
+public datasets, respectively. For text classification,
+we collect two datasets, i.e., <Query-Category>
+(user query and the category of one user-clicked
+product) and <Title-Category> (product title and
+its category). For image classification, we
+experiment on the cifar100 dataset, in which the
+66
+ACL 2020 ECNLP3
+4
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+fine and coarse labels are organized by a threelayer hierarchical tree. The information of these
+three datasets (e.g., sample numbers and class
+numbers) are shown in Table 1.
+For text classification, query-category and titlecategory corpus are randomly divided into ten
+equal parts. Nine parts are used in the training
+phase and the other one is used in the test phase.
+For image classification, we use the official
+training/testing parts. Accuracy is selected to
+evaluate the performances (Kiritchenko and Stan,
+2005; Kiritchenko and Stan, 2006).
+Accuracy Query-Category Title-Category
+1st layer 2nd layer 1st layer 2nd layer
+SVM 88.1% 67.99% 85.34% 60.13%
+HSVM 89.98% 68.59% 88.14% 63.59%
+FastText 90.10% 67.64% 88.06% 61.62%
+TextCNN 90.11% 68.29% 89.10% 64.31%
+HiNet 91.54% 72.98% 90.69% 65.10%
+DHC 92.10% 73.37% 91.21% 69.02%
+Table 2. Accuracy evaluation of SVM, HSVM,
+FastText, TextCNN, HiNet and DHC approaches for
+text classification
+Accuracy Cifar100
+1st layer 2nd layer
+KerasCNN 89.23% 67.89%
+HiNet 90.11% 72.23%
+DHC 92.21% 75.91%
+Table 3. Accuracy evaluation of baseline, HiNet and
+DHC approaches for image classification
+3.2 Evaluation of baseline and existing
+approaches
+In this set of experiments, we compare our
+approach with the existing approaches.
+For text classification, SVM (Chang and Lin,
+2009), FastText (Joulin et al., 2016), and TextCNN
+(Yoon Kim, 2014) are selected as the flat baselines
+and we train two classifiers for the two layers,
+respectively. HSVM (Tsochantaridis et al., 2005)
+and HiNet (Wu and Saito, 2017) are selected as
+hierarchical baselines. For fair competition, HiNet
+and DHC are adopted the same network
+architecture with TextCNN as the base model. The
+purpose is to verify the effectiveness of our DHC
+framework, but not the based model.
+With the limited space, the standard neural
+network (KerasCNN)2 and HiNET are adopted as
+the flat and hierarchical baselines in image
+classification, respectively. HiNET and DHC keep
+the same network architecture and hyperparameters with KerasCNN. We also focus on the
+ 2 https://keras.io/examples/cifar10_cnn/
+comparison of the DHC framework, rather than the
+base model.
+The accuracies of these four approaches are
+shown in Table 2 and Table 3, which shows that
+DHC outperforms all the other approaches. The
+layer representation sharing and hierarchical loss
+computation help the improvement in
+performance. Meanwhile, we find that the
+accuracy increase of the leaf layer is greater than
+that of the layer_1. This is because the
+classification for the layer_1 is much easier than
+that for the leaf layer. The classifiers can learn
+comparable models for the layer_1, but DHC
+shows its powerful ability in the leaf layer
+classification.
+3.3 Evaluation of HEN and HLN
+This set of experiments is to reveal the influence of
+HEN and HLN. HiNet is adopted as the baseline
+approach and the experiments are conducted on
+title-category dataset for simplicity.
+Figure 3. Accuracy evaluation of HiNet, DHC_HEN
+( � = 0 in Equation 8), DHC_HLN ( �/ = �/
+B in
+Equation 3) and DHC approaches
+Figure 3 illustrates the accuracy changes of the
+leaf layer prediction in the training iteration.
+Compared to HiNet, it indicates that both HEN and
+HLN have the positive influence for hierarchical
+classification. HEN contributes more than HLN.
+We find that the definition of the hierarchical loss
+function affects the robustness and accuracy of the
+classification a lot. A proper hierarchical loss
+function definition is still an open question
+

@@ -1,0 +1,2571 @@
+We introduce a discriminatively trained, globally normalized, log-linear variant of the lexical translation models proposed by Brown
+et al. (1993). In our model, arbitrary, nonindependent features may be freely incorporated, thereby overcoming the inherent limitation of generative models, which require that
+features be sensitive to the conditional independencies of the generative process. However, unlike previous work on discriminative
+modeling of word alignment (which also permits the use of arbitrary features), the parameters in our models are learned from unannotated parallel sentences, rather than from supervised word alignments. Using a variety
+of intrinsic and extrinsic measures, including
+translation performance, we show our model
+yields better alignments than generative baselines in a number of language pairs.
+1 Introduction
+Word alignment is an important subtask in statistical machine translation which is typically solved
+in one of two ways. The more common approach
+uses a generative translation model that relates bilingual string pairs using a latent alignment variable to
+designate which source words (or phrases) generate
+which target words. The parameters in these models
+can be learned straightforwardly from parallel sentences using EM, and standard inference techniques
+can recover most probable alignments (Brown et al.,
+1993). This approach is attractive because it only
+requires parallel training data. An alternative to the
+generative approach uses a discriminatively trained
+alignment model to predict word alignments in the
+parallel corpus. Discriminative models are attractive
+because they can incorporate arbitrary, overlapping
+features, meaning that errors observed in the predictions made by the model can be addressed by engineering new and better features. Unfortunately, both
+approaches are problematic, but in different ways.
+In the case of discriminative alignment models, manual alignment data is required for training, which is problematic for at least three reasons.
+Manual alignments are notoriously difficult to create and are available only for a handful of language
+pairs. Second, manual alignments impose a commitment to a particular preprocessing regime; this can
+be problematic since the optimal segmentation for
+translation often depends on characteristics of the
+test set or size of the available training data (Habash
+and Sadat, 2006) or may be constrained by requirements of other processing components, such parsers.
+Third, the “correct” alignment annotation for different tasks may vary: for example, relatively denser or
+sparser alignments may be optimal for different approaches to (downstream) translation model induction (Lopez, 2008; Fraser, 2007).
+Generative models have a different limitation: the
+joint probability of a particular setting of the random variables must factorize according to steps in a
+process that successively “generates” the values of
+the variables. At each step, the probability of some
+value being generated may depend only on the generation history (or a subset thereof), and the possible
+values a variable will take must form a locally normalized conditional probability distribution (CPD).
+While these locally normalized CPDs may be pa409
+rameterized so as to make use of multiple, overlapping features (Berg-Kirkpatrick et al., 2010), the requirement that models factorize according to a particular generative process imposes a considerable restriction on the kinds of features that can be incorporated. When Brown et al. (1993) wanted to incorporate a fertility model to create their Models 3
+through 5, the generative process used in Models 1
+and 2 (where target words were generated one by
+one from source words independently of each other)
+had to be abandoned in favor of one in which each
+source word had to first decide how many targets it
+would generate.1
+In this paper, we introduce a discriminatively
+trained, globally normalized log-linear model of lexical translation that can incorporate arbitrary, overlapping features, and use it to infer word alignments.
+Our model enjoys the usual benefits of discriminative modeling (e.g., parameter regularization, wellunderstood learning algorithms), but is trained entirely from parallel sentences without gold-standard
+word alignments. Thus, it addresses the two limitations of current word alignment approaches.
+This paper is structured as follows. We begin by
+introducing our model (§2), and follow this with a
+discussion of tractability, parameter estimation, and
+inference using finite-state techniques (§3). We then
+describe the specific features we used (§4) and provide experimental evaluation of the model, showing
+substantial improvements in three diverse language
+pairs (§5). We conclude with an analysis of related
+prior work (§6) and a general discussion (§8).
+2 Model
+In this section, we develop a conditional model
+p(t | s) that, given a source language sentence s with
+length m = |s|, assigns probabilities to a target sentence t with length n, where each word tj is an element in the finite target vocabulary Ω. We begin
+by using the chain rule to factor this probability into
+two components, a translation model and a length
+model.
+p(t | s) = p(t, n | s) = p(t | s, n)
+| {z }
+translation model
+× p(n | s)
+| {z }
+length model
+1Moore (2005) likewise uses this example to motivate the
+need for models that support arbitrary, overlapping features.
+In the translation model, we then assume that each
+word tj is a translation of one source word, or a
+special null token. We therefore introduce a latent
+alignment variable a = ha1, a2, . . . , ani ∈ [0, m]
+n
+,
+where aj = 0 represents a special null token.
+p(t | s, n) =X
+a
+p(t, a | s, n)
+So far, our model is identical to that of (Brown et
+al., 1993); however, we part ways here. Rather than
+using the chain rule to further decompose this probability and motivate opportunities to make independence assumptions, we use a log-linear model with
+parameters θ ∈ R
+k
+and feature vector function H
+that maps each tuple ha,s, t, ni into R
+k
+to model
+p(t, a | s, n) directly:
+pθ(t, a | s, n) = exp θ
+>H(t, a,s, n)
+Zθ(s, n)
+, where
+Zθ(s, n) = X
+t
+0∈Ωn
+X
+a
+0
+exp θ
+>H(t
+0
+, a
+0
+,s, n)
+Under some reasonable assumptions (a finite target
+vocabulary Ω and that all θk < ∞), the partition
+function Zθ(s, n) will always take on finite values,
+guaranteeing that p(t, a | s, n) is a proper probability
+distribution.
+So far, we have said little about the length model.
+Since our intent here is to use the model for alignment, where both the target length and target string
+are observed, it will not be necessary to commit to
+any length model, even during training.
+3 Tractability, Learning, and Inference
+The model introduced in the previous section is
+extremely general, and it can incorporate features
+sensitive to any imaginable aspects of a sentence
+pair and their alignment, from linguistically inspired (e.g., an indicator feature for whether both
+the source and target sentences contain a verb), to
+the mundane (e.g., the probability of the sentence
+pair and alignment under Model 1), to the absurd
+(e.g., an indicator if s and t are palindromes of each
+other).
+However, while our model can make use of arbitrary, overlapping features, when designing feature
+functions it is necessary to balance expressiveness
+and the computational complexity of the inference
+410
+algorithms used to reason under models that incorporate these features.2 To understand this tradeoff,
+we assume that the random variables being modeled
+(t, a) are arranged into an undirected graph G such
+that the vertices represent the variables and the edges
+are specified so that the feature function H decomposes linearly over all the cliques C in G,
+H(t, a,s, n) = X
+C
+h(tC, aC,s, n) ,
+where tC and aC are the components associated with
+subgraph C and h(·) is a local feature vector function. In general, exact inference is exponential in
+the width of tree-decomposition of G, but, given a
+fixed width, they can be solved in polynomial time
+using dynamic programming. For example, when
+the graph has a sequential structure, exact inference can be carried out using the familiar forwardbackward algorithm (Lafferty et al., 2001). Although our features look at more structure than this,
+they are designed to keep treewidth low, meaning
+exact inference is still possible with dynamic programming. Figure 1 gives a graphical representation
+of our model as well as the more familiar generative (directed) variants. The edge set in the depicted
+graph is determined by the features that we use (§4).
+3.1 Parameter Learning
+To learn the parameters of our model, we select the
+θ
+∗
+that minimizes the `1 regularized conditional loglikelihood of a set of training data T :
+L(θ) = −
+X
+hs,ti∈T
+logX
+a
+pθ(t, a | s, n) + β
+X
+k
+|θk| .
+Because of the `1 penalty, this objective is not everywhere differentiable, but the gradient with respect to
+the parameters of the log-likelihood term is as follows.
+∂L
+∂θ
+=
+X
+hs,ti∈T
+Epθ(a|s,t,n)
+[H(·)] − Epθ(t,a|s,n)
+[H(·)]
+(1)
+To optimize L, we employ an online method that
+approximates `1 regularization and only depends on
+2One way to understand expressiveness is in terms of independence assumptions, of course. Research in graphical models
+has done much to relate independence assumptions to the complexity of inference algorithms (Koller and Friedman, 2009).
+the gradient of the unregularized objective (Tsuruoka et al., 2009). This method is quite attractive since it is only necessary to represent the active
+features, meaning impractically large feature spaces
+can be searched provided the regularization strength
+is sufficiently high. Additionally, not only has this
+technique been shown to be very effective for optimizing convex objectives, but evidence suggests that
+the stochasticity of online algorithms often results
+in better solutions than batch optimizers for nonconvex objectives (Liang and Klein, 2009). On account of the latent alignment variable in our model,
+L is non-convex (as is the likelihood objective of the
+generative variant).
+To choose the regularization strength β and the
+initial learning rate η0,
+3 we trained several models on a 10,000-sentence-pair subset of the FrenchEnglish Hansards, and chose values that minimized
+the alignment error rate, as evaluated on a 447 sentence set of manually created alignments (Mihalcea
+and Pedersen, 2003). For the remainder of the experiments, we use the values we obtained, β = 0.4
+and η0 = 0.3.
+3.2 Inference with WFSAs
+We now describe how to use weighted finite-state
+automata (WFSAs) to compute the quantities necessary for training. We begin by describing the ideal
+WFSA representing the full translation search space,
+which we call the discriminative neighborhood, and
+then discuss strategies for reducing its size in the
+next section, since the full model is prohibitively
+large, even with small data sets.
+For each training instance hs, ti, the contribution
+to the gradient (Equation 1) is the difference in two
+vectors of expectations. The first term is the expected value of H(·) when observing hs, n, ti and
+letting a range over all possible alignments. The
+second is the expectation of the same function, but
+observing only hs, ni and letting t
+0
+and a take on
+any possible values (i.e., all possible translations
+of length n and all their possible alignments to s).
+To compute these expectations, we can construct
+a WFSA representing the discriminative neighborhood, the set Ω
+n×[0, m]
+n
+, such that every path from
+the start state to goal yields a pair ht
+0
+, ai with weight
+3
+For the other free parameters of the algorithm, we use the
+default values recommended by Tsuruoka et al. (2009).
+411
+a1 a2 a3 a
+n
+t
+1 t
+2 t
+3 t
+n
+s
+n
+Fully directed model (Brown et al., 1993;
+Vogel et al., 1996; Berg-Kirkpatrick et al., 2010)
+Our model
+... a1 a2 a3 a
+n
+t
+1 t
+2 t
+3 t
+n
+s
+n
+...
+... ... s
+s s s s
+s s s
+Figure 1: A graphical representation of a conventional generative lexical translation model (left) and our model with
+an undirected translation model. For clarity, the observed node s (representing the full source sentence) is drawn in
+multiple locations. The dashed lines indicate a dependency on a deterministic mapping of tj (not its complete value).
+H(t
+0
+, a,s, n). With our feature set (§4), number of
+states in this WFSA is O(m×n) since at each target
+index j, there is a different state for each possible index of the source word translated at position j − 1.
+4
+Once the WFSA representing the discriminative
+neighborhood is built, we use the forward-backward
+algorithm to compute the second expectation term.
+We then intersect the WFSA with an unweighted
+FSA representing the target sentence t (because of
+the restricted structure of our WFSA, this amounts
+to removing edges), and finally run the forwardbackward algorithm on the resulting WFSA to compute the first expectation.
+3.3 Shrinking the Discriminative
+Neighborhood
+The WFSA we constructed requires m × |Ω| transitions between all adjacent states, which is impractically large. We can reduce the number of edges by
+restricting the set of words that each source word can
+translate into. Thus, the model will not discriminate
+4
+States contain a bit more information than the index of the
+previous source word, for example, there is some additional information about the previous translation decision that is passed
+forward. However, the concept of splitting states to guarantee
+distinct paths for different values of non-local features is well
+understood by NLP and machine translation researchers, and
+the necessary state structure should be obvious from the feature
+description.
+among all candidate target strings in Ω
+n
+, but rather
+in Ω
+n
+s
+, where Ωs =
+Sm
+i=1 Ωsi
+, and where Ωs is the
+set of target words that s may translate into.5
+We consider four different definitions of Ωs: (1)
+the baseline of the full target vocabulary, (2) the set
+of all target words that co-occur in sentence pairs
+containing s, (3) the most probable words under
+IBM Model 1 that are above a threshold, and (4) the
+same Model 1, except we add a sparse symmetric
+Dirichlet prior (α = 0.01) on the translation distributions and use the empirical Bayes (EB) method to
+infer a point estimate, using variational inference.
+Table 1: Comparison of alternative definitions Ωs (arrows
+indicate whether higher or lower is better).
+Ωs time (s) ↓
+P
+s
+|Ωs| ↓ AER ↓
+= Ω 22.4 86.0M 0.0
+co-occ. 8.9 0.68M 0.0
+Model 1 0.2 0.38M 6.2
+EB-Model 1 1.0 0.15M 2.9
+Table 1 compares the average per-sentence time
+required to run the inference algorithm described
+5
+Future work will explore alternative formulations of the
+discriminative neighborhood with the goal of further improving
+inference efficiency. Smith and Eisner (2005) show that good
+performance on unsupervised syntax learning is possible even
+when learning from very small discriminative neighborhoods,
+and we posit that the same holds here.
+412
+above under these four different definitions of Ωs on
+a 10,000 sentence subset of the Hansards FrenchEnglish corpus that includes manual word alignments. While our constructions guarantee that all
+references are reachable even in the reduced neighborhoods, not all alignments between source and target are possible. The last column is the oracle AER.
+Although EB variant of Model 1 neighborhood is
+slightly more expensive to do inference with than
+regular Model 1, we use it because it has a lower
+oracle AER.
+6
+During alignment prediction (rather than during
+training) for a sentence pair hs, ti, it is possible to
+further restrict Ωs
+to be just the set of words occurring in t, making extremely fast inference possible
+(comparable to that of the generative HMM alignment model).
+4 Features
+Feature engineering lets us encode knowledge about
+what aspects of a translation derivation are useful in
+predicting whether it is good or not. In this section
+we discuss the features we used in our model. Many
+of these were taken from the discriminative alignment modeling literature, but we also note that our
+features can be much more fine-grained than those
+used in supervised alignment modeling, since we
+learn our models from a large amount of parallel
+data, rather than a small number of manual alignments.
+Word association features. Word association features are at the heart of all lexical translation models,
+whether generative or discriminative. In addition to
+fine-grained boolean indicator features hsaj
+, tj i for
+pair types, we have several orthographic features:
+identity, prefix identity, and an orthographic similarity measure designed to be informative for predicting the translation of named entities in languages
+that use similar alphabets.7
+It has the property that
+source-target pairs of long words that are similar are
+given a higher score than word pairs that are short
+and similar (dissimilar pairs have a score near zero,
+6We included all translations whose probability was within
+a factor of 10−4
+of the highest probability translation.
+7
+In experiments with Urdu, which uses an Arabic-derived
+script, the orthographic feature was computed after first applying a heuristic Romanization, which made the orthographic
+forms somewhat comparable.
+regardless of length). We also include “global” association scores that are precomputed by looking at the
+full training data: Dice’s coefficient (discretized),
+which we use to measure association strength between pairs of source and target word types across
+sentence pairs (Dice, 1945), IBM Model 1 forward
+and reverse probabilities, and the geometric mean of
+the Model 1 forward and reverse probabilities. Finally, we also cluster the source and target vocabularies (Och, 1999) and include class pair indicator
+features, which can learn generalizations that, e.g.,
+“nouns tend to translate into nouns but not modal
+verbs.”
+Positional features. Following Blunsom and
+Cohn (2006), we include features indicating
+closeness to the alignment matrix diagonal,
+h(aj , j, m, n) =
+
+
+
+
+
+
+aj
+m −
+j
+n
+
+
+
+
+
+. We also conjoin this
+feature with the source word class type indicator to
+enable the model to learn that certain word types
+are more or less likely to favor a location on the
+diagonal (e.g. Urdu’s sentence-final verbs).
+Source features. Some words are functional elements that fulfill purely grammatical roles and
+should not be the “source” of a translation. For example, Romance languages require a preposition in
+the formation of what could be a noun-noun compound in English, thus, it may be useful to learn not
+to translate certain words (i.e. they should not participate in alignment links), or to have a bias to translate others. To capture this intuition we include an
+indicator feature that fires each time a source vocabulary item (and source word class) participates in an
+alignment link.
+Source path features. One class of particularly
+useful features assesses the goodness of the alignment ‘path’ through the source sentence (Vogel et
+al., 1996). Although assessing the predicted path
+requires using nonlocal features, since each aj ∈
+[0, m] and m is relatively small, features can be sensitive to a wider context than is often practical.
+We use many overlapping source path features,
+some of which are sensitive to the distance and direction of the jump between aj−1 and aj , and others which are sensitive to the word pair these two
+points define, and others that combine all three elements. The features we use include a discretized
+413
+jump distance, the discretized jump conjoined with
+an indicator feature for the target length n, the discretized jump feature conjoined with the class of saj
+,
+and the discretized jump feature conjoined with the
+class of saj
+and saj−1
+. To discretize the features we
+take a log transform (base 1.3) of the jump width and
+let an indicator feature fire for the closest integer.
+In addition to these distance-dependent features, we
+also include indicator features that fire on bigrams
+hsaj−1
+, saj
+i and their word classes. Thus, this feature can capture our intuition that, e.g., adjectives
+are more likely to come before or after a noun in
+different languages.
+Target string features. Features sensitive to multiple values in the predicted target string or latent
+alignment variable must be handled carefully for the
+sake of computational tractability. While features
+that look at multiple source words can be computed
+linearly in the number of source words considered
+(since the source string is always observable), features that look at multiple target words require exponential time and space!8 However, by grouping
+the tj ’s into coarse equivalence classes and looking
+at small numbers of variables, it is possible to incorporate such features. We include a feature that fires
+when a word translates as itself (for example, a name
+or a date, which occurs in languages that share the
+same alphabet) in position j, but then is translated
+again (as something else) in position j − 1 or j + 1.
+5 Experiments
+We now turn to an empirical assessment of our
+model. Using various datasets, we evaluate the
+performance of the models’ intrinsic quality and
+theirtheir alignments’ contribution to a standard machine translation system. We make use of parallel
+corpora from languages with very different typologies: a small (0.8M words) Chinese-English corpus
+from the tourism and travel domain (Takezawa et al.,
+2002), a corpus of Czech-English news commentary (3.1M words),9
+and an Urdu-English corpus
+(2M words) provided by NIST for the 2009 Open
+MT Evaluation. These pairs were selected since
+each poses different alignment challenges (word or8This is of course what makes history-based language model
+integration an inference challenge in translation.
+9http://statmt.org/wmt10
+der in Chinese and Urdu, morphological complexity in Czech, and a non-alphabetic writing system in
+Chinese), and confining ourselves to these relatively
+small corpora reduced the engineering overhead of
+getting an implementation up and running. Future
+work will explore the scalability characteristics and
+limits of the model.
+5.1 Methodology
+For each language pair, we train two log-linear
+translation models as described above (§3), once
+with English as the source and once with English
+as the target language. For a baseline, we use
+the Giza++ toolkit (Och and Ney, 2003) to learn
+Model 4, again in both directions. We symmetrize
+the alignments from both model types using the
+grow-diag-final-and heuristic (Koehn et al.,
+2003) producing, in total, six alignment sets. We
+evaluate them both intrinsically and in terms of their
+performance in a translation system.
+Since we only have gold alignments for CzechEnglish (Bojar and Prokopova, 2006), we can re- ´
+port alignment error rate (AER; Och and Ney, 2003)
+only for this pair. However, we offer two further
+measures that we believe are suggestive and that
+do not require gold alignments. One is the average alignment “fertility” of source words that occur
+only a single time in the training data (so-called hapax legomena). This assesses the impact of a typical
+alignment problem observed in generative models
+trained to maximize likelihood: infrequent source
+words act as “garbage collectors”, with many target
+words aligned to them (the word dislike in the Model
+4 alignment in Figure 2 is an example). Thus, we expect lower values of this measure to correlate with
+better alignments. The second measure is the number of rule types learned in the grammar induction
+process used for translation that match the translation test sets.10 While neither a decrease in the average singleton fertility nor an increase in the number
+of rules induced guarantees better alignment quality,
+we believe it is reasonable to assume that they are
+positively correlated.
+For the translation experiments in each language
+pair, we make use of the cdec decoder (Dyer et al.,
+10This measure does not assess whether the rule types are
+good or bad, but it does suggest that the system’s coverage is
+greater.
+414
+2010), inducing a hierarchical phrase based translation grammar from two sets of symmetrized alignments using the method described by Chiang (2007).
+Additionally, recent work that has demonstrated that
+extracting rules from n-best alignments has value
+(Liu et al., 2009; Venugopal et al., 2008). We
+therefore define a third condition where rules are
+extracted from the corpus under both the Model 4
+and discriminative alignments and merged to form
+a single grammar. We incorporate a 3-gram language model learned from the target side of the
+training data as well as 50M supplemental words
+of monolingual training data consisting of sentences
+randomly sampled from the English Gigaword, version 4. In the small Chinese-English travel domain
+experiment, we just use the LM estimated from the
+bitext. The parameters of the translation model were
+tuned using “hypergraph” minimum error rate training (MERT) to maximize BLEU on a held-out development set (Kumar et al., 2009). Results are
+reported using case-insensitive BLEU (Papineni et
+al., 2002), METEOR11 (Lavie and Denkowski, 2009),
+and TER (Snover et al., 2006), with the number of
+references varying by task. Since MERT is a nondeterministic optimization algorithm and results can
+vary considerably between runs, we follow Clark et
+al. (2011) and report the average score and standard deviation of 5 independent runs, 30 in the case
+of Chinese-English, since observed variance was
+higher.
+5.2 Experimental Results
+Czech-English. Czech-English poses problems
+for word alignment models since, unlike English,
+Czech words have a complex inflectional morphology, and the syntax permits relatively free word order. For this language pair, we evaluate alignment
+error rate using the manual alignment corpus described by Bojar and Prokopova (2006). Table 2 ´
+summarizes the results.
+Chinese-English. Chinese-English poses a different set of problems for alignment. While Chinese
+words have rather simple morphology, the Chinese
+writing system renders our orthographic features
+useless. Despite these challenges, the Chinese re11Meteor 1.0 with exact, stem, synonymy, and paraphrase
+modules and HTER parameters.
+Table 2: Czech-English experimental results. φ˜
+sing. is the
+average fertility of singleton source words.
+AER ↓ φ˜
+sing. ↓ # rules ↑
+Model 4 e | f 24.8 4.1
+f | e 33.6 6.6
+sym. 23.4 2.7 993,953
+Our model e | f 21.9 2.3
+f | e 29.3 3.8
+sym. 20.5 1.6 1,146,677
+Alignment BLEU ↑ METEOR ↑ TER ↓
+Model 4 16.3±0.2 46.1±0.1 67.4±0.3
+Our model 16.5±0.1 46.8±0.1 67.0±0.2
+Both 17.4±0.1 47.7±0.1 66.3±0.5
+sults in Table 3 show the same pattern of results as
+seen in Czech-English.
+Table 3: Chinese-English experimental results.
+φ˜
+sing. ↓ # rules ↑
+Model 4 e | f 4.4
+f | e 3.9
+sym. 3.6 52,323
+Our model e | f 3.5
+f | e 2.6
+sym. 3.1 54,077
+Alignment BLEU ↑ METEOR ↑ TER ↓
+Model 4 56.5±0.3 73.0±0.4 29.1±0.3
+Our model 57.2±0.8 73.8±0.4 29.3±1.1
+Both 59.1±0.6 74.8±0.7 27.6±0.5
+Urdu-English. Urdu-English is a more challenging language pair for word alignment than the previous two we have considered. The parallel data is
+drawn from numerous genres, and much of it was acquired automatically, making it quite noisy. So our
+models must not only predict good translations, they
+must cope with bad ones as well. Second, there has
+been no previous work on discriminative modeling
+of Urdu, since, to our knowledge, no manual alignments have been created. Finally, unlike English,
+Urdu is a head-final language: not only does it have
+SOV word order, but rather than prepositions, it has
+post-positions, which follow the nouns they modify,
+meaning its large scale word order is substantially
+415
+different from that of English. Table 4 demonstrates
+the same pattern of improving results with our alignment model.
+Table 4: Urdu-English experimental results.
+φ˜
+sing. ↓ # rules ↑
+Model 4 e | f 6.5
+f | e 8.0
+sym. 3.2 244,570
+Our model e | f 4.8
+f | e 8.3
+sym. 2.3 260,953
+Alignment BLEU ↑ METEOR ↑ TER ↓
+Model 4 23.3±0.2 49.3±0.2 68.8±0.8
+Our model 23.4±0.2 49.7±0.1 67.7±0.2
+Both 24.1±0.2 50.6±0.1 66.8±0.5
+5.3 Analysis
+The quantitative results presented in this section
+strongly suggest that our modeling approach produces better alignments. In this section, we try to
+characterize how the model is doing what it does
+and what it has learned. Because of the `1 regularization, the number of active (non-zero) features in
+the inferred models is small, relative to the number
+of features considered during training. The number of active features ranged from about 300k for
+the small Chinese-English corpus to 800k for UrduEnglish, which is less than one tenth of the available
+features in both cases. In all models, the coarse features (Model 1 probabilities, Dice coefficient, coarse
+positional features, etc.) typically received weights
+with large magnitudes, but finer features also played
+an important role.
+Language pair differences manifested themselves
+in many ways in the models that were learned.
+For example, orthographic features were (unsurprisingly) more valuable in Czech-English, with their
+largely overlapping alphabets, than in Chinese or
+Urdu. Examining the more fine-grained features is
+also illuminating. Table 5 shows the most highly
+weighted source path bigram features on the three
+models where English was the source language, and
+in each, we may observe some interesting characteristics of the target language. Left-most is EnglishCzech. At first it may be surprising that words like
+since and that have a highly weighted feature for
+transitioning to themselves. However, Czech punctuation rules require that relative clauses and subordinating conjunctions be preceded by a comma
+(which is only optional or outright forbidden in English), therefore our model translates these words
+twice, once to produce the comma, and a second
+time to produce the lexical item. The middle column is the English-Chinese model. In the training
+data, many of the sentences are questions directed to
+a second person, you. However, Chinese questions
+do not invert and the subject remains in the canonical first position, thus the transition from the start
+of sentence to you is highly weighted. Finally, Figure 2 illustrates how Model 4 (left) and our discriminative model (right) align an English-Urdu sentence
+pair (the English side is being conditioned on in both
+models). A reflex of Urdu’s head-final word order
+is seen in the list of most highly weighted bigrams,
+where a path through the English source where verbs
+that transition to end-of-sentence periods are predictive of good translations into Urdu.
+Table 5: The most highly weighted source path bigram
+features in the English-Czech, -Chinese, and -Urdu models.
+Bigram θk
+. h/si 3.08
+like like 1.19
+one of 1.06
+” . 0.95
+that that 0.92
+is but 0.92
+since since 0.84
+hsi when 0.83
+, how 0.83
+, not 0.83
+Bigram θk
+. h/si 2.67
+? ? 2.25
+hsi please 2.01
+much ? 1.61
+hsi if 1.58
+thank you 1.47
+hsi sorry 1.46
+hsi you 1.45
+please like 1.24
+hsi this 1.19
+Bigram θk
+. h/si 1.87
+hsi this 1.24
+will . 1.17
+are . 1.16
+is . 1.09
+is that 1.00
+have . 0.97
+has . 0.96
+was . 0.91
+will h/si 0.88
+6 Related Work
+The literature contains numerous descriptions of discriminative approaches to word alignment motivated
+by the desire to be able to incorporate multiple,
+overlapping knowledge sources (Ayan et al., 2005;
+Moore, 2005; Taskar et al., 2005; Blunsom and
+Cohn, 2006; Haghighi et al., 2009; Liu et al., 2010;
+DeNero and Klein, 2010; Setiawan et al., 2010).
+This body of work has been an invaluable source
+of useful features. Several authors have dealt with
+the problem training log-linear models in an unsu416
+IBM Model 4 alignment Our model's alignment
+Figure 2: Example English-Urdu alignment under IBM Model 4 (left) and our discriminative model (right). Model
+4 displays two characteristic errors: garbage collection and an overly-strong monotonicity bias. Whereas our model
+does not exhibit these problems, and in fact, makes no mistakes in the alignment.
+pervised setting. The contrastive estimation technique proposed by Smith and Eisner (2005) is globally normalized (and thus capable of dealing with arbitrary features), and closely related to the model we
+developed; however, they do not discuss the problem
+of word alignment. Berg-Kirkpatrick et al. (2010)
+learn locally normalized log-linear models in a generative setting. Globally normalized discriminative
+models with latent variables (Quattoni et al., 2004)
+have been used for a number of language processing
+problems, including MT (Dyer and Resnik, 2010;
+Blunsom et al., 2008a). However, this previous
+work relied on translation grammars constructed using standard generative word alignment processes.
+7 Future Work
+While we have demonstrated that this model can be
+substantially useful, it is limited in some important
+ways which are being addressed in ongoing work.
+First, training is expensive, and we are exploring alternatives to the conditional likelihood objective that
+is currently used, such as contrastive neighborhoods
+advocated by (Smith and Eisner, 2005). Additionally, there is much evidence that non-local features
+like the source word fertility are (cf. IBM Model 3)
+useful for translation and alignment modeling. To be
+truly general, it must be possible to utilize such features. Unfortunately, features like this that depend
+on global properties of the alignment vector, a, make
+the inference problem NP-hard, and approximations
+are necessary. Fortunately, there is much recent
+work on approximate inference techniques for incorporating nonlocal features (Blunsom et al., 2008b;
+Gimpel and Smith, 2009; Cromieres and Kurohashi, `
+2009; Weiss and Taskar, 2010), suggesting that this
+problem too can be solved using established techniques.
+8 Conclusion
+We have introduced a globally normalized, loglinear lexical translation model that can be trained
+discriminatively using only parallel sentences,
+which we apply to the problem of word alignment.
+Our approach addresses two important shortcomings
+of previous work: (1) that local normalization of
+generative models constrains the features that can be
+used, and (2) that previous discriminatively trained
+word alignment models required supervised alignments. According to a variety of measures in a variety of translation tasks, this model produces superior
+alignments to generative approaches. Furthermore,
+the features learned by our model reveal interesting
+characteristics of the language pairs being modeled.
+Acknowledgments
+This work was supported in part by the DARPA GALE
+program; the U. S. Army Research Laboratory and the
+U. S. Army Research Office under contract/grant num417
+ber W911NF-10-1-0533; and the National Science Foundation through grants IIS-0844507, IIS-0915187, IIS0713402, and IIS-0915327 and through TeraGrid resources provided by the Pittsburgh Supercomputing Center under grant number TG-DBS110003. We thank
+Ondˇrej Bojar for providing the Czech-English alignment
+data, and three anonymous reviewers for their detailed
+suggestions and comments on an earlier draft of this paper.
+
+
+PAPER--END
+
+
+
+
+
+Twitter provides access to large volumes of
+data in real time, but is notoriously noisy,
+hampering its utility for NLP. In this paper, we
+target out-of-vocabulary words in short text
+messages and propose a method for identifying and normalising ill-formed words. Our
+method uses a classifier to detect ill-formed
+words, and generates correction candidates
+based on morphophonemic similarity. Both
+word similarity and context are then exploited
+to select the most probable correction candidate for the word. The proposed method
+doesn’t require any annotations, and achieves
+state-of-the-art performance over an SMS corpus and a novel dataset based on Twitter.
+1 Introduction
+Twitter and other micro-blogging services are highly
+attractive for information extraction and text mining
+purposes, as they offer large volumes of real-time
+data, with around 65 millions tweets posted on Twitter per day in June 2010 (Twitter, 2010). The quality
+of messages varies significantly, however, ranging
+from high quality newswire-like text to meaningless
+strings. Typos, ad hoc abbreviations, phonetic substitutions, ungrammatical structures and emoticons
+abound in short text messages, causing grief for text
+processing tools (Sproat et al., 2001; Ritter et al.,
+2010). For instance, presented with the input u must
+be talkin bout the paper but I was thinkin movies
+(“You must be talking about the paper but I was
+thinking movies”),1
+the Stanford parser (Klein and
+1Throughout the paper, we will provide a normalised version
+of examples as a gloss in double quotes.
+Manning, 2003; de Marneffe et al., 2006) analyses
+bout the paper and thinkin movies as a clause and
+noun phrase, respectively, rather than a prepositional
+phrase and verb phrase. If there were some way of
+preprocessing the message to produce a more canonical lexical rendering, we would expect the quality
+of the parser to improve appreciably. Our aim in this
+paper is this task of lexical normalisation of noisy
+English text, with a particular focus on Twitter and
+SMS messages. In this paper, we will collectively
+refer to individual instances of typos, ad hoc abbreviations, unconventional spellings, phonetic substitutions and other causes of lexical deviation as “illformed words”.
+The message normalisation task is challenging.
+It has similarities with spell checking (Peterson,
+1980), but differs in that ill-formedness in text messages is often intentional, whether due to the desire
+to save characters/keystrokes, for social identity, or
+due to convention in this text sub-genre. We propose
+to go beyond spell checkers, in performing deabbreviation when appropriate, and recovering the canonical word form of commonplace shorthands like b4
+“before”, which tend to be considered beyond the
+remit of spell checking (Aw et al., 2006). The free
+writing style of text messages makes the task even
+more complex, e.g. with word lengthening such as
+goooood being commonplace for emphasis. In addition, the detection of ill-formed words is difficult
+due to noisy context.
+Our objective is to restore ill-formed words to
+their canonical lexical forms in standard English.
+Through a pilot study, we compared OOV words in
+Twitter and SMS data with other domain corpora,
+368
+revealing their characteristics in OOV word distribution. We found Twitter data to have an unsurprisingly long tail of OOV words, suggesting that
+conventional supervised learning will not perform
+well due to data sparsity. Additionally, many illformed words are ambiguous, and require context
+to disambiguate. For example, Gooood may refer to
+Good or God depending on context. This provides
+the motivation to develop a method which does not
+require annotated training data, but is able to leverage context for lexical normalisation. Our approach
+first generates a list of candidate canonical lexical
+forms, based on morphological and phonetic variation. Then, all candidates are ranked according
+to a list of features generated from noisy context
+and similarity between ill-formed words and candidates. Our proposed cascaded method is shown
+to achieve state-of-the-art results on both SMS and
+Twitter data.
+Our contributions in this paper are as follows: (1)
+we conduct a pilot study on the OOV word distribution of Twitter and other text genres, and analyse different sources of non-standard orthography in
+Twitter; (2) we generate a text normalisation dataset
+based on Twitter data; (3) we propose a novel normalisation approach that exploits dictionary lookup,
+word similarity and word context, without requiring annotated data; and (4) we demonstrate that our
+method achieves state-of-the-art accuracy over both
+SMS and Twitter data.
+2 Related work
+The noisy channel model (Shannon, 1948) has traditionally been the primary approach to tackling text
+normalisation. Suppose the ill-formed text is T
+and its corresponding standard form is S, the approach aims to find arg max P(S|T) by computing arg max P(T|S)P(S), in which P(S) is usually a language model and P(T|S) is an error model.
+Brill and Moore (2000) characterise the error model
+by computing the product of operation probabilities
+on slice-by-slice string edits. Toutanova and Moore
+(2002) improve the model by incorporating pronunciation information. Choudhury et al. (2007) model
+the word-level text generation process for SMS messages, by considering graphemic/phonetic abbreviations and unintentional typos as hidden Markov
+model (HMM) state transitions and emissions, respectively (Rabiner, 1989). Cook and Stevenson
+(2009) expand the error model by introducing inference from different erroneous formation processes,
+according to the sampled error distribution. While
+the noisy channel model is appropriate for text normalisation, P(T|S), which encodes the underlying
+error production process, is hard to approximate
+accurately. Additionally, these methods make the
+strong assumption that a token ti ∈ T only depends
+on si ∈ S, ignoring the context around the token,
+which could be utilised to help in resolving ambiguity.
+Statistical machine translation (SMT) has been
+proposed as a means of context-sensitive text normalisation, by treating the ill-formed text as the
+source language, and the standard form as the target
+language. For example, Aw et al. (2006) propose a
+phrase-level SMT SMS normalisation method with
+bootstrapped phrase alignments. SMT approaches
+tend to suffer from a critical lack of training data,
+however. It is labor intensive to construct an annotated corpus to sufficiently cover ill-formed words
+and context-appropriate corrections. Furthermore,
+it is hard to harness SMT for the lexical normalisation problem, as even if phrase-level re-ordering
+is suppressed by constraints on phrase segmentation, word-level re-orderings within a phrase are still
+prevalent.
+Some researchers have also formulated text normalisation as a speech recognition problem. For example, Kobus et al. (2008) firstly convert input text
+tokens into phonetic tokens and then restore them to
+words by phonetic dictionary lookup. Beaufort et al.
+(2010) use finite state methods to perform French
+SMS normalisation, combining the advantages of
+SMT and the noisy channel model. Kaufmann and
+Kalita (2010) exploit a machine translation approach
+with a preprocessor for syntactic (rather than lexical)
+normalisation.
+Predominantly, however, these methods require
+large-scale annotated training data, limiting their
+adaptability to new domains or languages. In contrast, our proposed method doesn’t require annotated
+data. It builds on the work on SMS text normalisation, and adapts it to Twitter data, exploiting multiple data sources for normalisation.
+369
+Figure 1: Out-of-vocabulary word distribution in English Gigaword (NYT), Twitter and SMS data
+3 Scoping Text Normalisation
+3.1 Task Definition of Lexical Normalisation
+We define the task of text normalisation to be a mapping from “ill-formed” OOV lexical items to their
+standard lexical forms, focusing exclusively on English for the purposes of this paper. We define the
+task as follows:
+• only OOV words are considered for normalisation;
+• normalisation must be to a single-token word,
+meaning that we would normalise smokin to
+smoking, but not imo to in my opinion; a sideeffect of this is to permit lower-register contractions such as gonna as the canonical form of
+gunna (given that going to is out of scope as a
+normalisation candidate, on the grounds of being multi-token).
+Given this definition, our first step is to identify
+candidate tokens for lexical normalisation, where
+we examine all tokens that consist of alphanumeric
+characters, and categorise them into in-vocabulary
+(IV) and out-of-vocabulary (OOV) words, relative to
+a dictionary. The OOV word definition is somewhat
+rough, because it includes neologisms and proper
+nouns like hopeable or WikiLeaks which have not
+made their way into the dictionary. However, it
+greatly simplifies the candidate identification task,
+at the cost of pushing complexity downstream to
+the word detection task, in that we need to explicitly distinguish between correct OOV words and illformed OOV words such as typos (e.g. earthquak
+“earthquake”), register-specific single-word abbreviations (e.g. lv “love”), and phonetic substitutions
+(e.g. 2morrow “tomorrow”).
+An immediate implication of our task definition is
+that ill-formed words which happen to coincide with
+an IV word (e.g. the misspelling of can’t as cant) are
+outside the scope of this research. We also consider
+that deabbreviation largely falls outside the scope of
+text normalisation, as abbreviations can be formed
+freely in standard English. Note that single-word
+abbreviations such as govt “government” are very
+much within the scope of lexical normalisation, as
+they are OOV and match to a single token in their
+standard lexical form.
+Throughout this paper, we use the GNU aspell
+dictionary (v0.60.6)2
+to determine whether a token
+is OOV. In tokenising the text, hyphenanted tokens
+and tokens containing apostrophes (e.g. take-off and
+won’t, resp.) are treated as a single token. Twitter mentions (e.g. @twitter), hashtags (e.g. #twitter)
+and urls (e.g. twitter.com) are excluded from consideration for normalisation, but left in situ for context
+modelling purposes. Dictionary lookup of Internet
+slang is performed relative to a dictionary of 5021
+items collected from the Internet.3
+3.2 OOV Word Distribution and Types
+To get a sense of the relative need for lexical normalisation, we perform analysis of the distribution
+of OOV words in different text types. In particular,
+we calculate the proportion of OOV tokens per message (or sentence, in the case of edited text), bin the
+messages according to the OOV token proportion,
+and plot the probability mass contained in each bin
+for a given text type. The three corpora we compare
+2We remove all one character tokens, except a and I, and
+treat RT as an IV word.
+3http://www.noslang.com
+370
+are the New York Times (NYT),4 SMS,5
+and Twitter.6 The results are presented in Figure 1.
+Both SMS and Twitter have a relatively flat distribution, with Twitter having a particularly large tail:
+around 15% of tweets have 50% or more OOV tokens. This has implications for any context modelling, as we cannot rely on having only isolated occurrences of OOV words. In contrast, NYT shows a
+more Zipfian distribution, despite the large number
+of proper names it contains.
+While this analysis confirms that Twitter and SMS
+are similar in being heavily laden with OOV tokens,
+it does not shed any light on the relative similarity in
+the makeup of OOV tokens in each case. To further
+analyse the two data sources, we extracted the set
+of OOV terms found exclusively in SMS and Twitter, and analysed each. Manual analysis of the two
+sets revealed that most OOV words found only in
+SMS were personal names. The Twitter-specific set,
+on the other hand, contained a heterogeneous collection of ill-formed words and proper nouns. This
+suggests that Twitter is a richer/noisier data source,
+and that text normalisation for Twitter needs to be
+more nuanced than for SMS.
+To further analyse the ill-formed words in Twitter, we randomly selected 449 tweets and manually analysed the sources of lexical variation, to
+determine the phenomena that lexical normalisation needs to deal with. We identified 254 token instances of lexical normalisation, and broke
+them down into categories, as listed in Table 1.
+“Letter” refers to instances where letters are missing or there are extraneous letters, but the lexical correspondence to the target word form is trivially accessible (e.g. shuld “should”). “Number
+Substitution” refers to instances of letter–number
+substitution, where numbers have been substituted
+for phonetically-similar sequences of letters (e.g. 4
+“for”). “Letter&Number” refers to instances which
+have both extra/missing letters and number substitution (e.g. b4 “before”). “Slang” refers to instances
+4Based on 44 million sentences from English Gigaword.
+5Based on 12.6 thousand SMS messages from How and Kan
+(2005) and Choudhury et al. (2007).
+6Based on 1.37 million tweets collected from the Twitter
+streaming API from Aug to Oct 2010, and filtered for monolingual English messages; see Section 5.1 for details of the language filtering methodology.
+Category Ratio
+Letter&Number 2.36%
+Letter 72.44%
+Number Substitution 2.76%
+Slang 12.20%
+Other 10.24%
+Table 1: Ill-formed word distribution
+of Internet slang (e.g. lol “laugh out loud”), as found
+in a slang dictionary (see Section 3.1). “Other” is
+the remainder of the instances, which is predominantly made up of occurrences of spaces having being deleted between words (e.g. sucha “such a”). If
+a given instance belongs to multiple error categories
+(e.g. “Letter&Number” and it is also found in a slang
+dictionary), we classify it into the higher-occurring
+category in Table 1.
+From Table 1, it is clear that “Letter” accounts
+for the majority of ill-formed words in Twitter, and
+that most ill-formed words are based on morphophonemic variations. This empirical finding assists
+in shaping our strategy for lexical normalisation.
+4 Lexical normalisation
+Our proposed lexical normalisation strategy involves three general steps: (1) confusion set generation, where we identify normalisation candidates
+for a given word; (2) ill-formed word identification,
+where we classify a word as being ill-formed or not,
+relative to its confusion set; and (3) candidate selection, where we select the standard form for tokens
+which have been classified as being ill formed. In
+confusion set generation, we generate a set of IV
+normalisation candidates for each OOV word type
+based on morphophonemic variation. We call this
+set the confusion set of that OOV word, and aim to
+include all feasible normalisation candidates for the
+word type in the confusion set. The confusion candidates are then filtered for each token occurrence of
+a given OOV word, based on their local context fit
+with a language model.
+4.1 Confusion Set Generation
+Revisiting our manual analysis from Section 3.2,
+most ill-formed tokens in Twitter are morphophonemically derived. First, inspired by Kaufmann and
+Kalita (2010), any repititions of more than 3 letters are reduced back to 3 letters (e.g. cooool is re371
+Criterion Recall Average
+Candidates
+Tc ≤ 1 40.4% 24
+Tc ≤ 2 76.6% 240
+Tp = 0 55.4% 65
+Tp ≤ 1 83.4% 1248
+Tp ≤ 2 91.0% 9694
+Tc ≤ 2 ∨ Tp ≤ 1 88.8% 1269
+Tc ≤ 2 ∨ Tp ≤ 2 92.7% 9515
+Table 2: Recall and average number of candidates for different confusion set generation strategies
+duced to coool). Second, IV words within a threshold Tc character edit distance of the given OOV
+word are calculated, as is widely used in spell checkers. Third, the double metaphone algorithm (Philips,
+2000) is used to decode the pronunciation of all IV
+words, and IV words within a threshold Tp edit distance of the given OOV word under phonemic transcription, are included in the confusion set; this allows us to capture OOV words such as earthquick
+“earthquake”. In Table 2, we list the recall and average size of the confusion set generated by the final two strategies with different threshold settings,
+based on our evaluation dataset (see Section 5.1).
+The recall for lexical edit distance with Tc ≤ 2 is
+moderately high, but it is unable to detect the correct
+candidate for about one quarter of words. The combination of the lexical and phonemic strategies with
+Tc ≤ 2∨Tp ≤ 2 is more impressive, but the number
+of candidates has also soared. Note that increasing
+the edit distance further in both cases leads to an explosion in the average number of candidates, with
+serious computational implications for downstream
+processing. Thankfully, Tc ≤ 2∨Tp ≤ 1 leads to an
+extra increment in recall to 88.8%, with only a slight
+increase in the average number of candidates. Based
+on these results, we use Tc ≤ 2∨Tp ≤ 1 as the basis
+for confusion set generation.
+Examples of ill-formed words where we are unable to generate the standard lexical form are clippings such as fav “favourite” and convo “conversation”.
+In addition to generating the confusion set, we
+rank the candidates based on a trigram language
+model trained over 1.5GB of clean Twitter data, i.e.
+tweets which consist of all IV words: despite the
+prevalence of OOV words in Twitter, the sheer volume of the data means that it is relatively easy to collect large amounts of all-IV messages. To train the
+language model, we used SRILM (Stolcke, 2002)
+with the -<unk> option. If we truncate the ranking
+to the top 10% of candidates, the recall drops back
+to 84% with a 90% reduction in candidates.
+4.2 Ill-formed Word Detection
+The next step is to detect whether a given OOV word
+in context is actually an ill-formed word or not, relative to its confusion set. To the best of our knowledge, we are the first to target the task of ill-formed
+word detection in the context of short text messages,
+although related work exists for text with lower relative occurrences of OOV words (Izumi et al., 2003;
+Sun et al., 2007). Due to the noisiness of the data, it
+is impractical to use full-blown syntactic or semantic features. The most direct source of evidence is
+IV words around an OOV word. Inspired by work
+on labelled sequential pattern extraction (Sun et al.,
+2007), we exploit large-scale edited corpus data to
+construct dependency-based features.
+First, we use the Stanford parser (Klein and Manning, 2003; de Marneffe et al., 2006) to extract dependencies from the NYT corpus (see Section 3.2).
+For example, from a sentence such as One obvious
+difference is the way they look, we would extract
+dependencies such as rcmod(way-6,look-8)
+and nsubj(look-8,they-7). We then transform the dependencies into relational features for
+each OOV word. Assuming that way were an OOV
+word, e.g., we would extract dependencies of the
+form (look,way,+2), indicating that look occurs 2 words after way. We choose dependencies to
+represent context because they are an effective way
+of capturing key relationships between words, and
+similar features can easily be extracted from tweets.
+Note that we don’t record the dependency type here,
+because we have no intention of dependency parsing
+text messages, due to their noisiness and the volume
+of the data. The counts of dependency forms are
+combined together to derive a confidence score, and
+the scored dependencies are stored in a dependency
+bank.
+Given the dependency-based features, a linear
+kernel SVM classifier (Fan et al., 2008) is trained
+on clean Twitter data, i.e. the subset of Twitter messages without OOV words. Each word is repre372
+sented by its IV words within a context window
+of three words to either side of the target word,
+together with their relative positions in the form
+of (word1,word2,position) tuples, and their
+score in the dependency bank. These form the positive training exemplars. Negative exemplars are
+automatically constructed by replacing target words
+with highly-ranked candidates from their confusion
+set. Note that the classifier does not require any hand
+annotation, as all training exemplars are constructed
+automatically.
+To predict whether a given OOV word is
+ill-formed, we form an exemplar for each
+of its confusion candidates, and extract
+(word1,word2,position) features. If
+all its candidates are predicted to be negative by the
+model, we mark it as correct; otherwise, we treat
+it as ill-formed, and pass all candidates (not just
+positively-classified candidates) on to the candidate
+selection step. For example, given the message
+way yu lookin shuld be a sin and the OOV word
+lookin, we would generate context features for each
+candidate word such as (way,looking,-2),
+and classify each such candidate.
+In training, it is possible for the exact same feature vector to occur as both positive and negative exemplars. To prevent positive exemplars being contaminated from the automatic generation, we remove all negative instances in such cases. The
+(word1,word2,position) features are sparse
+and sometimes lead to conservative results in illformed word detection. That is, without valid features, the SVM classifier tends to label uncertain
+cases as correct rather than ill-formed words. This
+is arguably the right approach to normalisation, in
+choosing to under- rather than over-normalise in
+cases of uncertainty.
+As the context for a target word often contains
+OOV words which don’t occur in the dependency
+bank, we expand the dependency features to include
+context tokens up to a phonemic edit distance of 1
+from context tokens in the dependency bank. In
+this way, we generate dependency-based features
+for context words such as seee “see” in (seee,
+flm, +2) (based on the target word flm in the
+context of flm to seee). However, expanded dependency features may introduce noise, and we therefore introduce expanded dependency weights wd ∈
+{0.0, 0.5, 1.0} to ameliorate the effects of noise: a
+weight of wd = 0.0 means no expansion, while 1.0
+means expanded dependencies are indistinguishable
+from non-expanded (strict match) dependencies.
+We separately introduce a threshold td ∈
+{1, 2, ..., 10} on the number of positive predictions
+returned by the detection classifier over the set of
+normalisation candidates for a given OOV token: the
+token is considered to be ill-formed iff td or more
+candidates are positively classified, i.e. predicted to
+be correct candidates.
+4.3 Candidate Selection
+For OOV words which are predicted to be illformed, we select the most likely candidate from the
+confusion set as the basis of normalisation. The final
+selection is based on the following features, in line
+with previous work (Wong et al., 2006; Cook and
+Stevenson, 2009).
+Lexical edit distance, phonemic edit distance,
+prefix substring, suffix substring, and the longest
+common subsequence (LCS) are exploited to capture morphophonemic similarity. Both lexical and
+phonemic edit distance (ED) are normalised by the
+reciprocal of exp(ED). The prefix and suffix features are intended to capture the fact that leading
+and trailing characters are frequently dropped from
+words, e.g. in cases such as ish and talkin. We calculate the ratio of the LCS over the maximum string
+length between ill-formed word and the candidate,
+since the ill-formed word can be either longer or
+shorter than (or the same size as) the standard form.
+For example, mve can be restored to either me or
+move, depending on context. We normalise these ratios following Cook and Stevenson (2009).
+For context inference, we employ both language
+model- and dependency-based frequency features.
+Ranking by language model score is intuitively appealing for candidate selection, but our trigram
+model is trained only on clean Twitter data and illformed words often don’t have sufficient context for
+the language model to operate effectively, as in bt
+“but” in say 2 sum1 bt nt gonna say “say to someone but not going to say”. To consolidate the context modelling, we obtain dependencies from the dependency bank used in ill-formed word detection.
+Although text messages are of a different genre to
+edited newswire text, we assume they form similar
+373
+dependencies based on the common goal of getting
+across the message effectively. The dependency features can be used in noisy contexts and are robust
+to the effects of other ill-formed words, as they do
+not rely on contiguity. For example, uz “use” in i
+did #tt uz me and yu, dependencies can capture relationships like aux(use-4, do-2), which is beyond the capabilities of the language model due to
+the hashtag being treated as a correct OOV word.
+5 Experiments
+5.1 Dataset and baselines
+The aim of our experiments is to compare the effectiveness of different methodologies over text messages, based on two datasets: (1) an SMS corpus
+(Choudhury et al., 2007); and (2) a novel Twitter
+dataset developed as part of this research, based on
+a random sampling of 549 English tweets. The English tweets were annotated by three independent
+annotators. All OOV words were pre-identified,
+and the annotators were requested to determine: (a)
+whether each OOV word was ill-formed or not; and
+(b) what the standard form was for ill-formed words,
+subject to the task definition outlined in Section 3.1.
+The total number of ill-formed words contained in
+the SMS and Twitter datasets were 3849 and 1184,
+respectively.7
+The language filtering of Twitter to automatically
+identify English tweets was based on the language
+identification method of Baldwin and Lui (2010),
+using the EuroGOV dataset as training data, a mixed
+unigram/bigram/trigram byte feature representation,
+and a skew divergence nearest prototype classifier.
+We reimplemented the state-of-art noisy channel
+model of Cook and Stevenson (2009) and SMT approach of Aw et al. (2006) as benchmark methods. We implement the SMT approach in Moses
+(Koehn et al., 2007), with synthetic training and
+tuning data of 90,000 and 1000 sentence pairs, respectively. This data is randomly sampled from the
+1.5GB of clean Twitter data, and errors are generated according to distribution of SMS corpus. The
+10-fold cross-validated BLEU score (Papineni et al.,
+2002) over this data is 0.81.
+7The Twitter dataset is available at http://www.
+csse.unimelb.edu.au/research/lt/resources/
+lexnorm/.
+In addition to comparing our method with competitor methods, we also study the contribution of
+different feature groups. We separately compare dictionary lookup over our Internet slang dictionary,
+the contextual feature model, and the word similarity feature model, as well as combinations of these
+three.
+5.2 Evaluation metrics
+The evaluation of lexical normalisation consists of
+two stages (Hirst and Budanitsky, 2005): (1) illformed word detection, and (2) candidate selection.
+In terms of detection, we want to make sense of how
+well the system can identify ill-formed words and
+leave correct OOV words untouched. This step is
+crucial to further normalisation, because if correct
+OOV words are identified as ill-formed, the candidate selection step can never be correct. Conversely,
+if an ill-formed word is predicted to be correct, the
+candidate selection will have no chance to normalise
+it.
+We evaluate detection performance by token-level
+precision, recall and F-score (β = 1). Previous work
+over the SMS corpus has assumed perfect ill-formed
+word detection and focused only on the candidate
+selection step, so we evaluate ill-formed word detection for the Twitter data only.
+For candidate selection, we once again evaluate using token-level precision, recall and F-score.
+Additionally, we evaluate using the BLEU score
+over the normalised form of each message, as the
+SMT method can lead to perturbations of the token
+stream, vexing standard precision, recall and F-score
+evaluation.
+5.3 Results and Analysis
+First, we test the impact of the wd and td values
+on ill-formed word detection effectiveness, based on
+dependencies from either the Spinn3r blog corpus
+(Blog: Burton et al. (2009)) or NYT. The results for
+precision, recall and F-score are presented in Figure 2.
+Some conclusions can be drawn from the graphs.
+First, higher detection threshold values (td) give better precision but lower recall. Generally, as td is
+raised from 1 to 10, the precision improves slightly
+but recall drops dramatically, with the net effect that
+the F-score decreases monotonically. Thus, we use a
+374
+Figure 2: Ill-formed word detection precision, recall and
+F-score
+smaller threshold, i.e. td = 1. Second, there are differences between the two corpora, with dependencies from the Blog corpus producing slightly lower
+precision but higher recall, compared with the NYT
+corpus. The lower precision for the Blog corpus appears to be due to the text not being as clean as NYT,
+introducing parser errors. Nevertheless, the difference in F-score between the two corpora is insignificant. Third, we obtain the best results, especially
+in terms of precision, for wd = 0.5, i.e. with expanded dependencies, but penalised relative to nonexpanded dependencies.
+Overall, the best F-score is 71.2%, with a precision of 61.1% and recall of 85.3%, obtained over
+the Blog corpus with td = 1 and wd = 0.5. Clearly
+there is significant room for immprovements in these
+results. We leave the improvement of ill-formed
+word detection for future work, and perform evaluation of candidate selection for Twitter assuming
+perfect ill-formed word detection, as for the SMS
+data.
+From Table 3, we see that the general performance of our proposed method on Twitter is better
+than that on SMS. To better understand this trend,
+we examined the annotations in the SMS corpus, and
+found them to be looser than ours, because they have
+different task specifications than our lexical normalisation. In our annotation, the annotators only normalised ill-formed word if they had high confidence
+of how to normalise, as with talkin “talking”. For
+ill-formed words where they couldn’t be certain of
+the standard form, the tokens were left untouched.
+However, in the SMS corpus, annotations such as
+sammis “same” are also included. This leads to a
+performance drop for our method over the SMS corpus.
+The noisy channel method of Cook and Stevenson
+(2009) shares similar features with word similarity
+(“WS”), However, when word similarity and context support are combined (“WS+CS”), our method
+outperforms the noisy channel method by about 7%
+and 12% in F-score over SMS and Twitter corpora,
+respectively. This can be explained as follows. First,
+the Cook and Stevenson (2009) method is typebased, so all token instances of a given ill-formed
+word will be normalised identically. In the Twitter data, however, the same word can be normalised
+differently depending on context, e.g. hw “how” in
+so hw many time remaining so I can calculate it?
+vs. hw “homework” in I need to finish my hw first.
+Second, the noisy channel method was developed
+specifically for SMS normalisation, in which clipping is the most prevalent form of lexical variation,
+while in the Twitter data, we commonly have instances of word lengthening for emphasis, such as
+moviiie “movie”. Having said this, our method is
+superior to the noisy channel method over both the
+SMS and Twitter data.
+The SMT approach is relatively stable on the two
+datasets, but well below the performance of our
+method. This is due to the limitations of the training
+data: we obtain the ill-formed words and their standard forms from the SMS corpus, but the ill-formed
+words in the SMS corpus are not sufficient to cover
+those in the Twitter data (and we don’t have sufficient Twitter data to train the SMT method directly).
+Thus, novel ill-formed words are missed in normalisation. This shows the shortcoming of supervised
+data-driven approaches that require annotated data
+to cover all possibilities of ill-formed words in Twitter.
+The dictionary lookup method (“DL”) unsurprisingly achieves the best precision, but the recall
+on Twitter is not competitive. Consequently, the
+Twitter normalisation cannot be tackled with dictionary lookup alone, although it is an effective preprocessing strategy when combined with more ro375
+Dataset Evaluation NC MT DL WS CS WS+CS DL+WS+CS
+SMS
+Precision 0.465 — 0.927 0.521 0.116 0.532 0.756
+Recall 0.464 — 0.597 0.520 0.116 0.531 0.754
+F-score 0.464 — 0.726 0.520 0.116 0.531 0.755
+BLEU 0.746 0.700 0.801 0.764 0.612 0.772 0.876
+Twitter
+Precision 0.452 — 0.961 0.551 0.194 0.571 0.753
+Recall 0.452 — 0.460 0.551 0.194 0.571 0.753
+F-score 0.452 — 0.622 0.551 0.194 0.571 0.753
+BLEU 0.857 0.728 0.861 0.878 0.797 0.884 0.934
+Table 3: Candidate selection effectiveness on different datasets (NC = noisy channel model (Cook and Stevenson,
+2009); MT = SMT (Aw et al., 2006); DL = dictionary lookup; WS = word similarity; CS = context support)
+bust techniques such as our proposed method, and
+effective at capturing common abbreviations such as
+gf “girlfriend”.
+Of the component methods proposed in this research, word similarity (“WS”) achieves higher precision and recall than context support (“CS”), signifying that many of the ill-formed words emanate
+from morphophonemic variations. However, when
+combined with word similarity features, context
+support improves over the basic method at a level of
+statistical significance (based on randomised estimation, p < 0.05: Yeh (2000)), indicating the complementarity of the two methods, especially on Twitter
+data. The best F-score is achieved when combining dictionary lookup, word similarity and context
+support (“DL+WS+CS”), in which ill-formed words
+are first looked up in the slang dictionary, and only
+if no match is found do we apply our normalisation
+method.
+We found several limitations in our proposed approach by analysing the output of our method. First,
+not all ill-formed words offer useful context. Some
+highly noisy tweets contain almost all misspellings
+and unique symbols, and thus no context features
+can be extracted. This also explains why “CS” features often fail. For such cases, the method falls back
+to context-independent normalisation. We found
+that only 32.6% ill-formed words have all IV words
+in their context windows. Moreover, the IV words
+may not occur in the dependency bank, further decreasing the effectiveness of context support features. Second, the different features are linearly
+combined, where a weighted combination is likely
+to give better results, although it also requires a certain amount of well-sampled annotations for tuning.
+6 Conclusion and Future Work
+In this paper, we have proposed the task of lexical normalisation for short text messages, as found
+in Twitter and SMS data. We found that most illformed words are based on morphophonemic variation and proposed a cascaded method to detect and
+normalise ill-formed words. Our ill-formed word
+detector requires no explicit annotations, and the
+dependency-based features were shown to be somewhat effective, however, there was still a lot of
+room for improvement at ill-formed word detection.
+In normalisation, we compared our method with
+two benchmark methods from the literature, and
+achieved that highest F-score and BLEU score by
+integrating dictionary lookup, word similarity and
+context support modelling.
+In future work, we propose to pursue a number of
+directions. First, we plan to improve our ill-formed
+word detection classifier by introducing an OOV
+word whitelist. Furthermore, we intend to alleviate noisy contexts with a bootstrapping approach, in
+which ill-formed words with high confidence and no
+ambiguity will be replaced by their standard forms,
+and fed into the normalisation model as new training
+data.
+Acknowledgements
+NICTA is funded by the Australian government as represented by Department of Broadband, Communication
+and Digital Economy, and the Australian Research Council through the ICT centre of Excellence programme.
+
+
+
+
+PAPER--END
+
+
+
+
+Transliterating named entities from one language into another can be approached as
+neural machine translation (NMT) problem, for which we use deep attentional
+RNN encoder-decoder models. To build
+a strong transliteration system, we apply
+well-established techniques from NMT,
+such as dropout regularization, model ensembling, rescoring with right-to-left models, and back-translation. Our submission
+to the NEWS 2018 Shared Task on Named
+Entity Transliteration ranked first in several
+tracks.
+1 Introduction
+Transliteration of Named Entities (NEs) is defined
+as the phonetic translation of names across languages (Knight and Graehl, 1998). It is an important part of a number of natural language processing tasks, and machine translation in particular
+(Durrani et al., 2014; Sennrich et al., 2016c).
+Machine transliteration can be approached as
+a sequence-to-sequence modeling problem (Finch
+et al., 2016; Ameur et al., 2017). In this work, we
+explore the Neural Machine Translation (NMT)
+approach based on an attentional RNN encoderdecoder neural network architecture (Sutskever
+et al., 2014), motivated by its successful application to other sequence-to-sequence tasks, such as
+grammatical error correction (Yuan and Briscoe,
+2016), automatic post-editing (Junczys-Dowmunt
+and Grundkiewicz, 2016), sentence summarization
+(Chopra et al., 2016), or paraphrasing (Mallinson
+et al., 2017). We apply well-established techniques
+from NMT to machine transliteration building a
+strong system that achieves state-of-the-art-results.
+The techniques we exploit include:
+• Regularization with various dropouts preventing model overfitting;
+• Ensembling strategies involving independently trained models and model checkpoints;
+• Re-scoring of n-best list of candidate transliterations by right-to-left models;
+• Using synthetic training data generated via
+back-translation.
+The developed system constitutes our submission to the NEWS 2018 Shared Task1 on Named
+Entity Transliteration ranked first in several tracks.
+We describe the shared task in Section 2, including provided data sets and evaluation metrics. In
+Section 3, we present the model architecture and
+adopted NMT techniques. The experiment details
+are presented in Section 4, the results are reported
+in Section 5, and we conclude in Section 6.
+2 Shared task on named entity
+transliteration
+The NEWS 2018 shared task (Chen et al., 2018)
+continues the tradition from the previous tasks (Xiangyu Duan et al., 2016, 2015; Zhang et al., 2012)
+and focuses on transliteration of personal and place
+names from English or into English or in both directions.
+2.1 Datasets
+Five different datasets have been made available for
+use as the training and development data. The data
+for Thai (EnTh, ThEn) comes from the NECTEC
+transliteration dataset. The second dataset is the
+RMIT English-Persian dataset (Karimi et al., 2006,
+2007) (EnPe, PeEn). Chinese (EnCh, ChEn)
+and Vietnamese (EnVi) data originates in Xinhua
+1http://workshop.colips.org/news2018
+90
+ID Languages Train Dev Test
+EnTh English-Thai 30,781 1000 1000
+ThEn Thai-English 27,273 1000 1000
+EnPe English-Persian 13,386 1000 1000
+PeEn Persian-English 15,677 1000 1000
+EnCh English-Chinese 41,318 1000 1000
+ChEn Chinese-English 32,002 1000 1000
+EnVi English-Vietnamese 3,256 500 500
+EnHi English-Hindi 12,937 1000 1000
+EnTa English-Tamil 10,957 1000 1000
+EnKa English-Kannada 10,955 1000 1000
+EnBa English-Bangla 13,623 1000 1000
+EnHe English-Hebrew 10,501 1000 1000
+HeEn Hebrew-English 9,447 1000 1000
+Table 1: Official data sets in NEWS 2018 which
+we use in our experiments.
+transliteration datasets (Haizhou et al., 2004), and
+the VNU-HCMUS dataset (Cao et al., 2010; Ngo
+et al., 2015), respectively. Hindi, Tamil, Kannada,
+Bangla (EnHi, EnTa, EnKa, EnBa), and Hebrew
+(EnHe, HeEn) are provided by Microsoft Research
+India2
+. We do not evaluate our models on the
+dataset from the CJK Dictionary Institute as the
+data is not freely available for research purposes.
+We use 13 data sets for our experiments (Table 1). The data consists of genuine transliterations
+or back-translations or includes both.
+No other parallel nor monolingual data are allowed for the constrained standard submissions that
+we participate in.
+2.2 Evaluation
+The quality of machine transliterations is evaluated with four automatic metrics in the shared task:
+word accuracy, mean F-score, mean reciprocal rank,
+and MAPref (Chen et al., 2018). As a main evaluation metric for our experiments we use word
+accuracy (Acc) on the top candidate:
+Acc =
+1
+N
+X
+N
+i=1 (
+1 if ci,1matches any of ri,j
+0 otherwise
+.
+The closer the value to 1.0, the more top candidates ci,1 are correct transliterations, i.e. they
+match one of the references ri,j . N is the total
+number of entries in a test set.
+3 Neural machine translation
+Our machine transliteration system is based on
+a deep RNN-based attentional encoder-decoder
+2http://research.microsoft.com/india
+model that consists of a bidirectional multi-layer
+encoder and decoder, both using GRUs as their
+RNN variants (Sennrich et al., 2017b). It utilizes
+the BiDeep architecture proposed by Miceli Barone
+et al. (2017), which combines deep transitions with
+stacked RNNs. We employ the soft-attention mechanism (Bahdanau et al., 2014), and leave hard
+monotonic attention models (Aharoni and Goldberg, 2017) for future work. Layer normalization
+(Ba et al., 2016) is applied to all recurrent and
+feed-forward layers, except for layers followed by
+a softmax. We use weight tying between target and
+output embeddings (Press and Wolf, 2017).
+The model operates on word level, and no special adaptation is made to the model architecture
+in order to support character-level transliteration,
+except data preprocessing (Section 4.1).
+3.1 NMT techniques
+Regularization Randomly dropping units from
+the neural network during training is an effective
+regularization method that prevents the model from
+overfitting (Srivastava et al., 2014).
+For RNN networks, Gal and Ghahramani (2016)
+proposed variational dropout over RNN inputs and
+states, which we adopt in our experiments. Following Sennrich et al. (2016a), we also dropout entire
+source and target words (characters in our case)
+with a given probability.
+Model ensembling Model ensembling leads to
+consistent improvements for NMT (Sutskever et al.,
+2014; Sennrich et al., 2016a; Denkowski and Neubig, 2017). An ensemble of independent models
+usually outperforms an ensemble of different model
+checkpoints from a single training run as it results
+in more diverse models in the ensemble (Sennrich
+et al., 2017a). As an alternative method for checkpoint ensembles, Junczys-Dowmunt et al. (2016)
+propose exponential smoothing of network parameters averaging them over the entire training.
+We combine both methods and build ensembles
+of independently trained models with exponentially
+smoothed parameters.
+Re-scoring with right-left models Re-scoring
+of an n-best list of candidate translations obtained
+from one system by another allows to incorporate
+additional features into the model or to combine
+multiple different systems that cannot be easily
+ensembled. Sennrich et al. (2016a, 2017a), for rescoring a NMT system, propose to use separate
+91
+ID Original +Synthetic R
+EnTh 59,131 154,232 ×1
+ThEn 58,872 153,973 ×1
+EnPe 32,321 127,314 ×1
+PeEn 32,616 127,609 ×1
+EnCh 81,252 176,367 ×1
+ChEn 80,818 175,933 ×1
+EnVi 2,756 139,175 ×16
+EnHi 12,607 145,507 ×4
+EnTa 10,702 137,887 ×4
+EnKa 10,662 137,727 ×4
+EnBa 13,389 148,635 ×4
+EnHe 18,558 132,070 ×2
+HeEn 18,388 131,730 ×2
+Table 2: Comparison of training data sets without
+and with synthetic examples. The original data are
+oversampled R times in synthetic data sets.
+models trained on reversed target side that produce
+the target text from right-to-left.
+We adopt the following re-ranking technique: we
+first ensemble four standard left-to-right models to
+produce n-best lists of 20 transliteration candidates
+and then re-score them with two right-to-left models and re-rank.
+Back-translation Monolingual data can be backtranslated by a system trained on the reversed language direction to generate synthetic parallel corpora (Sennrich et al., 2016b). Additional training
+data can significantly improve a NMT system.
+As the task is organized under a constrained settings and no data other than that provided by organizers is allowed, we consider the English examples from all datasets as our monolingual data and
+use back-translations and “forward-translations” to
+enlarge the amount of parallel training data.
+4 Experimental setting
+We train all systems with Marian NMT toolkit3,4
+(Junczys-Dowmunt et al., 2018).
+4.1 Data preprocessing
+We uppercase5
+and tokenize all words into sequences of characters and treat them as words.
+Whitespaces are replaced by a special character
+to be able to reconstruct word boundaries after decoding.
+3https://marian-nmt.github.io
+4The training scripts are available at http://github.
+com/snukky/news-translit-nmt.
+5The evaluation metric is case-insensitive.
+We use the training data provided in the NEWS
+2018 shared task to create our training and validation sets, and the official development set as an
+internal test set. Validation sets consists of randomly selected 500 examples that are subtracted
+from the training data. If a name entity has alternative translations, we add them to the training data
+as separate examples with identical source side.
+The number of training examples varies between
+ca. 2,756 and 81,252 (Table 2).
+4.2 Model architecture
+We use the BiDeep model architecture (Miceli
+Barone et al., 2017) for all systems. The model
+consists of 4 bidirectional alternating stacked encoders with 2-layer transition cells, and 4 stacked
+decoders with the transition depth of 4 in the base
+RNN of the stack and 2 in the higher RNNs. We
+augment it with layer normalization, skip connections, and parameter tying between all embeddings
+and output layer. The RNN hidden state size is set
+to 1024, embeddings size to 512. Source and target
+vocabularies are identical. The size of the vocabulary varies across language pair and is determined
+by the number of unique characters in the training
+data.
+4.3 Training settings
+We limit the maximum input length to 80 characters during training. Variational dropout on all
+RNN inputs and states is set to 0.2, source and
+target dropouts are 0.1. A factor for exponential
+smoothing is set to 0.0001.
+Optimization is performed with Adam (Kingma
+and Ba, 2014) with a mini-batch size fitted into
+3GB of GPU memory6
+. Models are validated and
+saved every 500 mini-batches. We stop training
+when the cross-entropy cost on the validation set
+fails to reach a new minimum for 5 consecutive validation steps. As a final model we choose the one
+that achieves the highest word accuracy on the validation set. We train with learning rate of 0.003 and
+decrease the value by 0.9 every time the validation
+score does not improve over the current best value.
+We do not change any training hyperparameters
+across languages.
+Decoding is done by beam search with a beam
+size of 10. The scores for each candidate translation
+are normalized by sentence length.
+6We train all systems on a single GPU.
+92
+System EnTh ThEn EnPe PeEn EnCh ChEn EnVi EnHi EnTa EnKa EnBa EnHe HeEn
+No dropouts 0.434 0.467 0.566 0.365 0.754 0.306 0.390 0.466 0.451 0.387 0.450 0.616 0.286
+Baseline model 0.467 0.503 0.594 0.390 0.739 0.347 0.458 0.481 0.455 0.418 0.465 0.632 0.284
+Right-left model 0.462 0.502 0.598 0.402 0.751 0.351 0.458 0.476 0.446 0.403 0.476 0.606 0.287
+Ensemble ×4 0.477 0.526 0.605 0.407 0.752 0.366 0.478 0.504 0.469 0.438 0.489 0.633 0.291
++ Re-ranking 0.475 0.534 0.606 0.436 0.765 0.365 0.494 0.515 0.483 0.441 0.488 0.638 0.294
++ Synthetic data 0.484 0.728 0.610 0.585 0.760 0.759 0.496 0.519 0.471 0.455 0.484 0.626 0.615
+Test set 0.167 0.328 — — 0.304 0.276 0.502 0.333 0.237 0.340 0.461 0.187 0.153
+Table 3: Results (Acc) on the official NEWS 2018 development set. Bolded systems have been evaluated
+on the official test set (last row).
+4.4 Synthetic parallel data
+English texts from parallel training data from all
+datasets are used as monolingual data from which
+we generate synthetic examples7
+. We do not make
+a distinction between authentic examples or actual
+back-translations, and collect 95,179 unique English named entities in total.
+We back-translate English examples using the
+systems trained on the original data and use them as
+additional training data for training the systems into
+English. For systems from English into another language, we translate English texts with analogous
+systems creating “forward-translations”. To have a
+reasonable balance between synthetic and original
+examples, we oversample the original data several
+times (Table 2). The number of oversampling repetitions depends on the language pair, for instance,
+the Vietnamese original data are oversampled 16
+times, while Chinese data are not oversampled at
+all.
+5 Results on the development set
+We evaluate our methods on the official development set from the NEWS 2018 shared task (Table 3). Results for systems that do not use ensembles are averaged scores from four models.
+Regularization with dropouts improves the word
+accuracy for all language pairs except EnglishChinese. As expected, model ensembling brings
+significant and consistent gains. Re-ranking with
+right-to-left models is also an effective method raising accuracy, even for languages for which a single
+right-to-left model itself is worse then a baseline
+left-to-right model, e.g. for EnHi, EnKa and EnHe
+systems.
+The scale of the improvement for systems trained
+on additional synthetic data depends on the method
+7More specifically, we use the source side of EnTh, EnPe,
+EnCh, EnVi, EnHi, EnTa, EnKa, EnBa, EnHe, and the target
+side of ThEn, PeEn, ChEn, HeEn data sets.
+that the synthetic examples are generated with: the
+systems into English benefit greatly from backtranslations8
+, while other systems that were supplied by forward-translations do not improve much
+or even slightly downgrade the accuracy.
+6 Official results and conclusions
+As final systems submitted to the NEWS 2018
+shared task we chose ones that achieved the best
+performance on the development set (Table 3, last
+row). On the official test set, our systems are
+ranked first for most language pairs we experimented with9
+.
+The results show that the neural machine translation approach can be employed to build efficient
+machine transliteration systems achieving state-ofthe-art results for multiple languages and providing
+strong baselines for future work.
+Acknowledgments
+This research is based upon work supported in part
+by the Office of the Director of National Intelligence (ODNI), Intelligence Advanced Research
+Projects Activity (IARPA), via contract #FA8650-
+17-C-9117. The views and conclusions contained
+herein are those of the authors and should not be interpreted as necessarily representing the official
+policies, either expressed or implied, of ODNI,
+IARPA, or the U.S. Government. The U.S. Government is authorized to reproduce and distribute
+reprints for governmental purposes notwithstanding any copyright annotation therein.
+
+
+
+
+
+PAPER--END
+
+
+This paper describes the submissions to
+the efficiency track for GPUs at the Workshop for Neural Machine Translation and
+Generation by members of the University
+of Edinburgh, Adam Mickiewicz University, Tilde and University of Alicante. We
+focus on efficient implementation of the
+recurrent deep-learning model as implemented in Amun, the fast inference engine for neural machine translation. We
+improve the performance with an efficient
+mini-batching algorithm, and by fusing the
+softmax operation with the k-best extraction algorithm. Submissions using Amun
+were first, second and third fastest in the
+GPU efficiency track.
+1 Introduction
+As neural machine translation (NMT) models have
+become the new state-of-the-art, the challenge is to
+make their deployment efficient and economical.
+This is the challenge that this shared task (Birch
+et al., 2018) is shining a spotlight on.
+One approach is to use an off-the-shelf deeplearning toolkit to complete the shared task where
+the novelty comes from selecting the appropriate
+models and tuning parameters within the toolkit
+for optimal performance.
+We take an opposing approach by eschewing
+model selection and parameter tuning in favour of
+efficient implementation. We use and enhanced
+a custom inference engine, Amun (JunczysDowmunt et al., 2016), which we developed on the
+premise that fast deep-learning inference is an issue that deserves dedicated tools that are not compromised by competing objectives such as training
+or support for multiple models. As well as delivering on the practical goal of fast inference, it can
+serve as a test-bed for novel ideas on neural network inference, and it is useful as a means to explore the upper bound of the possible speed for
+a particular model and hardware. That is, Amun
+is an inference-only engine that supports a limited
+number of NMT models that put fast inference on
+modern GPU above all other considerations.
+We submitted two systems to this year’s shared
+task for the efficient translation on GPU. Our first
+submission was tailored to be as fast as possible
+while being above the baseline BLEU score. Our
+second submission trades some of the speed of
+the first submission to return better quality translations.
+2 Improvements
+We describe the main enhancements to Amun
+since the original 2016 publication that has improved translation speed.
+2.1 Batching
+The use of mini-batching is critical for fast model
+inference. The size of the batch is determined by
+the number of inputs sentences to the encoder in
+an encoder-decoder model. However, the number of batches during decoding can vary as some
+sentences have completed translating or the beam
+search add more hypotheses to the batch.
+It is tempting to ignore these considerations,
+for example, by always decoding with a constant batch and beam size and ignoring hypotheses which are not needed. Figure 1 illustrates a
+na¨ıve mini-batching with a constant size batch.
+The downside to this algorithm is lower translation speed due to wasteful processing.
+Amun implements an efficient batching algorithm that takes into account the actual number of
+hypotheses that need to be decoded at each decoding step, Figure 2.
+117
+Algorithm 1 Na¨ıve mini-batching
+procedure BATCHING(encoded sentences i)
+Create batch b from i
+while hypo h 6= EOS, ∀h ∈ b do
+Decode(b)
+end while
+end procedure
+Algorithm 2 Mini-batching
+procedure BATCHING(encoded sentences i)
+Create batch b from i
+while b 6= ∅ do
+Decode(b)
+for all hypo h ∈ b do
+if h = EOS then
+Remove h from b
+end if
+end for
+end while
+end procedure
+We will compare the effect of the two implementations in the Section 4.
+2.2 Softmax and K-Best Fusion
+Most NMT models predict a large number of
+classes in their output layer, corresponding to the
+number of words or subword units in their target
+language. For example, Sennrich et al. (2016) experimented with target vocabulary sizes of 60,000
+and 90,000 sub-word units.
+The output layer of most deep learning models
+consist of the following steps
+1. multiplication of the weight matrix with the
+input vector p = wx
+2. addition of a bias term to the resulting scores
+p = p + b
+3. applying the activation function, most commonly softmax pi = exp(pi)/
+Pexp(pi)
+4. a search for the best (or k-best) output classes
+argmaxi pi
+Figure 1 shows the amount of time spent in each
+step during translation. Clearly, the output layer of
+NMT models are very computationally expensive,
+accounting for over 60% of the translation time.
+We focus on the last three steps; their outline is
+shown in Algorithm 3. For brevity, we show the
+algorithm for 1-best, a k-best search is a simple
+extension of this.
+Figure 1: Proportion of time spent during translation
+Algorithm 3 Original softmax and k-best algorithm
+procedure ADDBIAS(vector p, bias vector b)
+for all pi
+in p do
+pi ← pi + bi
+end for
+end procedure
+procedure SOFTMAX(vector p)
+. calculate max for softmax stability
+max ← −∞
+for all pi
+in p do
+if pi > max then
+max ← pi
+end if
+end for
+. calculate denominator
+sum ← 0
+for all pi
+in p do
+sum ← sum + exp(pi − max)
+end for
+. calculate softmax
+for all pi
+in p do
+pi ← exp(pi−max)
+sum
+end for
+end procedure
+procedure FIND-BEST(vector p)
+max ← −∞
+for all pi
+in p do
+if pi > max then
+max ← pi
+best ← i
+end if
+end for
+return max, best
+end procedure
+118
+As can be seen, the vector p is iterated over
+five times - once to add the bias, three times to
+calculate the softmax, and once to search for the
+best classes. We propose fusing the three functions into one kernel, a popular optimization technique (Guevara et al., 2009), making use of the
+following observations.
+Firstly, softmax and exp are monotonic functions, therefore, we can move the search for the
+best class from FIND-BEST to SOFTMAX, at the
+start of the kernel.
+Secondly, we are only interested in the probabilities of the best classes during inference, not of
+all classes. Since they are now known at the start
+of the softmax kernel, we compute softmax only
+for those classes.
+Algorithm 4 Fused softmax and k-best
+procedure FUSED-KERNEL(vector p, bias vector b)
+max ← −∞
+sum ← 0
+for all pi
+in p do
+p
+0
+i ← pi + bi
+if p
+0
+i > max then
+∆ ← max − p
+0
+i
+sum ← ∆ × sum + 1
+max ← p
+0
+i
+best ← i
+else
+sum ← sum + exp(p
+0
+i − max)
+end if
+end for
+return 1
+sum
+, best
+end procedure
+Thirdly, the calculation of max and sum can be
+accomplished in one loop by adjusting sum whenever a higher max is found during the looping:
+sum = e
+xt−maxb +
+X
+i=0...t−1
+e
+xi−maxb
+= e
+xt−maxb +
+X
+i=0...t−1
+e
+xi−maxa+∆
+= e
+xt−maxb + e
+∆ ×
+X
+i=0...t−1
+e
+xi−maxa
+where maxa is the previous maximum value,
+maxb is the now higher maximum value, i.e.,
+maxb > maxa, and ∆ = maxa − maxb. The
+outline of our function is shown in Algorithm 4.
+In fact, a well known optimization is to skip
+softmax altogether and calculate the argmax over
+the input vector, Algorithm 5. This is only possible for beam size 1 and when we are not interested
+in returning the softmax probabilities.
+Algorithm 5 Find 1-best only
+procedure FUSED-KERNEL-1-BEST(vector p,
+bias vector b)
+max ← −∞
+for all pi
+in p do
+if pi + bi > max then
+max ← pi + bi
+best ← i
+end if
+end for
+return best
+end procedure
+Since we are working on GPU optimization, it
+is essential to make full use of the many GPU
+cores available. This is accomplished by wellknown parallelization methods which multi-thread
+the algorithms. For example, Algorithm 5 is parallelized by sharding the vector p and calculating
+best and max on each shard in parallel. The ultimate best is found in the following reduction step,
+Algorithm 6.
+2.3 Half-Precision
+Reducing the number of bits needed to store floating point values from 32-bits to 16-bits promises
+to increase translation speed through faster calculations and reduced bandwidth usage. 16-bit floating point operations are supported by the GPU
+hardware and software available in the shared task.
+In practise, however, efficiently using halfprecision value requires a comprehensive redevelopment of the GPU code. We therefore make do
+with using the GPU’s Tensor Core1
+fast matrix
+multiplication routines which transparently converts 32-bit float point input matrices to 16-bit values and output a 32-bit float point product of the
+inputs.
+3 Experimental Setup
+Both of our submitted systems use a sequenceto-sequence model similar to that described in
+Bahdanau et al. (2014), containing a bidirectional
+1
+https://devblogs.nvidia.com/programming-tensor-corescuda-9/
+119
+Algorithm 6 Parallel find 1-best only
+procedure FUSED-KERNEL-1-BEST(vector p,
+bias vector b)
+. parallelize
+Create shards p
+1
+...pn
+from p
+parfor p
+j ∈ p
+1
+...pn do
+maxj ← −∞
+for all p
+j
+i
+in p
+j do
+if p
+j
+i + bi > max then
+maxj ← p
+j
+i + bi
+bestj ← i
+end if
+end for
+end parfor
+. reduce
+max ← −∞
+for all maxj ∈ max1
+...maxn do
+if maxj > max then
+max ← maxj
+best ← bestj
+end if
+end for
+return best
+end procedure
+RNN in the encoder and a two-layer RNN in the
+decoder. We use byte pair encoding (Sennrich
+et al., 2016) to adjust the vocabulary size.
+We used a variety of GPUs to train the models
+but all testing was done on an Nvidia V100. Translation quality was measured using BLEU, specifically multi-bleu as found in the Moses toolkit2
+.
+The validation and test sets provided by the shared
+task organisers were used to measure translation
+quality, but a 50,000 sentence subset of the training data was used to measure translation speed to
+obtain longer, more accurate measurements.
+3.1 GRU-based system
+Our first submitted system uses gated recurred
+units (GRU) throughout. It was trained using Marian (Junczys-Dowmunt et al., 2018), but Amun
+was chosen as inference engine.
+We experimented with varying the vocabulary
+size and the RNN state size before settling for a
+vocabulary size of 30,000 (for both source and target language) and 256 for the state size, Table 1.
+After further experimentation, we decided to
+use sentence length normalization and NVidia’s
+2
+https://github.com/moses-smt/mosesdecoder
+State dim
+Vocab size 256 512 1024
+1.000 12.23 12.77
+5,000 16.79 17.16
+10,000 18.00 18.19
+20,000 - 19.52
+30,000 18.51 19.17 19.64
+Table 1: Validation set BLEU (newstest2014) for
+GRU-based model
+Vocab size
+Beam size 40,000 50,000
+1 23.45 23.32
+2 24.15 24.04
+3 24.48
+4 24.42
+5 24.48
+Table 2: Validation set BLEU for mLSTM-based
+model
+Tensor Core matrix multiplication which increased translation quality as well as translation
+speed. The beam was kept at 1 throughout for the
+fastest possible inference.
+3.2 mLSTM-based system
+Our second system uses multiplicativeLSTM (Krause et al., 2017) in the encoder
+and the first layer of a decder, and a GRU in the
+second layer, trained with an extension of the
+Nematus (Sennrich et al., 2017) toolkit which
+supports such models; multiplicative-LSTM’s
+suitability for use in NMT models has been
+previously demonstrated by Pinnis et al. (2017).
+As with our first submission, Amun is used as
+inference engine. We trained 2 systems with
+differing vocabulary sizes and varied the beam
+sizes, and chose the configuration that produced
+the best results for translation quality on the
+validation set, Table 2.
+4 Result
+4.1 Batching
+The efficiency of Amun’s batching algorithm can
+be seen by observing the time taken for each decoding step in a batch of sentences, Figure 2.
+Amun’s decoding becomes faster as sentences
+are completely translated. This contrasts with
+the Marian inference engine, which uses a na¨ıve
+120
+Figure 2: Time taken for each decoding step for a
+batch of 1280 sentences
+Figure 3: Speed v. batch size
+batching algorithm, where the speed stays relatively constant throughout the decoding of the
+batch.
+Using batching can increase the translation
+speed by over 20 times in Amun, Figure 3. Just
+as important, it doesn’t suffer degradation with
+large batch sizes, unlike the na¨ıve algorithm which
+slows down when batch sizes over 1000 is used.
+This scalability issue is likely to become more relevant as newer GPUs with ever increasing core
+counts are released.
+4.2 Softmax and K-Best Fusion
+Fusing the bias and softmax operations in the output layer with the beam search results in a speed
+improvement by 25%, Figure 4. Its relative improvement decreases marginally as the beam size
+increases.
+Further insight can be gained by examining the
+time taken for each step in the output layer and
+beam search, Table 3. The fused operation only
+has to loop through the large cost matrix once,
+therefore, for low beam sizes its is comparable in
+speed to the simple kernel to add the bias. For
+higher beam sizes, the cost of maintaining the nFigure 4: Using fused operation
+best list is begins to impact on speed.
+Baseline Fused
+Beam size 1
+Multiplication 5.39 5.38 (+0%)
+Add bias 1.26
+Softmax 1.69 2.07 (-86.6%)
+K-best extr. 12.53
+Beam size 3
+Multiplication 14.18 14.16 (+0%)
+Add bias 3.76
+Softmax 4.75 3.43 (-87.1%)
+K-best extr. 18.23
+Beam size 9
+Multiplication 38.35 38.42 (+0%)
+Add bias 11.64
+Softmax 14.4 17.5 (-72.1%)
+K-best extr. 36.7
+Table 3: Time taken (sec) breakdown
+4.3 Tensor Cores
+By taking advantage of the GPU’s hardware accelerated matrix multiplication, we can gain up to
+20% in speed, Table 4.
+Beam size Baseline Tensor Cores
+1 39.97 34.54 (-13.6%)
+9 145.8 116.8 (-20.0%)
+Table 4: Time taken (sec) using Tensor Cores
+5 Conclusion and Future Work
+We have presented some of the improvement to
+Amun which are focused on improving NMT inference.
+121
+We are also working to make deep-learning
+faster using more specialised hardware such as FPGAs. It would be interesting as future work to
+bring our focused approach to fast deep-learning
+inference to a more general toolkit.
+
+
+
+
+PAPER--END
+
+
+In this paper we describe an intuitionistic
+method for dependency parsing, where a
+classifier is used to determine whether a
+pair of words forms a dependency edge.
+And we also propose an effective strategy
+for dependency projection, where the dependency relationships of the word pairs
+in the source language are projected to the
+word pairs of the target language, leading
+to a set of classification instances rather
+than a complete tree. Experiments show
+that, the classifier trained on the projected
+classification instances significantly outperforms previous projected dependency
+parsers. More importantly, when this classifier is integrated into a maximum spanning tree (MST) dependency parser, obvious improvement is obtained over the
+MST baseline.
+1 Introduction
+Supervised dependency parsing achieves the stateof-the-art in recent years (McDonald et al., 2005a;
+McDonald and Pereira, 2006; Nivre et al., 2006).
+Since it is costly and difficult to build humanannotated treebanks, a lot of works have also been
+devoted to the utilization of unannotated text. For
+example, the unsupervised dependency parsing
+(Klein and Manning, 2004) which is totally based
+on unannotated data, and the semisupervised dependency parsing (Koo et al., 2008) which is
+based on both annotated and unannotated data.
+Considering the higher complexity and lower performance in unsupervised parsing, and the need of
+reliable priori knowledge in semisupervised parsing, it is a promising strategy to project the dependency structures from a resource-rich language
+to a resource-scarce one across a bilingual corpus
+(Hwa et al., 2002; Hwa et al., 2005; Ganchev et al.,
+2009; Smith and Eisner, 2009; Jiang et al., 2009).
+For dependency projection, the relationship between words in the parsed sentences can be simply projected across the word alignment to words
+in the unparsed sentences, according to the DCA
+assumption (Hwa et al., 2005). Such a projection procedure suffers much from the word alignment errors and syntactic isomerism between languages, which usually lead to relationship projection conflict and incomplete projected dependency
+structures. To tackle this problem, Hwa et al.
+(2005) use some filtering rules to reduce noise,
+and some hand-designed rules to handle language
+heterogeneity. Smith and Eisner (2009) perform
+dependency projection and annotation adaptation
+with quasi-synchronous grammar features. Jiang
+and Liu (2009) resort to a dynamic programming
+procedure to search for a completed projected tree.
+However, these strategies are all confined to the
+same category that dependency projection must
+produce completed projected trees. Because of the
+free translation, the syntactic isomerism between
+languages and word alignment errors, it would
+be strained to completely project the dependency
+structure from one language to another.
+We propose an effective method for dependency projection, which does not have to produce complete projected trees. Given a wordaligned bilingual corpus with source language sentences parsed, the dependency relationships of the
+word pairs in the source language are projected to
+the word pairs of the target language. A dependency relationship is a boolean value that represents whether this word pair forms a dependency
+edge. Thus a set of classification instances are obtained. Meanwhile, we propose an intuitionistic
+model for dependency parsing, which uses a classifier to determine whether a pair of words form
+a dependency edge. The classifier can then be
+trained on the projected classification instance set,
+so as to build a projected dependency parser without the need of complete projected trees.
+12
+i
+j j
+i
+Figure 1: Illegal (a) and incomplete (b) dependency tree produced by the simple-collection method.
+Experimental results show that, the classifier
+trained on the projected classification instances
+significantly outperforms the projected dependency parsers in previous works. The classifier
+trained on the Chinese projected classification instances achieves a precision of 58.59% on the CTB
+standard test set. More importantly, when this
+classifier is integrated into a 2nd-ordered maximum spanning tree (MST) dependency parser
+(McDonald and Pereira, 2006) in a weighted average manner, significant improvement is obtained
+over the MST baselines. For the 2nd-order MST
+parser trained on Penn Chinese Treebank (CTB)
+5.0, the classifier give an precision increment of
+0.5 points. Especially for the parser trained on the
+smaller CTB 1.0, more than 1 points precision increment is obtained.
+In the rest of this paper, we first describe
+the word-pair classification model for dependency
+parsing (section 2) and the generation method
+of projected classification instances (section 3).
+Then we describe an application of the projected
+parser: boosting a state-of-the-art 2nd-ordered
+MST parser (section 4). After the comparisons
+with previous works on dependency parsing and
+projection, we finally five the experimental results.
+2 Word-Pair Classification Model
+2.1 Model Definition
+Following (McDonald et al., 2005a), x is used to
+denote the sentence to be parsed, and xi
+to denote
+the i-th word in the sentence. y denotes the dependency tree for sentence x, and (i,j) ∈ y represents a dependency edge from word xi
+to word
+xj , where xi
+is the parent of xj .
+The task of the word-pair classification model
+is to determine whether any candidate word pair,
+xi and xj s.t. 1 ≤ i,j ≤ |x| and i 6= j, forms a
+dependency edge. The classification result C(i,j)
+can be a boolean value:
+C(i,j) = p p ∈ {0, 1} (1)
+as produced by a support vector machine (SVM)
+classifier (Vapnik, 1998). p = 1 indicates that the
+classifier supports the candidate edge (i,j), and
+p = 0 the contrary. C(i,j) can also be a realvalued probability:
+C(i,j) = p 0 ≤ p ≤ 1 (2)
+as produced by an maximum entropy (ME) classifier (Berger et al., 1996). p is a probability which
+indicates the degree the classifier support the candidate edge (i,j). Ideally, given the classification results for all candidate word pairs, the dependency parse tree can be composed of the candidate
+edges with higher score (1 for the boolean-valued
+classifier, and large p for the real-valued classifier). However, more robust strategies should be
+investigated since the ambiguity of the language
+syntax and the classification errors usually lead to
+illegal or incomplete parsing result, as shown in
+Figure 1.
+Follow the edge based factorization method
+(Eisner, 1996), we factorize the score of a dependency tree s(x, y) into its dependency edges,
+and design a dynamic programming algorithm
+to search for the candidate parse with maximum
+score. This strategy alleviate the classification errors to some degree and ensure a valid, complete
+dependency parsing tree. If a boolean-valued classifier is used, the search algorithm can be formalized as:
+y˜ = argmax
+y
+s(x, y)
+= argmax
+y
+X
+(i,j)∈y
+C(i,j)
+(3)
+And if a probability-valued classifier is used instead, we replace the accumulation with cumula13
+Type Features
+Unigram wordi ◦ posi wordi posi
+wordj ◦ posj wordj posj
+Bigram wordi ◦ posi ◦ wordj ◦ posj posi ◦ wordj ◦ posj wordi ◦ wordj ◦ posj
+wordi ◦ posi ◦ posj wordi ◦ posi ◦ wordj wordi ◦ wordj
+posi ◦ posj wordi ◦ posj posi ◦ wordj
+Surrounding posi ◦ posi+1 ◦ posj−1 ◦ posj posi−1 ◦ posi ◦ posj−1 ◦ posj posi ◦ posi+1 ◦ posj ◦ posj+1
+posi−1 ◦ posi ◦ posj ◦ posj+1 posi−1 ◦ posi ◦ posj−1 posi−1 ◦ posi ◦ posj+1
+posi ◦ posi+1 ◦ posj−1 posi ◦ posi+1 ◦ posj+1 posi−1 ◦ posj−1 ◦ posj
+posi−1 ◦ posj ◦ posj+1 posi+1 ◦ posj−1 ◦ posj posi+1 ◦ posj ◦ posj+1
+posi ◦ posj−1 ◦ posj posi ◦ posj ◦ posj+1 posi−1 ◦ posi ◦ posj
+posi ◦ posi+1 ◦ posj
+Table 1: Feature templates for the word-pair classification model.
+tive product:
+y˜ = argmax
+y
+s(x, y)
+= argmax
+y
+Y
+(i,j)∈y
+C(i,j)
+(4)
+Where y is searched from the set of well-formed
+dependency trees.
+In our work we choose a real-valued ME classifier. Here we give the calculation of dependency
+probability C(i,j). We use w to denote the parameter vector of the ME model, and f(i,j,r) to denote the feature vector for the assumption that the
+word pair i and j has a dependency relationship r.
+The symbol r indicates the supposed classification
+result, where r = + means we suppose it as a dependency edge and r = − means the contrary. A
+feature fk(i,j,r) ∈ f(i,j,r) equals 1 if it is activated by the assumption and equals 0 otherwise.
+The dependency probability can then be defined
+as:
+C(i,j) = exp(w · f(i,j, +))
+P
+r
+exp(w · f(i,j,r))
+=
+exp(
+P
+k wk × fk(i,j, +))
+P
+r
+exp(
+P
+k wk × fk(i,j,r))
+(5)
+2.2 Features for Classification
+The feature templates for the classifier are similar to those of 1st-ordered MST model (McDonald et al., 2005a). 1 Each feature is composed
+of some words and POS tags surrounded word i
+and/or word j, as well as an optional distance representations between this two words. Table shows
+the feature templates we use.
+Previous graph-based dependency models usually use the index distance of word i and word j
+1We exclude the in between features of McDonald et al.
+(2005a) since preliminary experiments show that these features bring no improvement to the word-pair classification
+model.
+to enrich the features with word distance information. However, in order to utilize some syntax
+information between the pair of words, we adopt
+the syntactic distance representation of (Collins,
+1996), named Collins distance for convenience. A
+Collins distance comprises the answers of 6 questions:
+• Does word i precede or follow word j?
+• Are word i and word j adjacent?
+• Is there a verb between word i and word j?
+• Are there 0, 1, 2 or more than 2 commas between word i and word j?
+• Is there a comma immediately following the
+first of word i and word j?
+• Is there a comma immediately preceding the
+second of word i and word j?
+Besides the original features generated according
+to the templates in Table 1, the enhanced features
+with Collins distance as postfixes are also used in
+training and decoding of the word-pair classifier.
+2.3 Parsing Algorithm
+We adopt logarithmic dependency probabilities
+in decoding, therefore the cumulative product of
+probabilities in formula 6 can be replaced by accumulation of logarithmic probabilities:
+y˜ = argmax
+y
+s(x, y)
+= argmax
+y
+Y
+(i,j)∈y
+C(i,j)
+= argmax
+y
+X
+(i,j)∈y
+log(C(i,j))
+(6)
+Thus, the decoding algorithm for 1st-ordered MST
+model, such as the Chu-Liu-Edmonds algorithm
+14
+Algorithm 1 Dependency Parsing Algorithm.
+1: Input: sentence x to be parsed
+2: for hi, ji ⊆ h1, |x|i in topological order do
+3: buf ← ∅
+4: for k ← i..j − 1 do ⊲ all partitions
+5: for l ∈ V[i, k] and r ∈ V[k + 1, j] do
+6: insert DERIV(l, r) into buf
+7: insert DERIV(r,l) into buf
+8: V[i, j] ← top K derivations of buf
+9: Output: the best derivation of V[1, |x|]
+10: function DERIV(p, c)
+11: d ← p ∪ c ∪ {(p · root, c · root)} ⊲ new derivation
+12: d · evl ← EVAL(d) ⊲ evaluation function
+13: return d
+used in McDonald et al. (2005b), is also applicable here. In this work, however, we still adopt
+the more general, bottom-up dynamic programming algorithm Algorithm 1 in order to facilitate
+the possible expansions. Here, V[i,j] contains the
+candidate parsing segments of the span [i,j], and
+the function EVAL(d) accumulates the scores of
+all the edges in dependency segment d. In practice, the cube-pruning strategy (Huang and Chiang, 2005) is used to speed up the enumeration of
+derivations (loops started by line 4 and 5).
+3 Projected Classification Instance
+After the introduction of the word-pair classification model, we now describe the extraction of projected dependency instances. In order to alleviate the effect of word alignment errors, we base
+the projection on the alignment matrix, a compact
+representation of multiple GIZA++ (Och and Ney,
+2000) results, rather than a single word alignment
+in previous dependency projection works. Figure
+2 shows an example.
+Suppose a bilingual sentence pair, composed of
+a source sentence e and its target translation f. ye
+is the parse tree of the source sentence. A is the
+alignment matrix between them, and each element
+Ai,j denotes the degree of the alignment between
+word ei and word fj . We define a boolean-valued
+function δ(y,i,j,r) to investigate the dependency
+relationship of word i and word j in parse tree y:
+δ(y,i,j,r) =
+
+
+
+1
+(i,j) ∈ y and r = +
+or
+(i,j) ∈/ y and r = −
+0 otherwise
+(7)
+Then the score that word i and word j in the target
+sentence y forms a projected dependency edge,
+Figure 2: The word alignment matrix between a
+Chinese sentence and its English translation. Note
+that probabilities need not to be normalized across
+rows or columns.
+s+(i,j), can be defined as:
+s+(i,j) = X
+i
+′
+,j′
+Ai,i′ × Aj,j′ × δ(ye,i′
+,j′
+, +) (8)
+The score that they do not form a projected dependency edge can be defined similarly:
+s−(i,j) = X
+i
+′
+,j′
+Ai,i′ × Aj,j′ × δ(ye,i′
+,j′
+, −) (9)
+Note that for simplicity, the condition factors ye
+and A are omitted from these two formulas. We
+finally define the probability of the supposed projected dependency edge as:
+Cp(i,j) = exp(s+(i,j))
+exp(s+(i,j)) + exp(s−(i,j)) (10)
+The probability Cp(i,j) is a real value between
+0 and 1. Obviously, Cp(i,j) = 0.5 indicates the
+most ambiguous case, where we can not distinguish between positive and negative at all. On the
+other hand, there are as many as 2|f|(|f|−1) candidate projected dependency instances for the target
+sentence f. Therefore, we need choose a threshold
+b for Cp(i,j) to filter out the ambiguous instances:
+the instances with Cp(i,j) > b are selected as the
+positive, and the instances with Cp(i,j) < 1 − b
+are selected as the negative.
+4 Boosting an MST Parser
+The classifier can be used to boost a existing parser
+trained on human-annotated trees. We first establish a unified framework for the enhanced parser.
+For a sentence to be parsed, x, the enhanced parser
+selects the best parse y˜ according to both the baseline model B and the projected classifier C.
+y˜ = argmax
+y
+[sB(x, y) + λsC(x, y)] (11)
+15
+Here, sB and sC denote the evaluation functions
+of the baseline model and the projected classifier, respectively. The parameter λ is the relative
+weight of the projected classifier against the baseline model.
+There are several strategies to integrate the two
+evaluation functions. For example, they can be integrated deeply at each decoding step (Carreras et
+al., 2008; Zhang and Clark, 2008; Huang, 2008),
+or can be integrated shallowly in a reranking manner (Collins, 2000; Charniak and Johnson, 2005).
+As described previously, the score of a dependency tree given by a word-pair classifier can be
+factored into each candidate dependency edge in
+this tree. Therefore, the projected classifier can
+be integrated with a baseline model deeply at each
+dependency edge, if the evaluation score given by
+the baseline model can also be factored into dependency edges.
+We choose the 2nd-ordered MST model (McDonald and Pereira, 2006) as the baseline. Especially, the effect of the Collins distance in the
+baseline model is also investigated. The relative
+weight λ is adjusted to maximize the performance
+on the development set, using an algorithm similar
+to minimum error-rate training (Och, 2003).
+5 Related Works
+5.1 Dependency Parsing
+Both the graph-based (McDonald et al., 2005a;
+McDonald and Pereira, 2006; Carreras et al.,
+2006) and the transition-based (Yamada and Matsumoto, 2003; Nivre et al., 2006) parsing algorithms are related to our word-pair classification
+model.
+Similar to the graph-based method, our model
+is factored on dependency edges, and its decoding procedure also aims to find a maximum spanning tree in a fully connected directed graph. From
+this point, our model can be classified into the
+graph-based category. On the training method,
+however, our model obviously differs from other
+graph-based models, that we only need a set of
+word-pair dependency instances rather than a regular dependency treebank. Therefore, our model is
+more suitable for the partially bracketed or noisy
+training corpus.
+The most apparent similarity between our
+model and the transition-based category is that
+they all need a classifier to perform classification
+conditioned on a certain configuration. However,
+they differ from each other in the classification results. The classifier in our model predicates a dependency probability for each pair of words, while
+the classifier in a transition-based model gives a
+possible next transition operation such as shift or
+reduce. Another difference lies in the factorization strategy. For our method, the evaluation score
+of a candidate parse is factorized into each dependency edge, while for the transition-based models,
+the score is factorized into each transition operation.
+Thanks to the reminding of the third reviewer
+of our paper, we find that the pairwise classification schema has also been used in Japanese dependency parsing (Uchimoto et al., 1999; Kudo
+and Matsumoto, 2000). However, our work shows
+more advantage in feature engineering, model
+training and decoding algorithm.
+5.2 Dependency Projection
+Many works try to learn parsing knowledge from
+bilingual corpora. L¨u et al. (2002) aims to
+obtain Chinese bracketing knowledge via ITG
+(Wu, 1997) alignment. Hwa et al. (2005) and
+Ganchev et al. (2009) induce dependency grammar via projection from aligned bilingual corpora, and use some thresholds to filter out noise
+and some hand-written rules to handle heterogeneity. Smith and Eisner (2009) perform dependency projection and annotation adaptation with
+Quasi-Synchronous Grammar features. Jiang and
+Liu (2009) refer to alignment matrix and a dynamic programming search algorithm to obtain
+better projected dependency trees.
+All previous works for dependency projection
+(Hwa et al., 2005; Ganchev et al., 2009; Smith and
+Eisner, 2009; Jiang and Liu, 2009) need complete
+projected trees to train the projected parsers. Because of the free translation, the word alignment
+errors, and the heterogeneity between two languages, it is reluctant and less effective to project
+the dependency tree completely to the target language sentence. On the contrary, our dependency
+projection strategy prefer to extract a set of dependency instances, which coincides our model’s demand for training corpus. An obvious advantage
+of this strategy is that, we can select an appropriate
+filtering threshold to obtain dependency instances
+of good quality.
+In addition, our word-pair classification model
+can be integrated deeply into a state-of-the-art
+MST dependency model. Since both of them are
+16
+Corpus Train Dev Test
+WSJ (section) 2-21 22 23
+CTB 5.0 (chapter) others 301-325 271-300
+Table 2: The corpus partition for WSJ and CTB
+5.0.
+factorized into dependency edges, the integration
+can be conducted at each dependency edge, by
+weightedly averaging their evaluation scores for
+this dependency edge. This strategy makes better
+use of the projected parser while with faster decoding, compared with the cascaded approach of
+Jiang and Liu (2009).
+6 Experiments
+In this section, we first validate the word-pair
+classification model by experimenting on humanannotated treebanks. Then we investigate the effectiveness of the dependency projection by evaluating the projected classifiers trained on the projected classification instances. Finally, we report the performance of the integrated dependency
+parser which integrates the projected classifier and
+the 2nd-ordered MST dependency parser. We
+evaluate the parsing accuracy by the precision of
+lexical heads, which is the percentage of the words
+that have found their correct parents.
+6.1 Word-Pair Classification Model
+We experiment on two popular treebanks, the Wall
+Street Journal (WSJ) portion of the Penn English
+Treebank (Marcus et al., 1993), and the Penn Chinese Treebank (CTB) 5.0 (Xue et al., 2005). The
+constituent trees in the two treebanks are transformed to dependency trees according to the headfinding rules of Yamada and Matsumoto (2003).
+For English, we use the automatically-assigned
+POS tags produced by an implementation of the
+POS tagger of Collins (2002). While for Chinese,
+we just use the gold-standard POS tags following
+the tradition. Each treebank is splitted into three
+partitions, for training, development and testing,
+respectively, as shown in Table 2.
+For a dependency tree with n words, only n −
+1 positive dependency instances can be extracted.
+They account for only a small proportion of all the
+dependency instances. As we know, it is important
+to balance the proportions of the positive and the
+negative instances for a batched-trained classifier.
+We define a new parameter r to denote the ratio of
+the negative instances relative to the positive ones.
+ 84
+ 84.5
+ 85
+ 85.5
+ 86
+ 86.5
+ 87
+ 1 1.5 2 2.5 3
+Dependency Precision (%)
+Ratio r (#negative/#positive)
+WSJ
+CTB 5.0
+Figure 3: Performance curves of the word-pair
+classification model on the development sets of
+WSJ and CTB 5.0, with respect to a series of ratio
+r.
+Corpus System P %
+WSJ Yamada and Matsumoto (2003) 90.3
+Nivre and Scholz (2004) 87.3
+1st-ordered MST 90.7
+2nd-ordered MST 91.5
+our model 86.8
+CTB 5.0 1st-ordered MST 86.53
+2nd-ordered MST 87.15
+our model 82.06
+Table 3: Performance of the word-pair classification model on WSJ and CTB 5.0, compared with
+the current state-of-the-art models.
+For example, r = 2 means we reserve negative
+instances two times as many as the positive ones.
+The MaxEnt toolkit by Zhang 2
+is adopted to
+train the ME classifier on extracted instances. We
+set the gaussian prior as 1.0 and the iteration limit
+as 100, leaving other parameters as default values.
+We first investigate the impact of the ratio r on
+the performance of the classifier. Curves in Figure 3 show the performance of the English and
+Chinese parsers, each of which is trained on an instance set corresponding to a certain r. We find
+that for both English and Chinese, maximum performance is achieved at about r = 2.5.
+3 The
+English and Chinese classifiers trained on the instance sets with r = 2.5 are used in the final evaluation phase. Table 3 shows the performances on
+the test sets of WSJ and CTB 5.0.
+We also compare them with previous works on
+the same test sets. On both English and Chinese,
+the word-pair classification model falls behind of
+the state-of-the-art. We think that it is probably
+2
+http://homepages.inf.ed.ac.uk/s0450736/
+maxent toolkit.html.
+3We did not investigate more fine-grained ratios, since the
+performance curves show no dramatic fluctuation along with
+the alteration of r.
+17
+ 54
+ 54.5
+ 55
+ 55.5
+ 56
+ 0.65 0.7 0.75 0.8 0.85 0.9 0.95
+Dependency Precision (%)
+Threshold b
+Figure 4: The performance curve of the wordpair classification model on the development set
+of CTB 5.0, with respect to a series of threshold b.
+due to the local optimization of the training procedure. Given complete trees as training data, it
+is easy for previous models to utilize structural,
+global and linguistical information in order to obtain more powerful parameters. The main advantage of our model is that it doesn’t need complete
+trees to tune its parameters. Therefore, if trained
+on instances extracted from human-annotated treebanks, the word-pair classification model would
+not demonstrate its advantage over existed stateof-the-art dependency parsing methods.
+6.2 Dependency Projection
+In this work we focus on the dependency projection from English to Chinese. We use the FBIS
+Chinese-English bitext as the bilingual corpus for
+dependency projection. It contains 239K sentence pairs with about 6.9M/8.9M words in Chinese/English. Both English and Chinese sentences
+are tagged by the implementations of the POS tagger of Collins (2002), which trained on WSJ and
+CTB 5.0 respectively. The English sentences are
+then parsed by an implementation of 2nd-ordered
+MST model of McDonald and Pereira (2006),
+which is trained on dependency trees extracted
+from WSJ. The alignment matrixes for sentence
+pairs are generated according to (Liu et al., 2009).
+Similar to the ratio r, the threshold b need also
+be assigned an appropriate value to achieve a better performance. Larger thresholds result in better
+but less classification instances, the lower coverage of the instances would hurt the performance of
+the classifier. On the other hand, smaller thresholds lead to worse but more instances, and too
+much noisy instances will bring down the classifier’s discriminating power.
+We extract a series of classification instance sets
+Corpus System P %
+CTB 2.0 Hwa et al. (2005) 53.9
+our model 56.9
+CTB 5.0 Jiang and Liu (2009) 53.28
+our model 58.59
+Table 4: The performance of the projected classifier on the test sets of CTB 2.0 and CTB 5.0, compared with the performance of previous works on
+the corresponding test sets.
+Corpus Baseline P% Integrated P%
+CTB 1.0 82.23 83.70
+CTB 5.0 87.15 87.65
+Table 5: Performance improvement brought by
+the projected classifier to the baseline 2nd-ordered
+MST parsers trained on CTB 1.0 and CTB 5.0, respectively.
+with different thresholds. Then, on each instance
+set we train a classifier and test it on the development set of CTB 5.0. Figure 4 presents the experimental results. The curve shows that the maximum performance is achieved at the threshold of
+about 0.85. The classifier corresponding to this
+threshold is evaluated on the test set of CTB 5.0,
+and the test set of CTB 2.0 determined by Hwa et
+al. (2005). Table 4 shows the performance of the
+projected classifier, as well as the performance of
+previous works on the corresponding test sets. The
+projected classifier significantly outperforms previous works on both test sets, which demonstrates
+that the word-pair classification model, although
+falling behind of the state-of-the-art on humanannotated treebanks, performs well in projected
+dependency parsing. We give the credit to its good
+collaboration with the word-pair classification instance extraction for dependency projection.
+6.3 Integrated Dependency Parser
+We integrate the word-pair classification model
+into the state-of-the-art 2nd-ordered MST model.
+First, we implement a chart-based dynamic programming parser for the 2nd-ordered MST model,
+and develop a training procedure based on the
+perceptron algorithm with averaged parameters
+(Collins, 2002). On the WSJ corpus, this parser
+achieves the same performance as that of McDonald and Pereira (2006). Then, at each derivation
+step of this 2nd-ordered MST parser, we weightedly add the evaluation score given by the projected classifier to the original MST evaluation
+score. Such a weighted summation of two eval18
+uation scores provides better evaluation for candidate parses. The weight parameter λ is tuned
+by a minimum error-rate training algorithm (Och,
+2003).
+Given a 2nd-ordered MST parser trained on
+CTB 5.0 as the baseline, the projected classifier brings an accuracy improvement of about 0.5
+points. For the baseline trained on the smaller
+CTB 1.0, whose training set is chapters 1-270 of
+CTB 5.0, the accuracy improvement is much significant, about 1.5 points over the baseline. It
+indicates that, the smaller the human-annotated
+treebank we have, the more significant improvement we can achieve by integrating the projecting classifier. This provides a promising strategy
+for boosting the parsing performance of resourcescarce languages. Table 5 summarizes the experimental results.
+

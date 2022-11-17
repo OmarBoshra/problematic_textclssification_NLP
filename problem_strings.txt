@@ -1,0 +1,500 @@
+prosodic cues are never absolute ; they are relative to individual speakers , gender , dialect , discourse context , local context , phonological environment , and many other factors
+they increase the state space of the grammar substantially
+absence of annotated material that could be used for training
+parameter estimations are usually based on plain text items only
+they fail to recognize terms which are not included in the dictionary
+they are inefficient to train with large-scale , especially large category data
+measure word generation in a general SMT system
+many verb reorderings are still missed
+finding infrequent but important product features
+the expansion of CFG rules
+an SF error can be corrected only if the right SF appears at least in one of the n-best parse trees
+cost of annotation
+underrepresentation of Kazakh language in various fields such as science , entertainment , official documentation , etc .
+small number of research participants
+sparse training resources
+the scheme will be less general
+unsupervised training erasing what was learned from the manually annotated corpus
+there is no path into it
+the inconsistency in human decisions ( Lin and Hovy , 2003 )
+sparse or impoverished training data
+word vectors developed from distributional models cannot reveal word relatedness if its information does not lie in word distributions
+their applicability is limited only to those words for which sense tagged data is available
+depth-boundedness is undecidable
+limited vowel presentation in this writing system
+analyzer bias
+the loss and distortion of semantic information
+data sparseness for PCFG
+the objects can belong to more than one semantic class
+the high expense of manually annotating the text
+nonterminal symbols encode too general information which weakly discriminates syntactic ambiguities
+the limited input features
+taking into consideration only one-word terms
+exceptions
+the much skewed distribution in real text
+they are ad-hoc : the rules that govern word formation and inflection are only implicit in such systems , usually intertwined with control structures and general code
+the scarcity of manually aligned training data
+it used no lexical information in the supertagging process as the training material consisted of ( part-of-speech , supertag ) pairs
+their performances are easily affected by the size of the context window
+there may be a complementary distribution between prosodic and lexical features
+the method can translate only those source language strings contained in the translation database
+the unavailability of full prosodic analysis
+they adopt a holistic scoring scheme , which summarizes the quality of an essay with a single score and thus provides very limited feedback to the writer
+the metrics were not designed to evaluate single key/response pairs , but whole texts
+it involves a good deal of human effort to research on a specific data set and summarize the rules
+ontologies are not standard among systems
+it is only a partial solution to argument labeling in discourse parsing
+some of the system timex-values could be incorrect
+the WCN does not assign probability to the u = fi* case –
+it relies too heavily on user interaction
+lone prepositions
+it only applies to parse-scoring functions with an arc-factored component
+it is not capable of modeling bilexical dependencies on the right hand side of the rules
+crucial dependencies between ECs and other elements in the syntactic structure are not represented
+it needs almost 20,000 iterations before the Gibbs sampler converges
+it cannot deal with dependencies of higher order of TU n-grams than bigrams
+the way in which potential predictor variables were refined
+its short life span
+it is likely to worsen the generalising power of the model
+the restriction to pairwise predicates
+much of the efficiency of XPath expressions can be lost through the necessity of resolving XLinks at every child or parent step of the expression
+it is language-dependent , as the underlying technology is based on shallow analysis and is therefore timeexpensive to extend to a new language
+the highly precise choice of endpoints can rarely be wellmotivated in natural domains such as these
+they take the bag-of-words ( BOW ) assumption without considering the fact that an email thread is a multi-party , asynchronous conversation
+the head passing conventions differ between DepBank and CCGbank
+overfitting
+it might not work well for low-frequency words
+the sparsity of publicly available datasets
+working with only one reference
+it requires the proportion of positive and negative examples in the test data be close to the proportion in the training data , which may not always hold , particularly when the training data is small
+it can only handle approximately 20 words or phrases
+they adopt a holistic scoring scheme , which summarizes the quality of an essay with a single score and thus provides very limited feedback to the writer
+E1 and E2 regularization can not let the model give weight to conjunctions that have not been observed at training
+the fact that the configurability of PRESENTOR at the micro-planning level is restricted to the lexicalization and the linguistic realization of rhetorical relations
+vagueness
+the difficulty of matching their goals to the given options
+since extracted events in test are imperfect , this creates a divergence between training and testing scenarios , which can lead to degraded performance
+the user may not find the exact sign ( or version of a sign ) that is needed for a particular sentence
+these models have not been scrutinized using standard NLP evaluations
+they ignore edge type information
+there may be many acceptable outputs
+it does not effectively combine competing factors into a single model
+its restricted range of syntactic coverage
+when two entities belonging to the same class are adjacent , our classifier will automatically merge them into one entity
+in the requirement for absolute lexical match with unknown rule unigrams and bigrams
+being dependent on the so-called monotonicity constraint : The alignment paths are assumed to be monotone
+tree overgeneration
+we have been using the same set of features for all concepts
+the arc-based features
+circularity in expert coding
+they use no or little grammatical knowledge , relying mainly on a target language model for producing correct target language texts , often resulting in ungrammatical output
+the entries produced automatically need some semimanual checking
+the generated sentences are compared only to a finite set of human labeled ground truth which obviously does not capture all possible sentences that one can generate
+many of the textual characteristics which are problematic for a pipeline to generate are also difficult to measure computationally
+that gold standards often prove to be incomplete
+low agreement on sense tagging
+it limits us to using a single source language
+it seemed to be quite weak for the very low frequency classes such as RNA , SOURCE.mo or TIME where the Ell\ilM usually proved to be more robust
+misspelling in PAN
+it ignores speaker information when segmenting transcripts
+the ambiguity of the clitic pronoun se
+their dependency on seed examples or seed patterns which may lead to limited generalization due to dependency on handcrafted examples
+that performance drops rapidly as input sentences become longer
+a cluster may correspond to a sense that is not shared by the original source word used to generate the translation set
+it is necessary to re-classify many words if the application domain changes significantly
+sparsity of labeled data : a given predicate-role instance may only occur a handful of times in the training set
+evaluation data is hard to get
+high overhead
+the need to manage text distribution among the annotators , as all the work was done on local computers
+that sense disambiguation is not carried out relative to any well defined set of senses , but rather an ad hoc set
+it willperform slower as it needs to process all the words
+users have to be patient to find the name that they are looking for
+need of extensive syntactic resources to determine the knowledge to be acquired
+poor results are obtained for language pairs that are not closely related ( Ismail and Manandhar , 2010 )
+the dataset contains only those acronyms whose long-forms were found in Medline abstracts
+the use of EUROVOC , which is a specific resource workable only for European languages
+not being able to separate data points
+being sensitive to portions of the graph that are far from the start node because it considers paths of length up to oc
+PEM requires substantial in-domain bilingual data to train the semantic adequacy evaluator , as well as sample human judgments to train the overall metric
+using the statistical model or human knowledge purely by combining them organically
+that the estimates of parameters corresponding to events that occur infrequently in the training data are not reliable
+most of them do not exhibit interesting linguistic properties
+it required a dependency parser , thesaurus , and training data
+spurious negative examples
+performance quickly degrades as soon as testing conditions deviate from training conditions
+combinatorial explosion in parsing English
+discontinuous constituents in natural language parsing
+the research was conducted using a single system
+it is not directly related to the aggregate analysis , but is rather an independent step
+The current HOO annotation scheme does not have the granularity to systematically identify all function word errors –
+complex functions do not generalize well and thus tend to over-fit
+that correct SF for the predicates of a sentence can actually appear in different parse trees
+senses which one might want to keep separate , e.g. , the most common sense box/container ( 1 ) , can be collapsed with others
+its dependence on semantic resources
+they are static
+the gold scoring function is nonlinear
+our classifier was effective only Exp.Conj , Exp.Inst and Exp.Rest
+poor accuracy of word segmentation and POS tagging
+the representation consumes more storage space than necessary
+creating these rules requires much cost and that they are usually domain-dependent
+a loss of recall on unseen paraphrases
+it weighs all co-occurrences equally , even those that happen rarely or never
+summarization of multimodal documents : no existing system is able to incorporate the non-text portions of a document ( e.g. , information graphics , images ) into the overall summary
+depending on relations from hand-built training data , knowledge bases or ontologies
+these models are restricted to reorderings with no gaps and phrases that are adjacent
+it can not represent the link between arguments of a verb
+the increase of coverage does not follow the growth of the case base to the same extent
+unbalanced dataset
+the system currently only works for Wikipedia pages
+they are all negative tests , which are known to be problematic in language classification tasks
+they may map two or more roles in an event description to the same dependency
+the preferred ordering of subtrees is insufficiently constrained by their embedding context
+lexical sparsity
+they require a great deal of skilled hand-crafting that , unfortunately , usually does not scale in broader application domains
+it requires more knowledge of the user than using a more specialized one
+we are confronted , again , with a syntactic feature containing , among other things , records of derivation history
+the dependencies that are necessary for determining anaphoric relationships are " hidden " in the DAG describing the linguistic expression ; information is distributed in a flat graph structure with no higher order grouping expressed
+biasing somewhat the frequencies in our data set towards the categories that take precedence
+it is impossible to adapt them to a specific task , which could generate many errors that are important to the task
+the poor generalization power affecting lexical features
+it is hard to obtain data big enough to split the data into subparts for both the hierarchical mixed model analysis and classification
+the SD scheme was developed against newswire data , namely the Wall Street Journal portion of the Penn Treebank
+the availability of annotated corpora , which do not exist for all languages
+it does not have a mechanism for attaining the maximize margin of the training data
+its model of the speaker 's goals is static , rather than dynamic ( e.g. , the speaker is always assumed to have a goal of being polite )
+being quite costly
+their inability to properly take into account subcategorization frames ( SF ) of predicative lexemes2
+the reliability of the rules is often language pair dependent
+Docent is non-deterministic , i.e. , it can give different results with the same parameter weights
+the database does not provide “true” recall
+some information gets lost in the thresholding that converts posterior probabilities from the prosodic model and the auxiliary LM into binary features
+the distance measure does not capture sufficient information of semantic relations between language constituents
+any data it is trained on must be in-coverage of the parser
+not all of the interviewees could read in Kazakh sufficiently fluent
+random generation can output so many bad suggestions and users have to be patient to find the name that they are looking for
+the resources they rely on require significant effort to create and will not always be available to model data in a new language or a new domain
+their reliance on predefined ontologies
+the solution may be only a local optimum
+a variant of Kipps ' caching cannot be used
+the instability of the model
+using a bias whose source is the introspection of a single , or of a community of scientists
+scores -- and as a result any feature representations -- are restricted to a single arc or a small number of arcs in the graph
+LDA does not modelize at all the sequentiality of the data
+this reduces the efficiency of the dynamic programming
+an iterative inference step is needed during runtime
+noisy proliferation
+the CCG labels for a particular sentence significantly reduces the paraphrases that can be used
+computation for the MSZ relevance score ranking is intractable due to the number of n-grams
+the relatively low performance of resolution
+annotator bias
+the complexity it introduces into an ( up till now ) quite simple story
+annotator bias
+the circularity of language comprehension
+parse space explosion
+structures may not be properly represented by flat features
+the user may have to read a large number of reviews in order to make a decision
+longer sentences
+the resulting tree , though maximal in probability , may not conform to basic linguistic properties of a dependency tree
+exponential explosion
+the various languages are analyzed independently of each other ( possibly by exploiting external knowledge like Wikipedia to enrich documents ( Kumar et al. , 2011c ; Kumar et al. , 2011a ) ) , and then the language-specific results are merged
+they usually work with terms , and so disregard the contextual meaning of those terms in the sentence ( Martineau and Finin , 2009 ; Moilanen and Pulman , 2007 )
+the time complexity
+manual linguistic mark-up is not based on abstract rules but rather on individual linguistic intuition
+the algorithm for finding them has a high computational complexity , and has not been evaluated empirically on treebank data.
+it requires considerable linguistic skill to produce proper rules in a proper order
+noisy data
+word co-occurrence information is not sufficiently exploited
+we have to generate a list of all possible light verbs
+they strongly depend on the arbitrarily defined window size parameter and do not penalize all error types equally , e.g. , pk penalizes false negatives more than false positives and wd penalizes false positive and negative boundaries more at the beginning and end of the text ( Lamprier , et al. , 2007 )
+it re-attaches a single node in every iteration
+the need for large training data
+ignoring many links that might reflect true – although less frequently attested – conceptual relations
+because constraints on pronominal anaphora are stated entirely in terms of configurational relations of tree geometry , specifically , in terms of c-command and minimal dominating S and NP domains , control and unbounded dependency structures can only be handled by additional and fairly complex devices
+in assigning an induced word cluster to a known target category , such as noun , and evaluating the goodness of the cluster according to how well it represents the class noun , the assumption is made that it is fine for a target class to be represented by multiple induced clusters , but it is unacceptable for a single induced category to represent a combination of multiple target categories
+each level of correspondence ( character and morpheme ) can completely describe the observed data
+taxonomies are built according to the sense distinctions present in dictionaries and not according to the actual use of words in the corpus
+we focus mostly on unitary sources of overgeneration : a single lexical item , tree property or derivation operation that consistently occurs in overgenerated strings
+Mongolian uses the Cyrillic alphabet to represent both conventional words and loanwords , and so the automatic extraction of loanwords is difficult
+allowing the audience to see thumbnails of every slide returned by a content-based query , regardless of whether the presenter intended for them to be seen
+it completely ignores the labeled source data after initialization , but the source data does contain some valuable information
+they work better on few articles which were highly modified by editors
+the considerable delay between user input and wizard response
+overgeneration
+it contains a single isolated parameter for every span
+they cannot be used to study language in natural tasks with real-world referents
+the fusion process is typically fed with transcriptions of entire audio recordings ( lasting up to hours )
+this context may not be sufficient
+nothing is said specifically about obtaining data from such resources as Twitter or Facebook , which need access via APIs rather than direct crawling
+the large search space faced by the decoder
+they require meaning annotations for example sentences
+the polysemy of relation phrases , which means that a relation phrase ctx can express different relations in different triples
+it can not infer class information for verbs not listed in Levin
+this is expensive
+over-generating ungrammatical sentences due to its “almost-free” alignment
+the treatment of input elements as indivisible entities
+it can miss the kind of conditioning information present in local subtrees
+all MFbased methods map words and their context words to two different sets of embeddings , and then employ Singular Value Decomposition ( SVD ) to obtain a low rank approximation of the word-context matrix M
+we do not identify multiple target expressions for the same category
+inaccurate constraint estimation
+inaccurate counts for low-probability cooccurrences
+selecting citations that have no valuable information in them
+they may or may not produce the term types and granularities useful to the user
+as the complexity of the sentences recognized increases , the computational complexity increases quadratically
+the different sentence lengths have not been taken into account
+it finds only a local optimum , since it uses the same backpropagation technique as MLP
+the solution may be only a local optimum
+the tail model assigns a static preference to paraphrase ( i.e. , tail preferences are assumed to be contextindependent )
+systems are hard to be ported across different domains and different languages
+the fact that misspellings resulting in real words were not addressed
+it can not bridge vocabulary gaps between documents and queries
+all disagreements are treated equally
+the system having an unrealistically high memory requirement
+languages are named , without the corresponding ISO language codes
+using only those arg2s that exactly match clean lists leaves out some good data ( e.g. , a tuple with an arg2 of ‘Univ of Wash’ will not match against a list of universities that spells it as ‘University of Washington’ )
+their method limits the training of multi-sense embeddings to the M most common words , forcing a complete re-training of the model should a new word of interest appear
+some synonyms for a word do not carry the same sentiment orientation
+the generated summaries do not contain any information about the distribution of opinions
+the choice of the appropriate conceptual types is non trivial , even when selecting very high-level tags
+morphotactics was explicitly raised to the level of the sentence grammar , hence the categorial lexicon accounted for both constituent order and the morpheme order with no distinction
+the data scarcity
+it will add complexity
+ParaMor currently does not address morphophonology
+incomplete sentences and wrong grammars
+these features give no information about where in the string the n-grams should occur
+we do not currently use subcategorization dictionaries for either language , while we have several for English
+the assertion component of the latter is essentially limited to atomic predications and their negations , so that ordinary statements such as Most students who passed the AI exam also passed the theory exam , or If Kim and Sandy get divorced , then Kim will probably get custody of their children , cannot be represented , let alone reasoned with
+a given term may be assigned to an implausibly large number of categories
+low representation power
+it increases the size of the synchronous context-free grammar massively
+data sparseness
+no studies could provide empirical comparisons across grammar theories
+the sequential models treat queries as unstructured ( linear ) sequences of words
+many synonyms need to be discarded in order to achieve this property
+a small number of words in almost every resulting class does n't belong to the part-of-speech categories which most of words in that class belong to
+in the approximation of exponentially many parse trees by a polynomial-size sample
+the latter distribution is conditioned on two very disparate sources of information which are difficult to combine in a complementary way
+it does not guarantee that the output parse is a projective dependency tree , only a projective dependency forest , that is , a sequence of adjacent , non-overlapping projective trees ( Nivre 2008 )
+the web mining process is quite inefficient
+the use of the raw empirical unigram distribution to represent content significance
+they do not store meta-information about the speaker
+the combinatorial expansion in the search space
+if the web site being queried is modified by its creators , slight modifications will have to be made to the query generator to accommodate those changes
+it relies too much on the quality of sentiment lexicon and thus hard to cover the network language arose spontaneously
+they aggregate scores of different pairs — even though these scores can vary greatly in the embedding space
+high dimensionality
+it introduces class imbalance : urban areas tend to contain far more tweets than rural areas
+WIT cannot deal with multiple speech recognition candidates such as those in an N-best list
+its predictions are not validated on actual documents
+for some inputs , the right output might not be available in the set considered by the training data , even if it might easily be constructed from known parts using a generative approach
+different interpretations of clause spans
+having only one valid translation ( the aligned translation in the parallel corpus ) as a gold standard translation
+as all the results are not manually validated , some resulting classifications can appear incorrect
+the resulting reliance on manually annotated examples , which are expensive and time-consuming to create
+the type-checking which is not fully implemented
+the explosion of possible constituents
+the representativeness of the N-best list is often a question mark
+frequency is not always useful for detecting mistakes , because the norm can be very separated from real use
+the unbalanced knowledge sources shared by human beings and a computer system
+their inevitable dependency on the here-and-now
+a tagged corpus is essential for training
+they do not directly model events , which have structured information
+we would have to store one rule for each utterance that we would like our system to produce
+no labeled training data in the target domain
+this structure may be cubic in the length of the parsed sentence , and more generally polynomial for some proposed algorithms
+it simply models the text-to-word information without leveraging the correlation between short texts
+the effect of skewed distributions on the value of K
+the resources are not necessarily constructed from the same source data
+the quality of the output is very susceptible to the quality and amount of resources available
+it exclusively focuses on error types taken in isolation
+in the fact that it significantly deviates from the standard methodology of developing finite-state devices , and integration of vectorized automata with standard ones remains a challenge
+the complexity of training and decoding increases proportionally to the number of target words
+falling into local minima
+unknown word
+that ONSET can also play a role for triggering resyllabification
+they are restricted to learning one-to-one word mappings
+information about eye movement events following this first regressive saccade is lost
+training time is increased because of the extra nested loop needed to calculate feature covariances
+an adaption to a different dialogue system or to new modalities is quite expensive
+the use of reference answers makes it impossible to compare systems that use different dialog strategies for carrying out the same task
+the logical nature of automated planning systems , which do not handle probabilistic grammars , or force ad-hoc approaches for doing so ( Bauer and Koller , 2010 )
+word ambiguity
+it has been demonstrated for a single language ( French ) , and was not applied to any other language
+evaluation is typically slower compared to using an intrinsic metric
+they do not assign semantically equivalent sentences the same semantic representation
+complicating the feature space
+various metrics may be highly correlated with one another , and provide redundant information on performance
+the sparsity issue
+the non-contiguous elements in a verbchain are assigned into a single node while the subject in between belongs to its own node
+frequently two semantically similar senses are distant in the WordNet hierarchy
+when we do this we actually increase the lexical sparsity
+unobserved co-occurrences of words in the training corpus
+the word form of an unknown word often contains useful information that is not available in the present setup
+very conservative approaches to exact and partial string matches overgenerate badly
+the increase of its size with the increase of the text or the n-gram length
+the metric used to measure the similarity between strings ( n-gram overlap ) is only a crude approximation of an ideal semantic similarity metric
+This bias towards outliers
+they capture associations when the CH and SV occur in close textual distance
+an explosion of syntactic parses in natural language systems
+limited data
+not being able to take into account the influence of a wider linguistic environment
+tying
+each request involves the overhead of starting a new Prolog process , and a consequently inflated response time , as well as complex arrangements to maintain dialogue state information
+feature sparseness
+unknown words
+KB annotations are currently present only if there is a YAGO means relation between the mention string and the correct entity
+the individuals’ propensity of alignment is only characterized using a proportion of lexical elements
+it is not obvious that we have learned particularly useful clues about what differentiates the English written by authors with different native languages
+it does not take into account the semantic similarities between the words that are combined in the CDSM models
+existence of nonadaptive sentences that may be inappropriate in some of the scenes
+even by the end of the book , neither Prolog nor parsing has been covered in depth
+there is a margin of error in the parallel segment identification and alignment
+the low coverage of the lexicon
+the feature set , even with feature selection , may fit the labeled source data well but not the target data because the target data has no labels to be used in feature selection
+the system does not take into account constraints from mentions outside of the ( mention , antecedent ) pairs
+the parsing process might slow down the system significantly
+it gives poor results when the number of clusters is different from the real number of valid classes
+these proposed tools rely on resources of limited coverage , such as dictionaries , thesauri , or manually constructed databases to generate the candidates
+only five predefined realisations of REs were used to elicit object descriptions from the participants
+all existing systems can be used for analysis but not for generation
+OSN data come with no annotations , and it would be impossible to manually annotate the data for a quantitative analysis of self-disclosure
+This polarity , and the wide gap it exposes between positions
+increasing the number of features , which can make MERT less stable ( Foster and Kuhn , 2009 )
+it may bring extra noises into our system
+the sentences are artificially constructed for the LSAT and GRE tests
+the sensitivity of this method to the set of initial seeds ( Pantel et al. , 2009 )
+they make little or no direct use of syntactic information
+discarding much of the information present in the soft labeling
+a large parameter space
+there has been little consistency in the field in the use of cross-validation , the number of L1s , and which L1s are used
+the fact that different spellings of a word are linked to the same index
+the corpus is not publicly available yet
+there is no obvious way of showing how new schemas might be developed , or how existing ones might be modified
+the present framework can handle only one anchor point ( the question term ) in the candidate answer sentence
+the low number of paraphrases
+a grammar may need a large number of categories and rules
+the parse trees of original and compressed sentences sometimes do not correspond
+relying on text-based paraphrases
+such techniques cannot be extended with semantically analyzed structures for target identification
+the length of sentences
+Fong 's approach does not extend to the VIA-reading ( in Jackendoff 's terminology ) of sentences like Example ( 3 )
+the probability distribution over dialogue acts is prone to distortion depending on the portion of NoMove in the training data
+combinatorial explosion
+the greedy parsing strategy may lead to error propagation
+the criterion for selecting patterns , precision , is not the only issue for a pattern to be effective
+its strict incrementality
+it does not provide a mechanism for inserting the omitted short vowels in Arabic names
+a very small , and likely biased , subset of the policy sections is considered
+longer definitions are prefered over short ones
+if only existential quantifiers are used then some objects are unidentifiable ( i.e. , it is not possible to distinguish them uniquely )
+the softmax normalization would be very costly for large vocabularies
+it tends to be costly in terms of time and bandwidth
+the actual lexical information gets lost in favor of marking IGs , preventing the potential usage of that information in deciding on inter-word dependencies
+the complexity in syntactic processing is coupled with semantic parsing and makes the latter even harder
+the exponential relationship between the number of possible paraphrases of a summary of a set of facts and the number of facts in that set
+its cost : associating concept tags with a dialogue transcription is already a tedious task and its complexity is largely increased by the requirement for a precise delimitation of the support ( lexical segment ) corresponding to each tag
+semantically isolated senses ( identified as neighbors )
+they are designed to find only full sentences
+38 % of the slots that were identified are considered by the human judges to be too general
+the limited scope of the similarity function
+the identification of mentions is subject to errors , and thus suffers a lower precision compared to hashtag matching
+the independence between many choices can not be fully exploited
+the n-gram simulations only use a window of n moves in the dialogue history
+the time required to load and watch the videos
+even though several Slavic languages have the same property as Czech , the ambiguity is not preserved
+consuming very large parameter spaces
+such probabilities could not be estimated directly from the data due to data sparseness
+a deviation between two scanpaths in one fixation leads to an increase of the dissimilarity of 1 irrespective of whether the deviation is spatially large or small
+its apparent inadequacy in dealing with the sparse data problem
+we only get to see a small subset of the examples that the experimenter has collected and our view is controlled by the opinions of an analyst , who typically was not a participant to the conversation and who might not even have been present at the time
+matching syntactic analysis can not always guarantee a good translation
+pervasive structural divergence between languages
+data sparseness
+they require an exact match of the constituents in extracted phrases , so it faces the risk of losing coverage of the rules
+noisy data
+the generation of inconsistent sense clusters
+the very small size of its syntax , lexis , semantics and working domain
+there is only a limited amount of visual clues that can be used to distinguish individual components from each other and cognitive overload restricts how many annotation schemes can be viewed at the same time
+important structural information related to interargument dependencies is neglected
+we only cover about half of the utterances
+needing to build a new phrase table for each document to translate
+the heavy cost of inferencing
+the relatively low upper bound for the CCG parser on DepBank
+requiring manually sense-tagged data
+exact inference is intractable for those dynamically generated segment level features
+the selection of only a single alignment from the distribution of source words at the end of 1,000 walks , since this does not allow for one-to-many mappings
+the computational complexity of working with SVMs
+it queries each term appearing in each list and hence , suffers from high run time cost
+unknown words
+it is very hard to generalize and introduces a lot of additional redundant relation edges
+the large combined search space
+is not feasible to search the space of possible feature sets by hand
+the strong confidence this approach places on word boundaries ( Beaufort et al. , 2010 )
+we would have to set up too many of them depending on the various shapes and functions of bent trajectories
+Ravichandran and Hovy focus on the use of such surface text patterns to answer so-called factoid questions ( Voorhees , 2004 )
+the system considers coreference only within a sentence and between adjacent sentences
+KB sparsity
+its organizational and text templates are not particularly flexible ( e.g. , they demand a specific speech act order and they realize each speech act as a single sentence )
+it does not provide estimates of class membership probabilities
+it was developed for English , and adapting it to other languages would involve a major redesign and adaptation of the system
+the method encodes strong dependency assumptions between the punctuation symbol to be inserted and its surrounding words
+considering only one-word terms
+it requires high accuracy parsing , at least for constituents composed of temporal expressions
+we have only considered single words as context
+RI gives equal weight to FPs and FNs
+our decoding algorithm , although efficient , still prunes the search space aggressively , while not being able to take advantage of look-ahead features as discriminative models can
+the assumption that source and target information is generated monotonically
+the minimal expressiveness of the input language : user requests must be expressed as a conjunction of simple relations ( literals ) , equivalent to the select/project/join operations of a relational algebra
+they are hard to test for convergence
+many particles have a sentential usage
+the small size of the training corpus
+the procedure of building such a reference corpus is expensive
+a performance degradation when the size of data increases , since Prolog is not provided with efficient search algorithms
+the features considered are local to the alignment links joining pairs of words
+phrases are translated and reordered independently of each other and contextual information outside of phrasal boundaries is ignored
+the book is not multilingual in scope
+the noun modifier relationship is not limited to meronymy
+CLWSD is a lexical sample task , which only evaluates disambiguation of 20 English nouns
+small centroids tend to cluster with bigger centroids instead of other small centroids , often resulting in highly skewed trees such as shown in Figure 2 , a=0
+it requires training over the whole extent of the given pattern
+it does not capture whether two proteins are arguments of the same binding event , or arguments of two binding events with the same trigger
+the need for large amounts of sense-tagged data
+a data input error caused All Negative Chinese n-gram category to be combined with two n-grams included in the Positive Chinese School and Home category
+the metrics they use for evaluation compare to human references , but they do not necessarily reflect human acceptability or grammaticality
+no unsupervised training algorithm has been presented for learning rules automatically without a manually annotated corpus
+the large combined search space
+it does not measure the quality of the abstracts from which the short answers were extracted
+limited data
+training with unbalanced data
+theoretical approaches become obsolete
+its reliance on a robust syntactic/semantic analysis to find the focus on which all the IRs depend
+their need for always having two players , which requires them to sustain enough interest to always maintain an active pool of players
+the time complexity of inference as presented here is quadratic in the number of classes rather than linear
+too many terms were identified , which in turn led to the aforementioned inflation in vocabulary size
+data sparseness
+it requires us to be disciplined in our pass/overgeneration annotations
+in the process of discarding many incorrect names , it also discarded some correct names
+low co-occurrence probability in tweets
+their inefficiency
+no idiom or multi-word expression is allowed to align to a single word on the other side
+they are not capable of coming to grips with the pervasive fuzziness of information in the knowledge base , and , as a result , are mostly ad hoc in nature
+the bound is loose in many cases
+it attaches to a character rather than to the location between two adjacent characters
+the phenomenon of exponential and rapid growth of function values during combinatorial manipulations , called combinatorial explosion ( Krippendorff , 1986 )
+it causes sensitivity to outliers
+LMF provides only a specification manual with a few examples
+there is no information indicating how the word being defined binds to the relations in the qualia
+the neglect of document structure
+data privacy issues
+we get fewer data points with a test set of the same size , which might mean that we need more data to achieve as good results as with sentence-level optimization
+the negative instances far outnumber the positive ones
+there are many more negative than positive examples
+they are generally computed to maximize the joint likelihood of the training data
+being carried out on small corpora
+the presence of semantic information might reduce chart sharing
+downgrading explicit relations to implicit ones by removing the explicit discourse connectives
+they are tied to the MacOS platform
+exponential explosion of unpacked parse results
+the false positive events that are propagated from the original EE system
+it is completely unsupervised and therefore does not take advantage of the training set provided by the task organizers
+the number of labels grows unbounded with the treebank size , as we may encounter complex substructures where the event sequences are long
+requiring a great human effort before actually being able to use it
